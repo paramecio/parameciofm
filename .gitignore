@@ -1,0 +1,11 @@
+*~
+*.pyc
+__pycache__
+modules/*
+!modules/welcome
+!modules/admin
+settings/*
+!settings/__init__.py
+!settings/config.py.sample
+themes/*
+!themes/default/

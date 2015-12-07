@@ -1,0 +1,11 @@
+# REQUIREMENTS
+
+- Python >3.3
+- Bottle 0.12+
+- Jinja2
+- passlib
+- cffi
+- bcrypt
+
+Use PIP is recommended for new installations.
+
