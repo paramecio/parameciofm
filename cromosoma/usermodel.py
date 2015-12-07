@@ -98,25 +98,25 @@ class UserModel(WebModel):
         
         if self.username_field in dict_values:
         
-            self.conditions=['WHERE username=%s', [dict_values[self.username_field]]]
+            self.conditions=['WHERE (username=%s', [dict_values[self.username_field]]]
 
         
         if self.email_field in dict_values:
         
             if len(self.conditions[1])>0:
         
-                self.conditions[0]+=' OR email=%s'
+                self.conditions[0]+=' OR email=%s)'
             else:
-                self.conditions[0]='WHERE email=%s'
+                self.conditions[0]='WHERE (email=%s)'
                 self.conditions[1]=[]
         
             self.conditions[1].append([dict_values[self.email_field]])
         
         if get_id>0:
-            self.conditions[0]=' AND '+self.username_field+'=%s'
+            self.conditions[0]+=' AND '+self.name_field_id+'!=%s'
             self.conditions[1].append(get_id)
-            
         
+        print(self.conditions[0])
         if self.select_count()>0:
             
             self.fields[self.username_field].error=True
