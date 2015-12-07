@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <title><%block name="title">${lang('admin', 'login', 'Paramecio Login')}</%block></title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+    ${add_js_home('jquery.min.js')}
+    ${add_css_home('admin/login.css')}
+    ${add_css_home('font-awesome.min.css')}
+    ${HeaderHTML.css_home()|n}
+    ${HeaderHTML.js_home()|n}
+    <%block name="ajax">
+    <script language="javascript">
+        $(document).ready( function () {
+        
+            $('#login_submit').click( function () {
+            
+                $('#loading').show();
+            
+                $.ajax({
+                url: "${make_url('admin/login')}",
+                method: "POST",
+                dataType: "json",
+                data: {'username': $('#username_form').val(), 'password': $('#password_form').val()}
+                }).done(function(data) {
+                
+                    if(data.error==0)
+                    {
+                        
+                        window.location.href="${make_url('admin')}";
+                    
+                    }
+                    else
+                    {
+                    
+                        $('#loading').hide('slow');
+
+                        $('#username_error').html("${lang('common', 'error_login', 'Error, wrong username or password')}");
+                        
+                    }
+                
+                });
+                
+                return false;
+            
+            });
+        
+        });
+    </script>
+    </%block>
+    </head>
+    <body>
+        <%block name="content">
+        <form id="login">
+            <div id="title">
+                ${lang('admin', 'login', 'Paramecio Login')}
+            </div>
+            ${forms|n}
+            <div id="submit_block">
+                <input type="submit" value="${lang('common', 'login', 'Login')}" class="submit" id="login_submit"/>
+                <span id="loading">&nbsp;</span>
+            </div>
+        </form>
+        </%block>
+    </body>
+</html>

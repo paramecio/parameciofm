@@ -1,0 +1,14 @@
+<%def name="check_required(required)">
+    % if required: 
+        ${'*'}
+    % endif
+</%def>
+<div class="form">
+    % for form in forms.values():
+        % if form.type!='hidden':
+            <p><label>${form.label} ${check_required(form.required)}</label>${form.form()|n} <span class="error" id="${form.name}_error">${form.txt_error}</span></p>
+        % else:
+            ${form.form()|n}
+        % endif
+    % endfor
+</div>

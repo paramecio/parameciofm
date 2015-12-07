@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>${title}</title>
+<!--<link href="{{'css/admin/admin.css'|make_media_url}}" rel="stylesheet" type="text/css"/>
+<link href="{{'css/font-awesome.min.css'|make_media_url}}" rel="stylesheet" type="text/css"/>-->
+${add_css_home('admin/admin.css')}
+${add_css_home('font-awesome.min.css')}
+${HeaderHTML.css_home()|n}
+${add_js_home('jquery.min.js')}
+${HeaderHTML.js_home()|n}
+${HeaderHTML.header_home()|n}
+</head>
+<body>
+<div id="languages_general">
+</div>
+<div id="logout">
+<a href="${make_url('admin/logout')}">Logout</a>
+</div>
+
+<div id="center_body">
+    <div id="header"><span id="title_phango">Paramecio</span> <span id="title_framework">Framework!</span> </div>
+    <div class="content_admin">
+        <div id="menu">
+            <div class="menu_title">${lang('admin', 'applications', 'Applications')}</div>
+            % for module in sorted(menu):
+                % if type(menu[module]).__name__=='list':
+                    <a href="${make_url('admin/'+module)}">${menu[module][0]}</a>
+                % else:
+                    <div class="father_admin">${menu[module]}</div>
+                % endif
+            % endfor
+        </div>
+        <div class="contents">
+            <h1>${title}</h1>
+            <%block name="content">
+            </%block>
+        </div>
+    </div>
+</div>
+<div id="loading_ajax">
+</div>
+</body>
+</html>

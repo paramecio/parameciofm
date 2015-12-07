@@ -1,0 +1,5 @@
+<div class="form">
+    {% for form in forms.values() %}
+        <p><label>{{form.label|safe}}</label>{{form.form()}}</p>
+    {% endfor %}
+</div>

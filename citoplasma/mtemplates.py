@@ -77,8 +77,12 @@ class ptemplate:
         theme_templates='themes/'+config.theme+'/templates'
 
         module_templates=module+'/templates'
+        
+        #Standard templates
+        
+        standard_templates=path.dirname(__name__)+'/templates'
 
-        return TemplateLookup(directories=[theme_templates, module_templates], default_filters=['h'], input_encoding='utf-8', encoding_errors='replace')
+        return TemplateLookup(directories=[theme_templates, module_templates, standard_templates], default_filters=['h'], input_encoding='utf-8', encoding_errors='replace')
 
         #return Environment(autoescape=self.guess_autoescape, auto_reload=True, loader=FileSystemLoader([theme_templates, module_templates]))
 

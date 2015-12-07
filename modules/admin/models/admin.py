@@ -1,11 +1,11 @@
 #!/usr/bin/python3
 
-from citoplasma.i18n import I18n
-from cromosoma.webmodel import WebModel
-from cromosoma.usermodel import UserModel
-from cromosoma import corefields
-from cromosoma.extrafields.emailfield import EmailField
-from cromosoma.extrafields.passwordfield import PasswordField
+from paramecio.citoplasma.i18n import I18n
+from paramecio.cromosoma.webmodel import WebModel
+from paramecio.cromosoma.usermodel import UserModel
+from paramecio.cromosoma import corefields
+from paramecio.cromosoma.extrafields.emailfield import EmailField
+from paramecio.cromosoma.extrafields.passwordfield import PasswordField
 
 class PrivilegesField(corefields.IntegerField):
     pass

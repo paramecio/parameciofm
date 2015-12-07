@@ -1,0 +1,53 @@
+<!--{% set header_js_list %}
+    <script language="Javascript">
+        /*alert('pepe');*/
+    </script>
+{% endset %}
+{{ header_js_list|add_header_home() }}-->
+<%def name="select_field()">
+    % if simplelist.search_field==field:
+        selected
+    % endif
+</%def>
+<%def name="set_css_arrow(simplelist, field)">
+    % if simplelist.order_field==field:
+        fa fa-arrow-circle-${simplelist.order_class[simplelist.s['order']]}
+    % endif
+</%def>
+% if simplelist.yes_search:
+<div class="form">
+<form method="get" action="{{simplelist.url}}">
+    ${lang('common','search', 'Search')}: <input type="text" name="search_text" value="${simplelist.search_text|n}"> 
+    <select name="search_field">
+    % for field in simplelist.search_fields:
+        <option value="${simplelist.model.forms[field].name}" ${select_field()}>${simplelist.model.forms[field].label}</option>
+    % endfor 
+    </select>
+    <input type="submit" value="${lang('common', 'search', 'Search')}" />
+</form>
+</div>
+% endif
+<table class="table_list">
+    <tr class="title_list">
+        % for field in simplelist.fields_showed:
+            <td><a href="${add_get_parameters(simplelist.url, order_field=simplelist.model.fields[field].name, begin_page=simplelist.begin_page, order=simplelist.change_order[field], search_text=simplelist.search_text, search_field=simplelist.search_field)}" class="${set_css_arrow(simplelist, field)}">${simplelist.model.fields[field].label}</a></td>
+        % endfor 
+        % for extra_field in simplelist.arr_extra_fields:
+            <td>${ extra_field }</td>
+        % endfor
+    </tr>
+    % for row in list:
+    <tr class="row_list">
+        % for field in simplelist.fields_showed:
+            <td>${simplelist.model.fields[field].show_formatted(row[field])}</td>
+        % endfor
+        
+        % for extra_field_func in simplelist.arr_extra_options:
+            <td>${ simplelist.set_options(extra_field_func, row)|n }</td>
+        % endfor 
+    </tr>
+    % endfor 
+</table>
+<p>
+${pages|n}
+</p>

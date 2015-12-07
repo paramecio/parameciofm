@@ -1,16 +1,16 @@
 #!/usr/bin/python3
 
-from citoplasma.mtemplates import ptemplate
-from modules.admin.models.admin import UserAdmin
-from citoplasma.i18n import load_lang, I18n
-from citoplasma.urls import make_url, add_get_parameters
-from citoplasma.sessions import get_session
+from paramecio.citoplasma.mtemplates import ptemplate
+from paramecio.modules.admin.models.admin import UserAdmin
+from paramecio.citoplasma.i18n import load_lang, I18n
+from paramecio.citoplasma.urls import make_url, add_get_parameters
+from paramecio.citoplasma.sessions import get_session
 from bottle import get,post
 from settings import config
 from settings import config_admin
-from citoplasma.lists import SimpleList
-from citoplasma.generate_admin_class import GenerateAdminClass
-from citoplasma.httputils import GetPostFiles
+from paramecio.citoplasma.lists import SimpleList
+from paramecio.citoplasma.generate_admin_class import GenerateAdminClass
+from paramecio.citoplasma.httputils import GetPostFiles
 from cromosoma.formsutils import show_form, pass_values_to_form
 from cromosoma.coreforms import PasswordForm
 from importlib import import_module, reload

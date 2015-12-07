@@ -48,14 +48,6 @@ def create_app():
         
         try:
             
-            #dir_controllers=os.listdir(config.base_modules.replace('.', '/')+'/'+module)
-            
-            #arr_views=[x for x in dir_modules if x.find('.py')!=-1 and x.find('__init__')==-1]
-            """
-            for controller in config.base_modules:
-                if controller.find('.py')!=-1 and controller.find('__init__')==-1:
-                    controller=controller.replace('.py', '')
-            """
             controller_path=import_module(module)
             
             controller_base=os.path.dirname(controller_path.__file__)
@@ -67,7 +59,7 @@ def create_app():
                 if controller.find('.py')!=-1 and controller.find('__init__')==-1:
                     
                     controller_py=controller.replace('.py', '')
-                    print(controller_py)
+                    
                     import_module(module+'.'+controller_py)
 
             add_func_static_module(controller_base)

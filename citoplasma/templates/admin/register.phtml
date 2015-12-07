@@ -1,0 +1,60 @@
+<%inherit file="login.phtml"/>
+<%block name="ajax">
+    <script language="Javascript">
+        $(document).ready( function () {
+            
+            $("#register_submit").click( function () {
+                
+                $.ajax({
+                url: "${make_url('admin/register')}",
+                method: "POST",
+                dataType: "json",
+                data: {'username': $('#username_form').val(), 'email': $('#email_form').val(), 'password': $('#password_form').val(), 'repeat_password': $('#repeat_password_form').val()}
+                }).done(function(data) {
+                //$( this ).addClass( "done" );
+                //Redirect if register
+                
+                    if(data.error==0)
+                    {
+                    
+                        //$('#result_register').html('Done!. Redirecting...');
+                        $('#loading').show();
+                        
+                        window.location.href="${make_url('admin/login')}";
+                    
+                    }
+                    else
+                    {
+                        //alert(JSON.stringify(data));
+                        //$('#result_register').html('Error');
+                        $('#username_error').html(data.username);
+                        $('#email_error').html(data.email);
+                        $('#password_error').html(data.password);
+                        
+                        $('#repeat_password_error').html(data.password_repeat);
+                    }
+                
+                });
+                
+                return false;
+                
+            });
+            
+        
+        });
+    </script>
+</%block>
+<%block name="title">${lang('admin', 'sign_up', 'Paramecio Sign up')}</%block>
+<%block name="content">
+<form id="login">
+    <div id="title">
+                ${lang('admin', 'sign_up', 'Paramecio Sign up')}
+    </div>
+    ${forms|n}
+    <div id="result_register"></div>
+    <div id="submit_block">
+        <input type="submit" value="${lang('common', 'sign_up', 'Sign up')}" class="submit" id="register_submit"/>
+        <span id="loading">&nbsp;</span>
+    </div>
+</form>
+</%block>
