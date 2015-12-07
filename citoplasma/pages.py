@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 
 from math import ceil, floor
-from citoplasma.urls import add_get_parameters
-from citoplasma.i18n import I18n
+from paramecio.citoplasma.urls import add_get_parameters
+from paramecio.citoplasma.i18n import I18n
 
 class Pages: 
 

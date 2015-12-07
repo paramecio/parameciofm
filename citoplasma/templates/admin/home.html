@@ -5,10 +5,10 @@
 <title>${title}</title>
 <!--<link href="{{'css/admin/admin.css'|make_media_url}}" rel="stylesheet" type="text/css"/>
 <link href="{{'css/font-awesome.min.css'|make_media_url}}" rel="stylesheet" type="text/css"/>-->
-${add_css_home('admin/admin.css')}
-${add_css_home('font-awesome.min.css')}
+${add_css_home_local('admin.css', 'admin')}
+${add_css_home_local('font-awesome.min.css', 'admin')}
 ${HeaderHTML.css_home()|n}
-${add_js_home('jquery.min.js')}
+${add_js_home_local('jquery.min.js', 'admin')}
 ${HeaderHTML.js_home()|n}
 ${HeaderHTML.header_home()|n}
 </head>

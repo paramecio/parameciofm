@@ -46,6 +46,10 @@ class ptemplate:
         
         self.add_filter(add_js_home)
         
+        self.add_filter(add_css_home_local)
+        
+        self.add_filter(add_js_home_local)
+        
         self.add_filter(add_header_home)
         
         #self.auto_reload=True
@@ -56,11 +60,15 @@ class ptemplate:
         HeaderHTML.js=[]
         HeaderHTML.header=[]
         HeaderHTML.cache_header=[]
+        HeaderHTML.css_local={}
+        HeaderHTML.js_local={}
     
     def clean_header_cache(self):
         
         HeaderHTML.css=[]
         HeaderHTML.js=[]
+        HeaderHTML.css_local={}
+        HeaderHTML.js_local={}
         HeaderHTML.header=[]
         HeaderHTML.cache_header=[]
     
@@ -80,8 +88,8 @@ class ptemplate:
         
         #Standard templates
         
-        standard_templates=path.dirname(__name__)+'/templates'
-
+        standard_templates=path.dirname(__file__)+'/templates'
+        #print(standard_templates)
         return TemplateLookup(directories=[theme_templates, module_templates, standard_templates], default_filters=['h'], input_encoding='utf-8', encoding_errors='replace')
 
         #return Environment(autoescape=self.guess_autoescape, auto_reload=True, loader=FileSystemLoader([theme_templates, module_templates]))
@@ -128,6 +136,10 @@ class HeaderHTML:
         for js in HeaderHTML.js:
             final_js.append('<script language="Javascript" src="'+make_media_url('js/'+js)+'"></script>')
         
+        for module, arr_js in HeaderHTML.js_local.items():
+            for js in arr_js:
+                final_js.append('<script language="Javascript" src="'+make_media_url_module('js/'+js, module)+'"></script>')
+        
         return "\n".join(final_js)
 
     def css_home():
@@ -136,6 +148,12 @@ class HeaderHTML:
         
         for css in HeaderHTML.css:
             final_css.append('<link href="'+make_media_url('css/'+css)+'" rel="stylesheet" type="text/css"/>')
+
+        for module, arr_css in HeaderHTML.css_local.items():
+            
+            for css in arr_css:
+            
+                final_css.append('<link href="'+make_media_url_module('css/'+css, module)+'" rel="stylesheet" type="text/css"/>')
 
         return "\n".join(final_css)
 
@@ -158,15 +176,35 @@ def add_css_home(css):
     
     if not css in HeaderHTML.css:
         HeaderHTML.css.append(css)
-    
-    return ""
-    
+        
+    return ''
+        
 def add_js_home(js):
     
     if not js in HeaderHTML.js:
         HeaderHTML.js.append(js)
+
+    return ''
+
+def add_css_home_local(css, module):
     
-    return ""
+    if not css in HeaderHTML.css_local:
+        
+        HeaderHTML.css_local[module]=HeaderHTML.css_local.get(module, [])
+        
+        HeaderHTML.css_local[module].append(css)
+
+    return ''
+
+def add_js_home_local(js, module):
+    
+    if not js in HeaderHTML.js_local:
+        
+        HeaderHTML.js_local[module]=HeaderHTML.js_local.get(module, [])
+        
+        HeaderHTML.js_local[module].append(js)
+
+    return ''
 
 def set_flash_message(message):
     

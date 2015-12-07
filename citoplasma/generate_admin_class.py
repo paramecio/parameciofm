@@ -1,10 +1,10 @@
-from citoplasma.lists import SimpleList
+from paramecio.citoplasma.lists import SimpleList
 from bottle import request, redirect 
-from citoplasma.urls import add_get_parameters
-from citoplasma.templates import set_flash_message
-from cromosoma.formsutils import show_form
-from citoplasma.i18n import I18n
-from citoplasma.httputils import GetPostFiles
+from paramecio.citoplasma.urls import add_get_parameters
+from paramecio.citoplasma.mtemplates import set_flash_message
+from paramecio.cromosoma.formsutils import show_form
+from paramecio.citoplasma.i18n import I18n
+from paramecio.citoplasma.httputils import GetPostFiles
 
 class GenerateAdminClass:
     

@@ -1,9 +1,9 @@
 #By default id is not showed
 
-from citoplasma.pages import Pages
-from citoplasma.urls import add_get_parameters
-from citoplasma.sessions import get_session
-from citoplasma.i18n import I18n
+from paramecio.citoplasma.pages import Pages
+from paramecio.citoplasma.urls import add_get_parameters
+from paramecio.citoplasma.sessions import get_session
+from paramecio.citoplasma.i18n import I18n
 from bottle import request
 import sys
 

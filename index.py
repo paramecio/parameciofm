@@ -8,6 +8,8 @@ from beaker.middleware import SessionMiddleware
 #WARNING: only use this feature in development, not in production.
 
 def create_app():
+    
+    arr_module_path={}
 
     if config.yes_static==True:
         
@@ -20,11 +22,11 @@ def create_app():
             @route('/mediafrom/<module>/<filename:path>')
             def send_static_module(module, filename):
                 
-                path_module=module+'/media/'
+                path_module=arr_module_path[module]+'/media/'
                 
                 file_path_module=path_module+filename
                 
-                path=module+'/media/'
+                path='themes/'+config.theme+'/media/'+module
                 
                 file_path=path+filename
                 
@@ -51,6 +53,10 @@ def create_app():
             controller_path=import_module(module)
             
             controller_base=os.path.dirname(controller_path.__file__)
+            
+            base_module=module.split('.')[-1]
+            
+            arr_module_path[base_module]=controller_base
             
             dir_controllers=os.listdir(controller_base)
             
@@ -95,10 +101,16 @@ def create_app():
             os.makedirs(config.session_opts['session.data_dir'], 0o700, True)
 
         app = SessionMiddleware(app, config.session_opts, environ_key=config.cookie_name)
-    
-    if __name__ == "__main__":
-        run(app=app, host=config.host, server=config.server_used, port=config.port, debug=config.debug, reloader=config.reloader)
-    else:
-        return run(app=app, host=config.host, server=config.server_used, port=config.port, debug=config.debug, reloader=config.reloader)
 
+        return app
+
+def run_app(app):
+
+    run(app=app, host=config.host, server=config.server_used, port=config.port, debug=config.debug, reloader=config.reloader)
+"""
+if __name__ == "__main__":
+    run(app=app, host=config.host, server=config.server_used, port=config.port, debug=config.debug, reloader=config.reloader)
+    #else:
+        #return run(app=app, host=config.host, server=config.server_used, port=config.port, debug=config.debug, reloader=config.reloader)
+"""
 

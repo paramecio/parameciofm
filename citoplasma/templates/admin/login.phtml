@@ -4,9 +4,9 @@
     <title><%block name="title">${lang('admin', 'login', 'Paramecio Login')}</%block></title>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
-    ${add_js_home('jquery.min.js')}
-    ${add_css_home('admin/login.css')}
-    ${add_css_home('font-awesome.min.css')}
+    ${add_js_home_local('jquery.min.js', 'admin')}
+    ${add_css_home_local('login.css', 'admin')}
+    ${add_css_home_local('font-awesome.min.css', 'admin')}
     ${HeaderHTML.css_home()|n}
     ${HeaderHTML.js_home()|n}
     <%block name="ajax">

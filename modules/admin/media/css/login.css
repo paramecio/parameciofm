@@ -1,0 +1,266 @@
+body {
+    
+    margin:0px;
+    background: #fbfbfb;
+    font-family: 'Open Sans', sans-serif;
+    
+}
+
+#title {
+    
+    padding:10px;
+    color: #fbfbfb;
+    background: #ff7153 url("../images/admin/background_title_login.png") right no-repeat;
+    font-size:1.5em;
+    /*text-shadow: 1px 1px 0px rgba(0, 0, 0, 1);*/
+
+}
+
+.form {
+    
+    margin:10px 15px 10px 10px;
+    position:relative;
+    
+}
+
+input {
+    
+    width:100%;
+    border: solid #bcbcbc 1px;
+    font-size:2em;
+    border-radius:5px;
+    padding:2px;
+    
+}
+
+input:focus {
+    
+    border-color: #FF7052;
+    outline:1px;
+    
+}
+
+.submit {
+
+  width:250px;
+  display: block;
+  margin: 0 auto 18px auto;
+  background: #fff;
+  border-radius: 10px;
+  border: 1px solid #FF7052;
+  color: #FF7052;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0px 0px 0px 7px #fff;
+  transition: 0.2s ease-out;
+  position:relative;
+}
+
+.submit:hover,
+.submit:focus {
+  background: #FF7052;
+  color: #fff;
+  outline: 0;
+}
+
+.error {
+    
+    font-weight:bold;
+    color: #ff0000;
+    
+}
+
+#submit_block {
+
+    position:relative;
+
+}
+
+#loading {
+
+    top:10px;
+    right:40px;
+    position:absolute;
+    display:block;
+    width:16px;
+    height:16px;
+    border: solid #000 0px;
+    background: url('../images/ajax-loader.gif') center no-repeat;
+    display:none;
+
+}
+
+/* Phones */
+@media (max-width: 767px) {
+  
+    #login {
+    
+        width:100%;
+        border: solid #cbcbcb;
+        border-width:0px 0px 1px 0px;
+        margin-top:5px;
+        margin:0px;
+        overflow:hidden;
+        background: #eaeaea;
+    
+    }
+    
+}
+
+/* Tablets */
+@media (min-width: 780px) and (max-width: 979px) {
+    
+    #login {
+    
+        position:relative;
+        width:400px;
+        border: solid #cbcbcb 1px;
+        margin-top:5px;
+        margin-left:auto;
+        margin-right:auto;
+        overflow:hidden;
+        background: #eaeaea;
+    
+    }
+}
+
+/* Desktops */
+@media (min-width: 980px) {
+    
+    #login {
+        
+        position:relative;
+        width:400px;
+        border: solid #cbcbcb 1px;
+        margin-top:5px;
+        margin-left:auto;
+        margin-right:auto;
+        overflow:hidden;
+        background: #eaeaea;
+    }
+  
+}
+
+/*
+* {
+  -ms-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+html,
+body {
+  width: 100%;
+  height: 100%;
+  background: #cedeff;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 200;
+}
+.login {
+  position: relative;
+  top: 50%;
+  width: 250px;
+  display: table;
+  margin: -150px auto 0 auto;
+  background: #fff;
+  border-radius: 4px;
+}
+.legend {
+  position: relative;
+  width: 100%;
+  display: block;
+  background: #FF7052;
+  padding: 15px;
+  color: #fff;
+  font-size: 20px;
+}
+.legend:after {
+  content: "";
+  background-image: url(../images/admin/multy-user.png);
+  background-size: 100px 100px;
+  background-repeat: no-repeat;
+  background-position: 152px -16px;
+  opacity: 0.06;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+}
+.input {
+  position: relative;
+  width: 90%;
+  margin: 15px auto;
+}
+.input span {
+  position: absolute;
+  display: block;
+  color: #d4d4d4;
+  left: 10px;
+  top: 8px;
+  font-size: 20px;
+}
+.input input {
+  width: 100%;
+  padding: 10px 5px 10px 40px;
+  display: block;
+  border: 1px solid #EDEDED;
+  border-radius: 4px;
+  transition: 0.2s ease-out;
+  color: #a1a1a1;
+}
+.input input:focus {
+  padding: 10px 5px 10px 10px;
+  outline: 0;
+  border-color: #FF7052;
+}
+.submit {
+  width: 45px;
+  height: 45px;
+  display: block;
+  margin: 0 auto -15px auto;
+  background: #fff;
+  border-radius: 100%;
+  border: 1px solid #FF7052;
+  color: #FF7052;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0px 0px 0px 7px #fff;
+  transition: 0.2s ease-out;
+}
+.submit:hover,
+.submit:focus {
+  background: #FF7052;
+  color: #fff;
+  outline: 0;
+}
+.feedback {
+  position: absolute;
+  bottom: -70px;
+  width: 100%;
+  text-align: center;
+  color: #fff;
+  background: #2ecc71;
+  padding: 10px 0;
+  font-size: 12px;
+  display: none;
+  opacity: 0;
+}
+.feedback:before {
+  bottom: 100%;
+  left: 50%;
+  border: solid transparent;
+  content: "";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+  border-color: rgba(46, 204, 113, 0);
+  border-bottom-color: #2ecc71;
+  border-width: 10px;
+  margin-left: -10px;
+}
+*/

@@ -1,10 +1,10 @@
 #!/usr/bin/python3
 
-from modules.admin.models.admin import UserAdmin
-from citoplasma.urls import make_url
-from citoplasma.generate_admin_class import GenerateAdminClass
-from citoplasma.i18n import I18n
-from cromosoma.coreforms import SelectForm
+from paramecio.modules.admin.models.admin import UserAdmin
+from paramecio.citoplasma.urls import make_url
+from paramecio.citoplasma.generate_admin_class import GenerateAdminClass
+from paramecio.citoplasma.i18n import I18n
+from paramecio.cromosoma.coreforms import SelectForm
 
 def admin(t):
     

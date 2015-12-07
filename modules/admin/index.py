@@ -11,8 +11,8 @@ from settings import config_admin
 from paramecio.citoplasma.lists import SimpleList
 from paramecio.citoplasma.generate_admin_class import GenerateAdminClass
 from paramecio.citoplasma.httputils import GetPostFiles
-from cromosoma.formsutils import show_form, pass_values_to_form
-from cromosoma.coreforms import PasswordForm
+from paramecio.cromosoma.formsutils import show_form, pass_values_to_form
+from paramecio.cromosoma.coreforms import PasswordForm
 from importlib import import_module, reload
 from bottle import redirect
 from collections import OrderedDict
