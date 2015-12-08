@@ -466,7 +466,13 @@ class WebModel:
         if self.yes_reset_conditions:
             self.reset_conditions()
         
-        return result
+        if result.rowcount>0:
+        
+            return True
+        else:
+            
+            return False
+    
     
     # Method for create sql tables
     

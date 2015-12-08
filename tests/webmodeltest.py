@@ -65,6 +65,12 @@ class TestWebModelMethods(unittest.TestCase):
         
         self.assertTrue(model.element_exists(1))
         
+        model.conditions=['WHERE id=%s', [2]]
+        
+        self.assertFalse(model.delete())
+        
+        self.assertTrue(model.delete())
+        
         self.assertTrue(model.drop())
     
 if __name__ == '__main__':
