@@ -96,6 +96,8 @@ class WebModel:
         self.updated=False
         
         self.valid_fields=[]
+        
+        self.last_id=0
     
     # A method where create the new fields of this model
     
@@ -155,6 +157,7 @@ class WebModel:
             
         except: 
             self.query_error='Cannot insert the new row'
+
             return False
         
         sql="insert into `"+self.name+"` (`"+"`, `".join(fields)+"`) VALUES ("+", ".join(values)+")"
@@ -162,6 +165,8 @@ class WebModel:
         cursor=SqlClass.query(SqlClass, sql, self.conditions[1], self.connection_id)
         
         if cursor.rowcount>0:
+            
+            self.last_id=cursor.lastrowid
             
             return True
         else:
@@ -324,9 +329,9 @@ class WebModel:
         
         return cursor.fetchone()
     
-    def insert_id(self, cursor):
+    def insert_id(self):
         
-        return cursor.lastrowid
+        return self.last_id
     
     def element_exists(self, id):
         
@@ -562,8 +567,8 @@ class WebModel:
         
     # Method for drop sql tables and related
     
-    def drop_table(name):
-        pass
+    def drop(self):
+        return WebModel.query(WebModel, 'DROP TABLE '+self.name, [], self.connection_id)
     
     #Return an array with all fields
     
@@ -692,6 +697,14 @@ class WebModel:
         for k,r in self.fields.items():
             self.fields[k].required=r
 
+    #Choose all fields to updated
+    
+    def set_valid_fields(self, fields={}):
+        
+        if len(fields)==0:
+            fields=self.fields.keys()
+            
+        self.valid_fields=fields
     
     #Create a form based in table.
     
