@@ -383,8 +383,16 @@ class WebModel:
     
     def select_to_array(self, fields_selected=[], raw_query=0):
         
-        if len(fields_selected) > 0 and (self.name_field_id not in fields_selected):
+        if len(fields_selected)==0:
+            fields_selected=self.fields.keys()
+        
+        if (self.name_field_id not in fields_selected):
             fields_selected.append(self.name_field_id)
+            def del_row_id(row):
+                del row[self.name_field_id]
+        else:
+            def del_row_id(row):
+                pass
         
         cursor=self.select(fields_selected, raw_query)
         
@@ -393,6 +401,7 @@ class WebModel:
         for row in cursor:
             
             results[row[self.name_field_id]]=row
+            del_row_id(results[row[self.name_field_id]])
         
         return results
         

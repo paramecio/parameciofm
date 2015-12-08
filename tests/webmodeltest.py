@@ -49,6 +49,8 @@ class TestWebModelMethods(unittest.TestCase):
         
         self.assertEqual(model.select_a_row_where(['title']), {'title': 'Example title Updated'})
         
+        self.assertEqual(model.select_to_array(['title', 'content']), {1: {'title': 'Example title Updated', 'content': 'New content Updated'}})
+        
         model.yes_reset_conditions=True
         
         model.reset_conditions()
@@ -60,7 +62,6 @@ class TestWebModelMethods(unittest.TestCase):
         row=model.fetch(cur)
         
         self.assertEqual(row, {'id': 1, 'title': 'Example title Updated', 'content': 'New content Updated'})
-        
         
         self.assertTrue(model.element_exists(1))
         
