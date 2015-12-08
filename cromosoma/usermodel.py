@@ -30,6 +30,8 @@ class UserModel(WebModel):
             
             repeat_password.label=I18n.lang('common', 'repeat_password', 'Repeat Password')
             
+            repeat_password.field=self.fields['password']
+            
             self.create_form_after(self.password_field, repeat_password)
     """
     def insert(self, dict_values, external_agent=True):
@@ -116,7 +118,7 @@ class UserModel(WebModel):
             self.conditions[0]+=' AND '+self.name_field_id+'!=%s'
             self.conditions[1].append(get_id)
         
-        print(self.conditions[0])
+        
         if self.select_count()>0:
             
             self.fields[self.username_field].error=True

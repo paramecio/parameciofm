@@ -828,7 +828,7 @@ class PhangoField:
         value=WebModel.escape_sql(value)
         
         if value=="":
-            self.txt_error="The field is in blank"
+            self.txt_error="The field is empty"
             self.error=True
             
         
