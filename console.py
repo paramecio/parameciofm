@@ -115,13 +115,25 @@ def start():
             admin=input('Do you want create admin site? y/n: ')
         
             if admin=='y' or admin=='Y':
-                useradmin=UserAdmin()
                 
-                sql=useradmin.create_table()
-                if not WebModel.query(WebModel, sql):
-                    print('Error: cannot create table admin, you can create this table with padmin.py')
-                else:
-                    print('Created admin site...')
+                try:
+        
+                    shutil.copy(workdir+'/settings/config_admin.py.sample', path_settings+'/config_admin.py')
+                
+                    useradmin=UserAdmin()
+                
+                    sql=useradmin.create_table()
+                    
+                    if not WebModel.query(WebModel, sql):
+                        print('Error: cannot create table admin, you can create this table with padmin.py')
+                    else:
+                        print('Created admin site...')
+                
+                except:
+                    
+                    print('Error: cannot copy the file padmin.py. Check if exists and if you have permissions for this task')
+                
+                
         pass
     
         # Question about install admin site.
