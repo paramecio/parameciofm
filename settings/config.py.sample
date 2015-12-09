@@ -2,7 +2,7 @@
 
 # You need install cromosoma for use this.
 
-#from cromosoma.webmodel import WebModel
+from paramecio.cromosoma.webmodel import WebModel
 
 #server_used="wsgiref"
 
@@ -26,7 +26,7 @@ theme='default'
 
 #Base directory for save modules
 
-base_modules="modules"
+#base_modules="modules"
 
 #Type server used for connect to the internet...
 
@@ -38,7 +38,7 @@ default_module="welcome"
 
 #Modules with permissions to access for users
 
-modules=['welcome']
+modules=['paramecio.modules.welcome']
 
 #Activate sessions?
 

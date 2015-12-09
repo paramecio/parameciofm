@@ -5,7 +5,7 @@ import os
 import shutil
 import getpass
 from pathlib import Path
-from paramecio.cromosoma import WebModel
+from paramecio.cromosoma.webmodel import WebModel
 from paramecio.modules.admin.models.admin import UserAdmin
 
 def start():
@@ -73,7 +73,7 @@ def start():
         
         host_db=input('MySQL database server host, by default localhost: ').strip()
         
-        db=input('MySQL database name, by default paramecio: ').strip()
+        db=input('MySQL database name, by default paramecio_db: ').strip()
         
         user_db=input('MySQL database user, by default root: ').strip()
         
@@ -95,11 +95,33 @@ def start():
             f.close()
         
         #user=UserAdmin()
+
+        #Create db
         
-        sql='create database '+
+        if db=="":
+            db='paramecio_db'
         
-        if not WebModel.query(WebModel, sql)
+        WebModel.connections={'default': {'name': 'default', 'host': host_db, 'user': user_db, 'password': pass_db, 'db': '', 'charset': 'utf8mb4', 'set_connection': False} }
         
+        sql='create database '+db
+        
+        if not WebModel.query(WebModel, sql):
+            print('Error: cannot create database, check the data of database')
+        
+        else:
+            
+            WebModel.query(WebModel, 'use '+db)
+            
+            admin=input('Do you want create admin site? y/n: ')
+        
+            if admin=='y' or admin=='Y':
+                useradmin=UserAdmin()
+                
+                sql=useradmin.create_table()
+                if not WebModel.query(WebModel, sql):
+                    print('Error: cannot create table admin, you can create this table with padmin.py')
+                else:
+                    print('Created admin site...')
         pass
     
         # Question about install admin site.
