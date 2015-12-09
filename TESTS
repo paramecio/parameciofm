@@ -1,0 +1,6 @@
+# Tests execution
+
+For execute the tests you can use this command:
+
+
+python3 -m unittest PYTHON_PATH/paramecio/tests/nameoftest.py
