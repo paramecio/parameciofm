@@ -5,13 +5,14 @@ import os
 import shutil
 import getpass
 from pathlib import Path
+from paramecio.cromosoma import WebModel
 from paramecio.modules.admin.models.admin import UserAdmin
 
 def start():
 
     parser=argparse.ArgumentParser(description='A tool for create new paramecio sites')
 
-    parser.add_argument('--path', help='The path where the paramecio site is created', required=True)
+    parser.add_argument('--path', help='The path where the paramecio site is located', required=True)
 
     args=parser.parse_args()
     
@@ -72,6 +73,8 @@ def start():
         
         host_db=input('MySQL database server host, by default localhost: ').strip()
         
+        db=input('MySQL database name, by default paramecio: ').strip()
+        
         user_db=input('MySQL database user, by default root: ').strip()
         
         pass_db=getpass.getpass('MySQL database password, by default "": ').strip()
@@ -91,9 +94,15 @@ def start():
             f.write("\n\n"+connection)
             f.close()
         
+        #user=UserAdmin()
+        
+        sql='create database '+
+        
+        if not WebModel.query(WebModel, sql)
+        
         pass
     
-    # Question about install admin site.
+        # Question about install admin site.
 
 
 if __name__=="__main__":
