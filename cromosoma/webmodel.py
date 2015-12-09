@@ -889,7 +889,13 @@ class PrimaryKeyField(PhangoField):
         if value=='':
             value='0'
         
-        value=str(int(value))
+        try:
+        
+            value=str(int(value))
+        
+        except:
+            
+            value=0
         
         if value==0:
             self.txt_error="The value is zero"
