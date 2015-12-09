@@ -28,7 +28,7 @@ def start():
     except:
         
         print('Error: cannot create the directory. Check if exists and if you have permissions')
-
+        exit()
     # Create folder settings and copy index.py, admin.py 
     
     path_settings=args.path+'/settings'
@@ -87,13 +87,6 @@ def start():
             
             user_db='root'
         
-        
-        connection="WebModel.connections={'default': {'name': 'default', 'host': '"+host_db+"', 'user': '"+user_db+"', 'password': '"+pass_db+"', 'db': 'example', 'charset': 'utf8mb4', 'set_connection': False} }"
-        
-        with open(path_settings+'/config.py', 'a') as f:
-            f.write("\n\n"+connection)
-            f.close()
-        
         #user=UserAdmin()
 
         #Create db
@@ -102,6 +95,12 @@ def start():
             db='paramecio_db'
         
         WebModel.connections={'default': {'name': 'default', 'host': host_db, 'user': user_db, 'password': pass_db, 'db': '', 'charset': 'utf8mb4', 'set_connection': False} }
+        
+        connection_code="WebModel.connections={'default': {'name': 'default', 'host': '"+host_db+"', 'user': '"+user_db+"', 'password': '"+pass_db+"', 'db': '"+db+"', 'charset': 'utf8mb4', 'set_connection': False} }"
+        
+        with open(path_settings+'/config.py', 'a') as f:
+            f.write("\n\n"+connection_code)
+            f.close()
         
         sql='create database '+db
         
@@ -127,6 +126,22 @@ def start():
                     if not WebModel.query(WebModel, sql):
                         print('Error: cannot create table admin, you can create this table with padmin.py')
                     else:
+                        
+                        # Add admin module to config
+                        with open(path_settings+'/config.py', 'r') as f:
+                            
+                            config_text=f.read()
+                            
+                            f.close()
+                        
+                        config_text=config_text.replace("modules=['paramecio.modules.welcome']", "modules=['paramecio.modules.welcome', 'paramecio.modules.admin']")
+                        
+                        with open(path_settings+'/config.py', 'w') as f:
+                            
+                            f.write(config_text)
+                            
+                            f.close()
+                        
                         print('Created admin site...')
                 
                 except:
