@@ -1,18 +1,21 @@
 #!/usr/bin/python3
 
-from settings import config
+from importlib import import_module
 
 def load_lang(*args):
     
     for module in args:
-        
-        if module in config.modules:
     
-            lang_path=config.base_modules+'.'+module+'.i18n'
-            
-        else:
-            lang_path='i18n'
-
+        lang_path=module+'.i18n'
+        
+        try: 
+            i18n_module=import_module(module)
+        
+            return True
+        
+        except:
+            return False
+        
        # here load the language 
         
 

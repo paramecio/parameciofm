@@ -8,7 +8,6 @@ from paramecio.cromosoma.extrafields.emailfield import EmailField
 from paramecio.cromosoma.extrafields.passwordfield import PasswordField
 
 class PrivilegesField(corefields.IntegerField):
-    pass
 
     def show_formatted(self, value):
         
