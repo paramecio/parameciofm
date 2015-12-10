@@ -1,0 +1,8 @@
+include paramecio/*.py
+include README.md
+include LICENSE
+include REQUIREMENTS
+recursive-include paramecio/citoplasma *
+recursive-include paramecio/frontend *
+recursive-include paramecio/cromosoma *
+recursive-include paramecio/settings *
