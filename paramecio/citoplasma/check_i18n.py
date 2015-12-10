@@ -11,7 +11,7 @@ lang_p=re.compile()
 
 def start():
     
-    # Module to search and file where save the file.
+    # Module to search a file where save the file.
     
     scandir('.')
     
