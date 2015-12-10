@@ -14,6 +14,8 @@ def start():
 
     parser.add_argument('--path', help='The path where the paramecio site is located', required=True)
 
+    parser.add_argument('--symlink', help='Set if create direct symlink to paramecio in new site', required=False, nargs='?', const='1')
+
     args=parser.parse_args()
     
     workdir=os.path.dirname(os.path.abspath(__file__))
@@ -64,6 +66,13 @@ def start():
     except:
         
         print('Error: cannot copy the file padmin.py. Check if exists and if you have permissions for this task')
+    
+    if args.symlink!=None:
+        try:
+            os.symlink(workdir, args.path+'/paramecio', True)
+            
+        except:
+            print('Error: cannot symlink paramecio in new site')
     
     # Question about mysql configuration? If yes, install configuration
     
