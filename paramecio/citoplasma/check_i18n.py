@@ -40,12 +40,14 @@ def scandir(path):
             # Open file
             # obtain modules, keys, and default text
 
-    # Open all files in a loop with modules from dictionary created from open files, if module path is not specified, the file is in paramecio.i18n. With module path the language files are saved in i18n directory into the path, for example if path is modules/panel, the files are saved in modules/panel/i18n/example.py. If key option is saved then only saved lang with keys selected. Normally you only need a file by module and by default. key option is the last member of path. For example, you can create a language file for a module and use in other module, but don't extract key used in the other module language file used. 
+    #Open all files in path specified. If not specified, see in all files recursively in path.
     
-    # Load array from file, if file not exists, is created
+    #Extract lang and I18n.lang and fill i18n property that save the values of language texts, only extracs key specified in option key, if not specified, extract last member of path key.
+
+    # Open all language files in a loop with modules from dictionary created from open files, if module path is not specified, the file is in paramecio.i18n. With module path the language files are saved in i18n directory into the path, for example if path is modules/panel, the files are saved in modules/panel/i18n/example.py. If key option is saved then only saved lang with keys selected. Normally you only need a file by module and by default. key option is the last member of path. For example, you can create a language file for a module and use in other module, but don't extract key used in the other module language file used. 
     
-    # If not exists the key with text, add them in arrays loaded from created array
+    # THe array i18n is overwrited loading the lang files.
     
-    # Rewrite the file with the new arrys and close the file. Open next file
+    # Save the files in specified path.
     
     
