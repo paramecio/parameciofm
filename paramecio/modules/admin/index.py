@@ -22,7 +22,8 @@ from collections import OrderedDict
 
 t=ptemplate('admin')
 
-load_lang('admin', 'common')
+load_lang('paramecio.admin', 'paramecio.common')
+
 @get('/'+config.admin_folder)
 @get('/'+config.admin_folder+'/<module>')
 @post('/'+config.admin_folder+'/<module>')

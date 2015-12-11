@@ -7,7 +7,7 @@ pattern=re.compile('^\w+\.py$')
 
 ignored=re.compile('^[__|\.].*$')
 
-lang_p=re.compile()
+lang_p=re.compile("I18n.lang\('(.*)',\s+'(.*)',\s+'(.*)'\)")
 
 def start():
     

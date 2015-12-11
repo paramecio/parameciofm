@@ -6,20 +6,24 @@ def load_lang(*args):
     
     for module in args:
     
-        lang_path=module+'.i18n'
+        lang_path=module+'.i18n.'+I18n.default_lang+'.'+module.split('.')[-1]
         
         try: 
             i18n_module=import_module(module)
         
-            return True
+            pass
         
         except:
-            return False
+            pass
         
        # here load the language 
         
 
 class I18n:
+    
+    default_lang='en-US'
+    
+    dict_i18n=['en-US', 'es-ES']
     
     l={}
     
