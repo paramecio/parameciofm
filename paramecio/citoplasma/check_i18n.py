@@ -2,22 +2,70 @@
 
 import os
 import re
+from pathlib import Path
+from importlib import import_module
+from paramecio.citoplasma.i18n import I18n
+from settings import config
 
-pattern=re.compile('^\w+\.py$')
+pattern=re.compile('^\w+\.(py|html|phtml)$')
 
 ignored=re.compile('^[__|\.].*$')
 
-lang_p=re.compile("I18n.lang\('(.*)',\s+'(.*)',\s+'(.*)'\)")
+lang_p=re.compile("I18n\.lang\('(.*?)',\s+'(.*?)',\s+'(.*?)'\)")
+lang_t=re.compile("\${lang\('(.*?)',\s+'(.*?)',\s+'(.*?)'\)\}")
 
 def start():
     
     # Module to search a file where save the file.
     
-    scandir('.')
+    path_save='paramecio/i18n'
+    
+    scandir('.', path_save)
+    
+    #Save the files
+
+    file_lang=''
+    
+    for module in I18n.l.keys():
+        
+        for lang in I18n.dict_i18n:
+        
+            try:
+                path_module=path_save.replace('/', '.')+'.'+lang+'.'+module
+                
+                import_module(path_module)
+        
+            except:
+                pass
+            
+            # Save in a file
+            real_path=path_save+'/'+lang
+            
+            if not os.path.isdir(real_path):
+            
+                p=Path(real_path)
+                p.mkdir(0o755, True)
+                
+            
+            file_lang="#!/usr/bin/python3\n\n"
+            
+            file_lang+="from paramecio.citoplasma.i18n import I18n\n\n"
+            
+            for key, text in I18n.l[module].items():
+
+                file_lang+="I18n.l['"+module+"']['"+key+"']='"+text+"'\n\n"
+            
+            final_file=real_path+'/'+module+'.py'
+            
+            f=open(final_file, 'w')
+            
+            f.write(file_lang)
+            
+            f.close()
     
     pass
 
-def scandir(path):
+def scandir(path, module_search=''):
     
     list=os.listdir(path)
     
@@ -32,10 +80,34 @@ def scandir(path):
             
             f=open(new_path)
             
-            
+            for line in f:
+                
+                match_p=lang_p.search(line)
+                match_t=lang_t.search(line)
+                
+                if match_p!=None:
+                     #print(match_p.group(1))
+                     
+                    module=match_p.group(1)
+                    symbol=match_p.group(2)
+                    text_default=match_p.group(3)
+                    
+                    I18n.l[module]=I18n.l.get(module, {})
+
+                    I18n.l[module][symbol]=I18n.l[module].get(symbol, text_default)
+                    
+                if match_t!=None:
+                    
+                    module=match_t.group(1)
+                    symbol=match_t.group(2)
+                    text_default=match_t.group(3)
+                    
+                    I18n.l[module]=I18n.l.get(module, {})
+
+                    I18n.l[module][symbol]=I18n.l[module].get(symbol, text_default)
             
             f.close()
-            
+                
             #print('archivo->'+path+'/'+name)
             # Open file
             # obtain modules, keys, and default text
@@ -49,5 +121,9 @@ def scandir(path):
     # THe array i18n is overwrited loading the lang files.
     
     # Save the files in specified path.
+
+if __name__=='__main__':
+    
+    start()
     
     

@@ -6,11 +6,11 @@ def load_lang(*args):
     
     for module in args:
     
-        lang_path=module+'.i18n.'+I18n.default_lang+'.'+module.split('.')[-1]
+        lang_path=module[0]+'.i18n.'+I18n.default_lang+'.'+module[1]
         
         try: 
-            i18n_module=import_module(module)
-        
+            i18n_module=import_module(lang_path)
+            
             pass
         
         except:

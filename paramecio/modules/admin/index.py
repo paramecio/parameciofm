@@ -22,7 +22,7 @@ from collections import OrderedDict
 
 t=ptemplate('admin')
 
-load_lang('paramecio.admin', 'paramecio.common')
+load_lang(['paramecio', 'admin'], ['paramecio', 'common'])
 
 @get('/'+config.admin_folder)
 @get('/'+config.admin_folder+'/<module>')
@@ -75,7 +75,7 @@ def home(module=''):
                     return t.load_template('admin/content.html', title=menu[module][0], content_index=new_module.admin(t), menu=menu)
                     
                 else:
-                    return t.load_template('admin/index.html', title=I18n.lang('admin', 'welcome_to_paramecio', "Welcome to Paramecio Admin!!!"), menu=menu)
+                    return t.load_template('admin/index.html', title=I18n.lang('admin', 'welcome_to_paramecio', 'Welcome to Paramecio Admin!!!'), menu=menu)
                 
         else:
             
