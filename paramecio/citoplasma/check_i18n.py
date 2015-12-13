@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+import argparse
 import os
 import re
 from pathlib import Path
@@ -16,11 +17,42 @@ lang_t=re.compile("\${lang\('(.*?)',\s+'(.*?)',\s+'(.*?)'\)\}")
 
 def start():
     
+    global lang_p
+    global lang_t
+    
     # Module to search a file where save the file.
+    
+    parser = argparse.ArgumentParser(description='A tool for create python language files')
+    
+    parser.add_argument('--module', help='The module where search lang files', required=False)
+    
+    args = parser.parse_args()
+    
+    #Without arguments, search in paramecio directory all language files
     
     path_save='paramecio/i18n'
     
-    scandir('.', path_save)
+    path='paramecio'
+    
+    if args.module!=None:
+        
+        path=args.module
+        
+        path_save=args.module+'/i18n'
+        
+        module_base=os.path.basename(args.module)
+        
+        lang_p=re.compile("I18n\.lang\('("+module_base+"?)',\s+'(.*?)',\s+'(.*?)'\)")
+        lang_t=re.compile("\${lang\('("+module_base+"?)',\s+'(.*?)',\s+'(.*?)'\)\}")
+    
+    
+    if not os.path.isdir(path):
+        
+        print("Error: directory to scan doesn't exists")
+    
+        exit(1)
+    
+    scandir(path, path_save)
     
     #Save the files
 
