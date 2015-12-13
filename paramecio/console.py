@@ -67,6 +67,14 @@ def start():
         
         print('Error: cannot copy the file padmin.py. Check if exists and if you have permissions for this task')
     
+    try:
+        
+        shutil.copy(workdir+'/frontend/i18nadmin.py', args.path+'/i18nadmin.py')
+        
+    except:
+        
+        print('Error: cannot copy the file i18nadmin.py. Check if exists and if you have permissions for this task')
+    
     if args.symlink!=None:
         try:
             os.symlink(workdir, args.path+'/paramecio', True)
