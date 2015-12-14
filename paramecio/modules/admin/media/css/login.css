@@ -23,7 +23,7 @@ body {
     
 }
 
-input {
+input[type="text"], input[type="password"] {
     
     width:100%;
     border: solid #bcbcbc 1px;

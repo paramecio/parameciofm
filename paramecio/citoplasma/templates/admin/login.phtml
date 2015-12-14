@@ -21,7 +21,7 @@
                 url: "${make_url('admin/login')}",
                 method: "POST",
                 dataType: "json",
-                data: {'username': $('#username_form').val(), 'password': $('#password_form').val()}
+                data: {'username': $('#username_form').val(), 'password': $('#password_form').val(), 'remember_login': $('#remember_login').val()}
                 }).done(function(data) {
                 
                     if(data.error==0)
@@ -56,6 +56,7 @@
                 ${lang('admin', 'login', 'Paramecio Login')}
             </div>
             ${forms|n}
+            <div class="form">${lang('admin', 'remember_login', 'Remember login?')} <input type="checkbox" id="remember_login" name="remember_login" value="1"></div>
             <div id="submit_block">
                 <input type="submit" value="${lang('common', 'login', 'Login')}" class="submit" id="login_submit"/>
                 <span id="loading">&nbsp;</span>

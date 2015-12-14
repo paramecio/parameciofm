@@ -40,6 +40,8 @@ class UserAdmin(UserModel):
 
         self.register(corefields.CharField('token_recovery'))
 
+        self.register(corefields.CharField('token_login'))
+
         self.register(PrivilegesField('privileges'))
 
 """

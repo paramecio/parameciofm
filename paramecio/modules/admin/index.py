@@ -5,7 +5,7 @@ from paramecio.modules.admin.models.admin import UserAdmin
 from paramecio.citoplasma.i18n import load_lang, I18n
 from paramecio.citoplasma.urls import make_url, add_get_parameters
 from paramecio.citoplasma.sessions import get_session
-from bottle import get,post
+from bottle import get,post,response
 from settings import config
 from settings import config_admin
 from paramecio.citoplasma.lists import SimpleList
@@ -16,6 +16,9 @@ from paramecio.cromosoma.coreforms import PasswordForm
 from importlib import import_module, reload
 from bottle import redirect
 from collections import OrderedDict
+from time import time
+from hashlib import sha512
+from os import urandom
 
 #from citoplasma.login import LoginClass
 # Check login
@@ -118,8 +121,8 @@ def login():
     
     GetPostFiles.obtain_post()
     
-    GetPostFiles.post.get('username', '')
-    GetPostFiles.post.get('password', '')
+    GetPostFiles.post['username']=GetPostFiles.post.get('username', '')
+    GetPostFiles.post['password']=GetPostFiles.post.get('password', '')
     
     username=user_admin.fields['username'].check(GetPostFiles.post['username'])
     
@@ -141,6 +144,31 @@ def login():
             s['id']=arr_user['id']
             s['login']=1
             s['privileges']=arr_user['privileges']
+            
+            remember_login=GetPostFiles.post.get('remember_login', '0')
+            
+            if remember_login=='1':
+                
+                timestamp=time()+315360000
+                
+                random_text=sha512(urandom(10)).hexdigest()
+                
+                #Update user with autologin token
+                
+                user_admin.check_user=False
+                
+                user_admin.conditions=['WHERE username=%s', [username]]
+                
+                user_admin.valid_fields=['token_login']
+                
+                user_admin.reset_require()
+                
+                if user_admin.update({'token_login': random_text}):
+                    
+                    response.set_cookie('remember_login', random_text, expires=timestamp)
+                else:
+                    print(user_admin.query_error)
+            
             
             return {'error': 0}
         else:

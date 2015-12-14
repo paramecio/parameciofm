@@ -632,35 +632,44 @@ class WebModel:
                 
                 self.fields[k].error=False
                 
-                if (self.fields[k].protected==None or self.fields[k].protected==False or external_agent==False) and k in self.valid_fields:
+                if (self.fields[k].protected==None or self.fields[k].protected==False or external_agent==False):
                     
-                    self.fields[k].update=updated_field[errors_set]
-                    
-                    value=self.fields[k].check(value)
-                    
-                    if self.fields[k].check_blank==False or self.updated==False:
+                    if k in self.valid_fields:
                         
-                        # If error checking, value=False
+                        self.fields[k].update=updated_field[errors_set]
                         
-                        if self.fields[k].error==True and self.fields[k].required==True:
+                        value=self.fields[k].check(value)
+                        
+                        if self.fields[k].check_blank==False or self.updated==False:
                             
-                            #Error, need this fields.
-                            self.num_errors+=1
+                            # If error checking, value=False
                             
-                            self.fields_errors[k].append("Error: "+v.label+" field required")
-                            
-                            error=True
-                            
-                        else:
+                            if self.fields[k].error==True and self.fields[k].required==True:
+                                
+                                #Error, need this fields.
+                                self.num_errors+=1
+                                
+                                self.fields_errors[k].append("Error: "+v.label+" field required")
+                                
+                                error=True
+                                
+                            else:
 
-                            fields.append(k)
-                            
-                            final_value=self.fields[k].quot_open+value+self.fields[k].quot_close
-                            
-                            values.append(final_value)
-                            
-                            update_values.append(f_update(k, final_value))
-                        
+                                fields.append(k)
+                                
+                                final_value=self.fields[k].quot_open+value+self.fields[k].quot_close
+                                
+                                values.append(final_value)
+                                
+                                update_values.append(f_update(k, final_value))
+                    else:
+                        self.num_errors+=1
+
+                        self.fields_errors[k].append("Error: "+self.fields[k].label+" is not in valid fields")
+                        self.fields[k].error=True
+                        self.fields[k].txt_error="Error: "+self.fields[k].label+" is not in valid fields"
+                        error=True
+                       
                 else:
                     self.num_errors+=1
                     
@@ -702,7 +711,7 @@ class WebModel:
         for k, v in self.fields.items():
 
             self.required_save[k]=self.fields[k].required
-            self.fields[k].required=0
+            self.fields[k].required=False
     
     
     #Reload the require field in fields
@@ -777,9 +786,9 @@ class PhangoField:
         
         self.size=size
         
-        # Protected, if this value != None, cannot use it in insert or update.
+        # Protected, if this value != False, cannot use it in insert or update.
     
-        self.protected=None
+        self.protected=False
         
         # $quote_open is used if you need a more flexible sql sentence, 
         # @warning USE THIS FUNCTION IF YOU KNOW WHAT YOU ARE DOING
