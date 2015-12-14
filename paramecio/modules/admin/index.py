@@ -18,7 +18,7 @@ from bottle import redirect
 from collections import OrderedDict
 from time import time
 from hashlib import sha512
-from os import urandom
+from os import urandom, path
 
 #from citoplasma.login import LoginClass
 # Check login
@@ -29,7 +29,9 @@ def create_key_encrypt():
 
 key_encrypt=create_key_encrypt()
 
-t=ptemplate('admin')
+module_admin=path.dirname(__file__)
+
+t=ptemplate(__file__)
 
 load_lang(['paramecio', 'admin'], ['paramecio', 'common'])
 
