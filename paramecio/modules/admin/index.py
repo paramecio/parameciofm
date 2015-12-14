@@ -23,6 +23,12 @@ from os import urandom
 #from citoplasma.login import LoginClass
 # Check login
 
+def create_key_encrypt():
+    
+    return sha512(urandom(10)).hexdigest()
+
+key_encrypt=create_key_encrypt()
+
 t=ptemplate('admin')
 
 load_lang(['paramecio', 'admin'], ['paramecio', 'common'])
@@ -45,6 +51,8 @@ def home(module=''):
         s['id']=s.get('id', 0)
         
         user_admin.conditions=['WHERE id=%s', [s['id']]]
+        
+        # Check if user id exists in session
         
         c=user_admin.select_count()
         
@@ -92,11 +100,11 @@ def home(module=''):
         
         if c>0:
             
-            if request.get_cookie("remember_login"):
+            if request.get_cookie("remember_login", secret=key_encrypt):
             
                  #check login
             
-                 token_login=request.get_cookie("remember_login")
+                 token_login=request.get_cookie("remember_login", secret=key_encrypt)
             
                  user_admin.conditions=['WHERE token_login=%s', [token_login]]
     
@@ -188,7 +196,7 @@ def login():
                 
                 if user_admin.update({'token_login': random_text}):
                     
-                    response.set_cookie('remember_login', random_text, expires=timestamp)
+                    response.set_cookie('remember_login', random_text, expires=timestamp, secret=key_encrypt)
                 #else:
                     #print(user_admin.query_error)
             
@@ -196,10 +204,7 @@ def login():
             return {'error': 0}
         else:
             return {'error': 1}
-            
-    
-    
-    
+
 
 @post('/'+config.admin_folder+'/register')
 def register():
@@ -256,7 +261,7 @@ def logout():
         del s['login']
         del s['privileges']
     
-    if request.get_cookie("remember_login"):
+    if request.get_cookie("remember_login", secret=key_encrypt):
            
         # delete cookie
         response.delete_cookie("remember_login")
@@ -276,6 +281,7 @@ def set_extra_forms_user(user_admin):
     user_admin.forms['repeat_password'].required=1
     
     user_admin.forms['repeat_password'].label=I18n.lang('common', 'repeat_password', 'Repeat Password')
+
 
 
     """user_admin.create_forms()
