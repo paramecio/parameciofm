@@ -17,15 +17,11 @@ from importlib import import_module, reload
 from bottle import redirect
 from collections import OrderedDict
 from time import time
-from hashlib import sha512
-from os import urandom, path
+from paramecio.citoplasma.keyutils import create_key_encrypt
+from os import path
 
 #from citoplasma.login import LoginClass
 # Check login
-
-def create_key_encrypt():
-    
-    return sha512(urandom(10)).hexdigest()
 
 key_encrypt=create_key_encrypt()
 
