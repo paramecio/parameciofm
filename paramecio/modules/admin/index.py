@@ -5,7 +5,7 @@ from paramecio.modules.admin.models.admin import UserAdmin
 from paramecio.citoplasma.i18n import load_lang, I18n
 from paramecio.citoplasma.urls import make_url, add_get_parameters
 from paramecio.citoplasma.sessions import get_session
-from bottle import get,post,response
+from bottle import get,post,response,request
 from settings import config
 from settings import config_admin
 from paramecio.citoplasma.lists import SimpleList
@@ -92,18 +92,41 @@ def home(module=''):
         
         if c>0:
             
-            post={}
+            if request.get_cookie("remember_login"):
             
-            user_admin.yes_repeat_password=False
+                 #check login
+            
+                 token_login=request.get_cookie("remember_login")
+            
+                 user_admin.conditions=['WHERE token_login=%s', [token_login]]
+    
+                 arr_user=user_admin.select_a_row_where(['id', 'privileges'])
+                 
+                 if arr_user==False:
+                     # delete cookioe
+                     response.delete_cookie("remember_login")
+                 else:
+                     s=get_session()
+            
+                     s['id']=arr_user['id']
+                     s['login']=1
+                     s['privileges']=arr_user['privileges']
+                     
+                     redirect('/'+config.admin_folder)
+            
+            else:
+                post={}
+                
+                user_admin.yes_repeat_password=False
 
-            user_admin.fields['password'].required=True
-            
-            user_admin.create_forms(['username', 'password'])
-            
-            forms=show_form(post, user_admin.forms, t, yes_error=False)
-            
-            return t.load_template('admin/login.phtml', forms=forms)
-            
+                user_admin.fields['password'].required=True
+                
+                user_admin.create_forms(['username', 'password'])
+                
+                forms=show_form(post, user_admin.forms, t, yes_error=False)
+                
+                return t.load_template('admin/login.phtml', forms=forms)
+                
         else:
         
             post={}
@@ -166,8 +189,8 @@ def login():
                 if user_admin.update({'token_login': random_text}):
                     
                     response.set_cookie('remember_login', random_text, expires=timestamp)
-                else:
-                    print(user_admin.query_error)
+                #else:
+                    #print(user_admin.query_error)
             
             
             return {'error': 0}
@@ -232,6 +255,11 @@ def logout():
     
         del s['login']
         del s['privileges']
+    
+    if request.get_cookie("remember_login"):
+           
+        # delete cookie
+        response.delete_cookie("remember_login")
     
     redirect('/'+config.admin_folder)
     
