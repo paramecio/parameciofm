@@ -51,10 +51,10 @@ def home(module=''):
         
         s['lang']=s.get('lang', None)
         
-        lang=None
+        lang_selected=None
         
         if s['lang']!=None:
-            lang=s['lang']
+            lang_selected=s['lang']
         
         user_admin.conditions=['WHERE id=%s', [s['id']]]
         
@@ -89,7 +89,7 @@ def home(module=''):
                     if config.reloader:
                         reload(new_module)
                     
-                    return t.load_template('admin/content.html', title=menu[module][0], content_index=new_module.admin(t), menu=menu, lang=lang, arr_i18n=I18n.dict_i18n)
+                    return t.load_template('admin/content.html', title=menu[module][0], content_index=new_module.admin(t), menu=menu, lang_selected=lang_selected, arr_i18n=I18n.dict_i18n)
                     
                 else:
                     return t.load_template('admin/index.html', title=I18n.lang('admin', 'welcome_to_paramecio', 'Welcome to Paramecio Admin!!!'), menu=menu, lang=lang, arr_i18n=I18n.dict_i18n)

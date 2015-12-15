@@ -23,10 +23,16 @@ ${HeaderHTML.header_home()|n}
     <div id="header">
         <span id="title_phango">Paramecio</span> <span id="title_framework">Framework!</span> 
         <div id="languages_general">
-        % if lang!=None:
+        <%def name="select_lang(i18n, lang_selected)">
+            % if i18n==lang_selected:
+                choose_flag
+            % else:
+                no_choose_flag
+            % endif
+        </%def>
+        % if lang_selected!=None:
             % for i18n in arr_i18n:
-            
-                <a class="choose_flag" href="/change_lang/${i18n}"><img src="${make_media_url_module('images/languages/'+i18n+'.png', 'admin')}" alt="${i18n}"/></a> 
+                <a class="${select_lang(i18n, lang_selected)}" href="/change_lang/${i18n}"><img src="${make_media_url_module('images/languages/'+i18n+'.png', 'admin')}" alt="${i18n}"/></a> 
             
             % endfor 
         % endif
