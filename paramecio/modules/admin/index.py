@@ -7,7 +7,6 @@ from paramecio.citoplasma.urls import make_url, add_get_parameters
 from paramecio.citoplasma.sessions import get_session
 from bottle import get,post,response,request
 from settings import config
-from settings import config_admin
 from paramecio.citoplasma.lists import SimpleList
 from paramecio.citoplasma.generate_admin_class import GenerateAdminClass
 from paramecio.citoplasma.httputils import GetPostFiles
@@ -23,18 +22,20 @@ from os import path
 #from citoplasma.login import LoginClass
 # Check login
 
+load_lang(['paramecio', 'admin'], ['paramecio', 'common'])
+
 key_encrypt=create_key_encrypt()
 
 module_admin=path.dirname(__file__)
 
 t=ptemplate(__file__)
 
-load_lang(['paramecio', 'admin'], ['paramecio', 'common'])
-
 @get('/'+config.admin_folder)
 @get('/'+config.admin_folder+'/<module>')
 @post('/'+config.admin_folder+'/<module>')
 def home(module=''):
+    
+    from settings import config_admin
     
     t.clean_header_cache()
     
@@ -47,6 +48,13 @@ def home(module=''):
     if 'login' in s:
         
         s['id']=s.get('id', 0)
+        
+        s['lang']=s.get('lang', None)
+        
+        lang=None
+        
+        if s['lang']!=None:
+            lang=s['lang']
         
         user_admin.conditions=['WHERE id=%s', [s['id']]]
         
@@ -81,10 +89,10 @@ def home(module=''):
                     if config.reloader:
                         reload(new_module)
                     
-                    return t.load_template('admin/content.html', title=menu[module][0], content_index=new_module.admin(t), menu=menu)
+                    return t.load_template('admin/content.html', title=menu[module][0], content_index=new_module.admin(t), menu=menu, lang=lang, arr_i18n=I18n.dict_i18n)
                     
                 else:
-                    return t.load_template('admin/index.html', title=I18n.lang('admin', 'welcome_to_paramecio', 'Welcome to Paramecio Admin!!!'), menu=menu)
+                    return t.load_template('admin/index.html', title=I18n.lang('admin', 'welcome_to_paramecio', 'Welcome to Paramecio Admin!!!'), menu=menu, lang=lang, arr_i18n=I18n.dict_i18n)
                 
         else:
             
@@ -180,7 +188,7 @@ def login():
                 
                 timestamp=time()+315360000
                 
-                random_text=sha512(urandom(10)).hexdigest()
+                random_text=create_key_encrypt()
                 
                 #Update user with autologin token
                 

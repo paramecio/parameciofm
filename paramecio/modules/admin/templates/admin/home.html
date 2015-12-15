@@ -20,7 +20,18 @@ ${HeaderHTML.header_home()|n}
 </div>
 
 <div id="center_body">
-    <div id="header"><span id="title_phango">Paramecio</span> <span id="title_framework">Framework!</span> </div>
+    <div id="header">
+        <span id="title_phango">Paramecio</span> <span id="title_framework">Framework!</span> 
+        <div id="languages_general">
+        % if lang!=None:
+            % for i18n in arr_i18n:
+            
+                <a class="" href="/change_lang/${i18n}"><img src="" alt="${i18n}"/></a> 
+            
+            % endfor 
+        % endif
+        </div>
+    </div>
     <div class="content_admin">
         <div id="menu">
             <div class="menu_title">${lang('admin', 'applications', 'Applications')}</div>

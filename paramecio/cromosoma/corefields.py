@@ -33,6 +33,15 @@ class CharField(PhangoField):
     
     pass
 
+class TextField(PhangoField):
+    
+    def __init__(self, name, required=False):
+        super().__init__(name, 11, required)
+    
+    def get_type_sql(self):
+
+        return 'TEXT NOT NULL DEFAULT ""'
+
 class ForeignKeyField(IntegerField):
     
     def __init__(self, name, related_table, size=11, required=False, identifier_field='id', named_field="id", select_fields=[]):

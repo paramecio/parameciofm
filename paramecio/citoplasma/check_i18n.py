@@ -15,6 +15,8 @@ ignored=re.compile('^[__|\.].*$')
 lang_p=re.compile("I18n\.lang\('(.*?)',\s+'(.*?)',\s+'(.*?)'\)")
 lang_t=re.compile("\${lang\('(.*?)',\s+'(.*?)',\s+'(.*?)'\)\}")
 
+tmp_lang={}
+
 def start():
     
     global lang_p
@@ -58,42 +60,57 @@ def start():
 
     file_lang=''
     
-    for module in I18n.l.keys():
+    for module in tmp_lang.keys():
+        
+        # Save in a file
+        real_path=path_save
+        
+        if not os.path.isdir(real_path):
+        
+            p=Path(real_path)
+            p.mkdir(0o755, True)
+        
+        try:
+            path_module=path_save.replace('/', '.')+'.'+module
+            
+            import_module(path_module)
+            
+            #Add values to tmp lang
+            
+            #for real_key, real_text in I18n.l[lang][module].items():
+                #tmp_lang[module][real_key]=real_text
+                
+        except:
+            pass
+            
+        
+        file_lang="#!/usr/bin/python3\n\n"
+        
+        file_lang+="from paramecio.citoplasma.i18n import I18n\n\n"
         
         for lang in I18n.dict_i18n:
-        
-            try:
-                path_module=path_save.replace('/', '.')+'.'+lang+'.'+module
+            
+            file_lang+="I18n.l['"+lang+"']={'"+module+"': {}}\n\n"
+            
+            I18n.l[lang]=I18n.l.get(lang, {})
+            
+            I18n.l[lang][module]=I18n.l[lang].get(module, {})
+            
+            for key, text in tmp_lang[module].items():
                 
-                import_module(path_module)
-        
-            except:
-                pass
-            
-            # Save in a file
-            real_path=path_save+'/'+lang
-            
-            if not os.path.isdir(real_path):
-            
-                p=Path(real_path)
-                p.mkdir(0o755, True)
-                
-            
-            file_lang="#!/usr/bin/python3\n\n"
-            
-            file_lang+="from paramecio.citoplasma.i18n import I18n\n\n"
-            
-            for key, text in I18n.l[module].items():
+                if not key in I18n.l[lang][module]:
+                    
+                     I18n.l[lang][module][key]=text
 
-                file_lang+="I18n.l['"+module+"']['"+key+"']='"+text+"'\n\n"
+                file_lang+="I18n.l['"+lang+"']['"+module+"']['"+key+"']='"+I18n.l[lang][module][key]+"'\n\n"
             
             final_file=real_path+'/'+module+'.py'
             
-            f=open(final_file, 'w')
-            
-            f.write(file_lang)
-            
-            f.close()
+        f=open(final_file, 'w')
+        
+        f.write(file_lang)
+        
+        f.close()
     
     pass
 
@@ -124,9 +141,9 @@ def scandir(path, module_search=''):
                     symbol=match_p.group(2)
                     text_default=match_p.group(3)
                     
-                    I18n.l[module]=I18n.l.get(module, {})
+                    tmp_lang[module]=tmp_lang.get(module, {})
 
-                    I18n.l[module][symbol]=I18n.l[module].get(symbol, text_default)
+                    tmp_lang[module][symbol]=tmp_lang[module].get(symbol, text_default)
                     
                 if match_t!=None:
                     
@@ -134,9 +151,9 @@ def scandir(path, module_search=''):
                     symbol=match_t.group(2)
                     text_default=match_t.group(3)
                     
-                    I18n.l[module]=I18n.l.get(module, {})
+                    tmp_lang[module]=tmp_lang.get(module, {})
 
-                    I18n.l[module][symbol]=I18n.l[module].get(symbol, text_default)
+                    tmp_lang[module][symbol]=tmp_lang[module].get(symbol, text_default)
             
             f.close()
                 

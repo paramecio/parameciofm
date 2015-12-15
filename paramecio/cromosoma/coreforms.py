@@ -37,6 +37,10 @@ class TextForm(BaseForm):
     
     def __init__(self, name, value):
         super(TextForm, self).__init__(name, value)
+        
+    def form(self):
+        
+        return '<textarea class="'+self.css+'" name="'+self.name+'" id="'+self.name+'_form">'+self.setform(self.default_value)+'</textarea>'
 
 class PasswordForm(BaseForm):
     
