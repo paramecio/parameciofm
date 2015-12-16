@@ -33,7 +33,12 @@ t=ptemplate(__file__)
 @get('/'+config.admin_folder)
 @get('/'+config.admin_folder+'/<module>')
 @post('/'+config.admin_folder+'/<module>')
-def home(module=''):
+@get('/'+config.admin_folder+'/<module>/<submodule>')
+@post('/'+config.admin_folder+'/<module>/<submodule>')
+def home(module='', submodule=''):
+    
+    if submodule!='':
+        module+='/'+submodule
     
     from settings import config_admin
     
@@ -84,15 +89,23 @@ def home(module=''):
                     
                     #Load module
                     
-                    new_module=import_module(menu[module][1])
                     
-                    if config.reloader:
-                        reload(new_module)
+                    try:
+                        new_module=import_module(menu[module][1])
+                    
+                        if config.reloader:
+                            reload(new_module)
+                    
+                    except ImportError:
+                        
+                        return "No exists admin module"
+                        
+                        
                     
                     return t.load_template('admin/content.html', title=menu[module][0], content_index=new_module.admin(t), menu=menu, lang_selected=lang_selected, arr_i18n=I18n.dict_i18n)
                     
                 else:
-                    return t.load_template('admin/index.html', title=I18n.lang('admin', 'welcome_to_paramecio', 'Welcome to Paramecio Admin!!!'), menu=menu, lang=lang, arr_i18n=I18n.dict_i18n)
+                    return t.load_template('admin/index.html', title=I18n.lang('admin', 'welcome_to_paramecio', 'Welcome to Paramecio Admin!!!'), menu=menu, lang_selected=lang_selected, arr_i18n=I18n.dict_i18n)
                 
         else:
             

@@ -33,7 +33,11 @@ class SimpleList:
         
         self.s=get_session()
         
-        #self.s['order']=self.s.get('order', 0)
+        #clean session
+        
+        self.s['order']=0
+        
+        self.s['order_field']=self.model.name_field_id
         
         self.order_by=self.order_defaults[0]
         

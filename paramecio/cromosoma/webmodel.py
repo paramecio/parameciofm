@@ -107,13 +107,15 @@ class WebModel:
     
     # A method for register the fields
     
-    def register(self, field_model):
+    def register(self, field_model, required=False):
         
         #self.fields_required[field_model]=field_model.required
         
         self.fields[field_model.name]=field_model
         
         self.fields[field_model.name].model=self
+        
+        self.fields[field_model.name].required=required
     
     # A method for create the id field.
     

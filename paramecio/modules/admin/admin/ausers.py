@@ -5,6 +5,7 @@ from paramecio.citoplasma.urls import make_url
 from paramecio.citoplasma.generate_admin_class import GenerateAdminClass
 from paramecio.citoplasma.i18n import I18n
 from paramecio.cromosoma.coreforms import SelectForm
+from settings import config
 
 def admin(t):
     

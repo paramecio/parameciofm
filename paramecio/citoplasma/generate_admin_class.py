@@ -18,7 +18,9 @@ class GenerateAdminClass:
 
         self.list=SimpleList(model, url, t)
         
-        self.arr_fields_edit=model.fields.keys()
+        self.arr_fields_edit=list(model.fields.keys())
+        
+        del self.arr_fields_edit[self.arr_fields_edit.index(model.name_field_id)]
         
         self.url=url
         
@@ -55,7 +57,7 @@ class GenerateAdminClass:
             post=None
             
             if len(self.model.forms)==0:
-                self.model.create_forms(self.arr_fields_edit)
+                self.model.create_forms()
             
             title_edit=I18n.lang('common', 'add_new_item', 'Add new item')
             
@@ -66,7 +68,12 @@ class GenerateAdminClass:
             if post==None:
                 post={}
             
-            form=show_form(post, self.model.forms, self.t, False)
+            edit_forms={}
+            
+            for key_form in self.arr_fields_edit:
+                edit_forms[key_form]=self.model.forms[key_form]
+            
+            form=show_form(post, edit_forms, self.t, False)
                 
             return self.t.load_template(self.template_insert, admin=self, title_edit=title_edit, form=form, model=self.model, id=GetPostFiles.get['id'])
         

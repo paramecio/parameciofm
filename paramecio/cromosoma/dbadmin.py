@@ -158,6 +158,9 @@ def start():
             
             old_table='old_'+table
             
+            if not old_table in WebModel.model:
+                WebModel.model[old_table]=WebModel.model[table]
+            
             for f, v in WebModel.model[table].fields.items():
                 
                 if not f in WebModel.model[old_table].fields:
