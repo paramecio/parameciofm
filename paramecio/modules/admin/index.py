@@ -75,14 +75,17 @@ def home(module='', submodule=''):
                 
                 menu=OrderedDict()
                 
-                for key, mod in config_admin.modules_admin.items():
-                    if type(mod[1]).__name__!='dict':
-                        menu[key]=mod
+                #modules_admin.append([I18n.lang('panel', 'servers_config', 'Server\'s configuration'), [I18n.lang('panel', 'servers_types', 'Server\'s types'), 'modules.panel.admin.types'], 'servers_config'])
+                
+                for mod in config_admin.modules_admin:
+                    if type(mod[1]).__name__!='list':
+                        menu[mod[2]]=mod
                     else:
-                        menu[key]=mod[0]
+                        print(mod)
+                        menu[mod[2]]=mod[0]
                         
-                        for subkey, submod in mod[1].items():
-                            menu[subkey]=submod
+                        for submod in mod[1]:
+                            menu[submod[2]]=submod
                             #pass
                         
                 if module in menu:
