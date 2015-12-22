@@ -81,7 +81,7 @@ def home(module='', submodule=''):
                     if type(mod[1]).__name__!='list':
                         menu[mod[2]]=mod
                     else:
-                        print(mod)
+                        
                         menu[mod[2]]=mod[0]
                         
                         for submod in mod[1]:

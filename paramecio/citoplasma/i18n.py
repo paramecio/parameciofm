@@ -3,6 +3,8 @@
 from importlib import import_module
 from paramecio.citoplasma.sessions import get_session
 
+yes_session=False
+
 i18n_module={}
 
 def load_lang(*args):
@@ -34,11 +36,16 @@ class I18n:
     @staticmethod
     def lang(module, symbol, text_default):
         
+        lang=I18n.default_lang
+        
         s=get_session()
         
-        s['lang']=s.get('lang', I18n.default_lang)
+        if s!=None:
         
-        lang=s['lang']
+            s['lang']=s.get('lang', I18n.default_lang)
+            
+            lang=s['lang']
+            
         
         I18n.l[lang]=I18n.l.get(lang, {})
         
