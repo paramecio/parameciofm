@@ -13,6 +13,7 @@ class EmailField(CharField):
         if not mail_pattern.match(value):
             
             self.error=True
+            value=""
             self.txt_error='No valid format'
             
         return value

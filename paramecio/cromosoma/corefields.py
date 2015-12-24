@@ -21,6 +21,7 @@ class IntegerField(PhangoField):
                 self.error=True
         except:
             
+            value=""
             self.error=True
 
         return value
