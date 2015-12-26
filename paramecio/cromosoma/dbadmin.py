@@ -45,6 +45,10 @@ def start():
     
     #print(WebModel.connections)
     
+    if '/' in args.model:
+        
+        args.model=args.model.replace('/', '.').replace('.py', '')
+    
     try:
     
         model=import_module(args.model)
