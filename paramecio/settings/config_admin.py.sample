@@ -2,6 +2,6 @@
 
 from paramecio.citoplasma.i18n import I18n
 
-modules_admin={'ausers': [I18n.lang('admin', 'users_admin', 'User\'s Admin'), 'paramecio.modules.admin.admin.ausers']}
+modules_admin=[[I18n.lang('admin', 'users_admin', 'User\'s Admin'), 'paramecio.modules.admin.admin.ausers', 'ausers']]
 
 #modules_admin={'ausers': [I18n.lang('admin', 'users_admin', 'User\'s Admin'), 'paramecio.modules.admin.admin.ausers'], 'module_father': [ I18n.lang('common', 'submodule', 'ModuleFather') , {'submodule': ['This is a module', 'paramecio.modules.admin.admin.ausers'] } ] }
