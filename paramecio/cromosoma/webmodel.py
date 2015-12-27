@@ -734,7 +734,7 @@ class WebModel:
     
     #Create a form based in table.
     
-    def create_forms(self, arr_fields={}):
+    def create_forms(self, arr_fields=[]):
         
         if len(arr_fields)==0:
             arr_fields=self.fields.keys()
@@ -743,6 +743,8 @@ class WebModel:
         for name_field in arr_fields:
             self.valid_fields.append(name_field)
             self.forms[name_field]=self.fields[name_field].create_form()
+
+        return arr_fields
             
     def create_form_after(self, form_after, new_form):
         

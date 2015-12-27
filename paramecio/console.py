@@ -151,7 +151,7 @@ def start():
                             
                             f.close()
                         
-                        config_text=config_text.replace("modules=['paramecio.modules.welcome']", "modules=['paramecio.modules.welcome', 'paramecio.modules.admin']")
+                        config_text=config_text.replace("modules=['paramecio.modules.welcome']", "modules=['paramecio.modules.welcome', 'paramecio.modules.admin', 'paramecio.modules.lang']")
                         
                         with open(path_settings+'/config.py', 'w') as f:
                             

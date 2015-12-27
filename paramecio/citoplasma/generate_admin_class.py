@@ -5,6 +5,7 @@ from paramecio.citoplasma.mtemplates import set_flash_message
 from paramecio.cromosoma.formsutils import show_form
 from paramecio.citoplasma.i18n import I18n
 from paramecio.citoplasma.httputils import GetPostFiles
+from collections import OrderedDict
 
 class GenerateAdminClass:
     
@@ -43,6 +44,8 @@ class GenerateAdminClass:
         self.template_insert='utils/insertform.phtml'
         
         self.template_admin='utils/admin.phtml'
+        
+        self.template_verify_delete='utils/verify_delete.phtml'
 
     def show(self):
         
@@ -52,12 +55,18 @@ class GenerateAdminClass:
         
         GetPostFiles.get['id']=GetPostFiles.get.get('id', '0')
         
+        if len(self.model.forms)==0:
+
+            self.model.create_forms()
+        
+        edit_forms=OrderedDict()
+            
+        for key_form in self.arr_fields_edit:
+            edit_forms[key_form]=self.model.forms[key_form]
+        
         if GetPostFiles.get['op_admin']=='1':
             
             post=None
-            
-            if len(self.model.forms)==0:
-                self.model.create_forms()
             
             title_edit=I18n.lang('common', 'add_new_item', 'Add new item')
             
@@ -67,11 +76,6 @@ class GenerateAdminClass:
             
             if post==None:
                 post={}
-            
-            edit_forms={}
-            
-            for key_form in self.arr_fields_edit:
-                edit_forms[key_form]=self.model.forms[key_form]
             
             form=show_form(post, edit_forms, self.t, False)
                 
@@ -106,19 +110,27 @@ class GenerateAdminClass:
                 redirect(self.url)
             else:
 
-                form=show_form(post, self.model.forms, self.t, True)
+                form=show_form(post, edit_forms, self.t, True)
                 return self.t.load_template(self.template_insert, admin=self, title_edit=title_edit, form=form, model=self.model, id=GetPostFiles.get['id'])
 
             
             pass
             
         elif GetPostFiles.get['op_admin']=='3':
+            
+            verified=GetPostFiles.get.get('verified', '0')
+            
+            if verified=='1':
     
-            if GetPostFiles.get['id']!='0':
-                self.model.conditions=['WHERE `'+self.model.name+'`.`'+self.model.name_field_id+'`=%s', [GetPostFiles.get['id']]]
-                self.model.delete()
-                set_flash_message(I18n.lang('common', 'task_successful', 'Task successful'))
-                redirect(self.url)
+                if GetPostFiles.get['id']!='0':
+                    self.model.conditions=['WHERE `'+self.model.name+'`.`'+self.model.name_field_id+'`=%s', [GetPostFiles.get['id']]]
+                    self.model.delete()
+                    set_flash_message(I18n.lang('common', 'task_successful', 'Task successful'))
+                    redirect(self.url)
+    
+            else:
+                
+                return self.t.load_template(self.template_verify_delete, url=self.url, item_id=GetPostFiles.get['id'], op_admin=3, verified=1)
     
         else:
             return self.t.load_template(self.template_admin, admin=self)

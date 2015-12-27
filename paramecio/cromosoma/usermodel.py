@@ -17,11 +17,11 @@ class UserModel(WebModel):
         self.yes_repeat_password=True
         self.check_user=True
     
-    def create_forms(self, arr_fields={}):
+    def create_forms(self, arr_fields=[]):
         
         # Add password_repeat to forms from the model
         
-        super().create_forms(arr_fields)
+        arr_fields=super().create_forms(arr_fields)
         
         if self.password_field in arr_fields and self.yes_repeat_password:
             
@@ -34,6 +34,9 @@ class UserModel(WebModel):
             repeat_password.field=self.fields['password']
             
             self.create_form_after(self.password_field, repeat_password)
+        
+        return arr_fields
+            
     """
     def insert(self, dict_values, external_agent=True):
         
@@ -50,12 +53,14 @@ class UserModel(WebModel):
     
     def check_all_fields(self, dict_values, external_agent, yes_update=False, errors_set="insert"):
         
+        error=0
+        
         try:
             
             fields, values, update_values=super().check_all_fields(dict_values, external_agent, yes_update, errors_set)
         except: 
             
-            return False
+            error+=1
         
         if self.check_user==True:
         
@@ -65,14 +70,14 @@ class UserModel(WebModel):
                 
                 dict_values['repeat_password']=dict_values.get('repeat_password', '')
                 
-                if dict_values['repeat_password']!=dict_values[self.password_field]:
-                    
-                    if dict_values[self.password_field].strip()!="":
+                if dict_values[self.password_field].strip()!="":
+                
+                    if dict_values['repeat_password']!=dict_values[self.password_field]:
                         
                         self.fields[self.password_field].error=True
                         self.fields[self.password_field].txt_error=I18n.lang('common', 'error_passwords_no_match', 'Error: passwords doesn\'t match')
                     
-                    return False
+                        error+=1
 
             # Check if exists user with same email or password
             
@@ -129,9 +134,12 @@ class UserModel(WebModel):
                 self.fields[self.username_field].error=True
                 self.fields[self.username_field].txt_error=I18n.lang('common', 'error_username_or_password_exists', 'Error: username or email exists in database')
                 
-                return False
+                error+=1
             
             self.conditions=original_conditions
+
+        if error>0:
+            return False
 
         return fields, values, update_values
         
