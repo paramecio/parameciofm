@@ -27,6 +27,8 @@ def admin(t):
     
     admin.list.search_fields=['username']
     
+    admin.arr_fields_edit=['username', 'password', 'email', 'privileges']
+    
     #admin.list.limit_pages=5
     
     return admin.show()

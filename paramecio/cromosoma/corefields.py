@@ -9,21 +9,21 @@ class IntegerField(PhangoField):
     
     def check(self, value):
         
-        self.error=None
+        self.error=False
         self.txt_error=''
         
         try:
         
             value=str(int(value))
         
-            if value==0 and self.required==True:
+            if value=="0" and self.required==True:
                 self.txt_error="The value is zero"
                 self.error=True
         except:
             
-            value=""
+            value="0"
             self.error=True
-
+        
         return value
     
     def get_type_sql(self):
@@ -38,6 +38,11 @@ class TextField(PhangoField):
     
     def __init__(self, name, required=False):
         super().__init__(name, 11, required)
+        
+    #def check(self, value):
+        
+        #value=super().check(value).replace('"', '&quot;').replace('<', '&lt;').replace('
+        
     
     def get_type_sql(self):
 

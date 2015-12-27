@@ -23,4 +23,21 @@ class TestFieldMethods(unittest.TestCase):
         
         self.assertEqual(value, "injection_\\'")
         
+    def test_integerfield(self):
+        
+        integerfield=corefields.IntegerField('example', 11)
+        
+        integerfield.required=True
+        
+        integerfield.check(0)
+        
+        self.assertTrue(integerfield.error)
+        
+        integerfield.check('25')
+        
+        self.assertFalse(integerfield.error)
+        
+        value=integerfield.check("25'")
+        
+        self.assertEqual(value, "0")
         
