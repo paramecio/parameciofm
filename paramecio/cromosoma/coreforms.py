@@ -31,7 +31,7 @@ class BaseForm:
         
         value=str(value)
         
-        return value.replace('"', '&quot;')
+        return value.replace('"', '&quot;').replace("'", '&#39;')
 
 class TextForm(BaseForm):
     

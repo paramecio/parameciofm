@@ -25,10 +25,18 @@ from settings import config
 
 # Next convert to 
 
+locale='es_ES'
+
+format_date="yyyy/LL/dd"
+
+format_time="HH:mm:ss"
+
+timezone='UTC'
+
 if hasattr(config, 'timezone'):
     timezone=config.timezone
-else:
-    timezone='UTC'
+    
+#if hasattr
     
 tzutc=get_timezone('UTC')
 
@@ -74,20 +82,33 @@ def obtain_fields_time(time):
     
     return year, month, day, hour, minute, second        
     
-
 # In the format of tzinfo
 
-def format_tztime(time):
+def format_tztime(time, tzc=None):
     
-    #try:
-        
+    if tzc==None:
+        tzc=tz
+    
     year, month, day, hour, minute, second=obtain_fields_time(time)
     
     t=datetime(year, month, day, hour, minute, second)
     
-    return format_datetime(t, locale="es_ES", tzinfo=tz)
-        
-    #except:
-        
+    return format_datetime(t, format_time, tzinfo=tzc)
+
+def format_tzdate(time, tzc=None):
+    
+    if tzc==None:
+        tzc=tz
+    
+    year, month, day, hour, minute, second=obtain_fields_time(time)
+    
+    t=datetime(year, month, day, hour, minute, second)
+    
+    return format_datetime(t, format_date, tzinfo=tzc)
+
+
     #    return timenow()
-       
+def obtain_timezone(timezone):
+    
+    return get_timezone(timezone)
+    
