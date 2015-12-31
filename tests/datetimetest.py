@@ -6,10 +6,25 @@ class TestFieldMethods(unittest.TestCase):
     
     def test_timenow(self):
         
+        time='20121023401223'
+        
+        time_set=datetime.format_timedata(time)
+        
+        self.assertFalse(datetime.checkdatetime(time_set[0], time_set[1], time_set[2], time_set[3], time_set[4], time_set[5]))
+        
+        time='20121026231248'
+        
+        time_set=datetime.format_timedata(time)
+        
+        self.assertTrue(datetime.checkdatetime(time_set[0], time_set[1], time_set[2], time_set[3], time_set[4], time_set[5]))
+        
+        """
+        tz=datetime.obtain_timezone('Europe/Madrid')
+        
         time=datetime.normalize_time(2012, 12, 21, 23, 24, 21)
         
         self.assertEqual(time, '20121221232421')
-        
+
         value=datetime.format_tztime(time)
         
         self.assertEqual(value, '23:24:21')
@@ -17,8 +32,6 @@ class TestFieldMethods(unittest.TestCase):
         value=datetime.format_tzdate(time)
         
         self.assertEqual(value, '2012/12/21')
-        
-        tz=datetime.obtain_timezone('Europe/Madrid')
         
         value=datetime.format_tzdate(time, tz)
         
@@ -28,4 +41,5 @@ class TestFieldMethods(unittest.TestCase):
         
         self.assertEqual(value, '00:24:21')
         
-        
+        print(datetime.local_to_utc('20121221232421', tz))
+        """
