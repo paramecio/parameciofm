@@ -18,6 +18,27 @@ class TestFieldMethods(unittest.TestCase):
         
         self.assertTrue(datetime.checkdatetime(time_set[0], time_set[1], time_set[2], time_set[3], time_set[4], time_set[5]))
         
+        timestamp=datetime.obtain_timestamp(time)
+        
+        self.assertTrue(timestamp)
+        
+        datetime.timezone='Europe/Madrid'
+        
+        datetime.set_timezone()
+        
+        gmtstamp=datetime.local_to_gmt(time)
+        
+        self.assertEqual(gmtstamp, '20121026221248')
+        
+        time_from_utc=datetime.format_time(time)
+        
+        self.assertEqual(time_from_utc, '00:12:48')
+        
+        date_from_utc=datetime.format_date(time)
+        
+        self.assertEqual(date_from_utc, '2012/10/27')
+        
+        
         """
         tz=datetime.obtain_timezone('Europe/Madrid')
         

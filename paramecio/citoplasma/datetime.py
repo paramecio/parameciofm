@@ -4,6 +4,7 @@ from babel.dates import format_date, format_datetime, format_time, get_timezone,
 from settings import config
 from bottle import hook
 from paramecio.citoplasma.sessions import get_session
+from os import environ
 
 #t=datetime.utcnow()
 
@@ -52,7 +53,7 @@ sql_format_time='%Y%m%d%H%M%S'
 
 format_date_txt="%Y/%m/%d"
 
-format_time_txt="%H%M%S"
+format_time_txt="%H:%M:%S"
 
 timezone='Europe/Madrid'
 
@@ -76,8 +77,10 @@ def set_timezone():
         
         timezone_local=s.get('timezone', timezone)
     
-    if os.environ['TZ']!=timezone_local:
-        os.environ['TZ']=timezone_local
+    environ['TZ']=environ.get('TZ', timezone_local)
+    
+    if environ['TZ']!=timezone_local:
+        environ['TZ']=timezone_local
         time.tzset()
     
     #request.environ['TIMEZONE'] = request.environ['PATH_INFO'].rstrip('/')
@@ -121,47 +124,49 @@ def checkdatetime(y, m, d, h, mi, s):
         return False
     
 
-def obtain_timestamp(time):
+def obtain_timestamp(timeform):
     
-    y, m, d, h, mi, s=format_timedata(time)
+    y, m, d, h, mi, s=format_timedata(timeform)
         
-    if checkdatetime(m, d, y, h, mi, s):
-    
+    if checkdatetime(y, m, d, h, mi, s):
+        
         return int(time.mktime((y, m, d, h, mi, s, 0, 1, 0)))
         #return mktime($h, $mi, $s, $m, $d, $y);
     else:
         return False
 
-def format_datetime(format, timestamp, func_utc_return):
+def format_datetime(format_time, timestamp, func_utc_return):
     
-        timestamp=obtain_timestamp(timestamp)
+    timestamp=obtain_timestamp(timestamp)
+    
+    if timestamp:
+    
+        #offset=time.timezone
         
-        if timestamp:
+        #timestamp=func_utc_return(timestamp, offset)
         
-            offset=time.timezone
-            
-            timestamp=func_utc_return(timestamp, offset)
-            
-            # Return utc
-            
-            return time.strptime(format, timestamp)
-            
-        else:
+        # Return utc
         
-            return False
+        time_set=func_utc_return(timestamp)
+        
+        return time.strftime(format_time, time_set)
+        
+    else:
+    
+        return False
         
 
-def local_to_gmt(time):
+def local_to_gmt(timeform):
     
-    return format_datetime(sql_format_time, time, sum_utc)
+    return format_datetime(sql_format_time, timeform, time.gmtime)
 
-def format_time(time):
+def format_time(timeform):
     
-    return format_datetime(format_time_txt, time, substract_utc)
+    return format_datetime(format_time_txt, timeform, time.localtime)
 
-def format_date(time):
+def format_date(timeform):
     
-    return format_datetime(format_date_txt, time, substract_utc)
+    return format_datetime(format_date_txt, timeform, time.localtime)
 
 def sum_utc(timestamp, offset):
 
