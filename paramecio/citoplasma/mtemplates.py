@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+from bottle import hook
 from mako.template import Template
 from mako.lookup import TemplateLookup
 from paramecio.citoplasma.urls import make_url, make_media_url, make_media_url_module, add_get_parameters
@@ -17,7 +18,16 @@ env = Environment(loader=FileSystemLoader(['/path/to/templates', '/other/path'])
 template = env.get_template('mytemplate.html')
 """
 
+#@hook('after_request')
+#def clean_tpl_cache():
+    
+    #ptemplate.clean_header_cache()
+    #pass
+
+
 class ptemplate:
+    
+    template_context=None
     
     def __init__(self, module):
         
@@ -63,7 +73,8 @@ class ptemplate:
         HeaderHTML.css_local={}
         HeaderHTML.js_local={}
     
-    def clean_header_cache(self):
+    @staticmethod
+    def clean_header_cache():
         
         HeaderHTML.css=[]
         HeaderHTML.js=[]
@@ -140,6 +151,9 @@ class HeaderHTML:
             for js in arr_js:
                 final_js.append('<script language="Javascript" src="'+make_media_url_module('js/'+js, module)+'"></script>')
         
+        HeaderHTML.js=[]
+        HeaderHTML.js_local={}
+        
         return "\n".join(final_js)
 
     def css_home():
@@ -154,6 +168,9 @@ class HeaderHTML:
             for css in arr_css:
             
                 final_css.append('<link href="'+make_media_url_module('css/'+css, module)+'" rel="stylesheet" type="text/css"/>')
+
+        HeaderHTML.css=[]
+        HeaderHTML.css_local={}
 
         return "\n".join(final_css)
 
@@ -229,3 +246,4 @@ def show_flash_message():
     
     return message
     
+standard_t=ptemplate(__file__)

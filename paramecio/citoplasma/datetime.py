@@ -87,22 +87,28 @@ def set_timezone():
 
 def format_timedata(time):
     
-    year=int(time[:4])
-    
-    month=int(time[4:6])
-    
-    day=int(time[6:8])
-    
-    hour=int(time[8:10])
-    
-    minute=int(time[10:12])
-    
-    second=int(time[12:14])
-    
+    year=0
+    month=0
+    day=0
+    hour=0
+    minute=0
+    second=0
     ampm=''
     
     try:
+    
+        year=int(time[:4])
         
+        month=int(time[4:6])
+        
+        day=int(time[6:8])
+        
+        hour=int(time[8:10])
+        
+        minute=int(time[10:12])
+        
+        second=int(time[12:14])
+    
         ampm=int(time[14:16])
 
     except:
