@@ -1,7 +1,7 @@
-from paramecio.cromosoma.corefields import CharField
+from paramecio.cromosoma.corefields import PhangoField
 from paramecio.citoplasma import datetime
 
-class DateField(CharField):
+class DateField(PhangoField):
     
     def check(self, value):
         
@@ -10,7 +10,7 @@ class DateField(CharField):
         if value==False:
             
             self.error=True
-            self.error='Date format invalid'
+            self.txt_error='Date format invalid'
             return ''
         
         return value
