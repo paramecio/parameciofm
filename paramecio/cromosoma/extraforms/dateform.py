@@ -30,9 +30,7 @@ class DateForm(BaseForm):
             h=int(time[3])
             min=int(time[4])
             s=int(time[5])
-            
-            
-        
+
         return standard_t.load_template('forms/dateform.phtml', yes_time=self.yes_time, form=self.name, y=y, m=m, d=d, h=h, min=min, s=s)
 
     #def 

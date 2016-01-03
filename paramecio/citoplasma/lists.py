@@ -137,7 +137,7 @@ class SimpleList:
         
         if self.search_field!='' and self.search_text!='':
             self.model.conditions[0]+=' AND '+self.search_field+' LIKE %s'
-            self.model.conditions[1]=['%'+self.search_text+'%']
+            self.model.conditions[1].append('%'+self.search_text+'%')
         
         pass
     
@@ -158,6 +158,8 @@ class SimpleList:
         
         self.obtain_field_search()
         
+        self.model.yes_reset_conditions=False
+        
         self.search()
         
         total_elements=self.model.select_count()
@@ -177,6 +179,8 @@ class SimpleList:
         pages=Pages.show( begin_page, total_elements, num_elements, link ,initial_num_pages=self.initial_num_pages, variable='begin_page', label='', func_jscript='')
         
         self.begin_page=str(self.begin_page)
+        
+        self.model.yes_reset_conditions=True
         
         return self.t.load_template('utils/list.phtml', simplelist=self, list=list_items, pages=pages)
     

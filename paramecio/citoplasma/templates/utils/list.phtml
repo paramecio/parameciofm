@@ -39,7 +39,11 @@
     % for row in list:
     <tr class="row_list">
         % for field in simplelist.fields_showed:
-            <td>${simplelist.model.fields[field].show_formatted(row[field])}</td>
+            % if simplelist.model.fields[field].escape==True:
+                <td>${simplelist.model.fields[field].show_formatted(row[field])}</td>
+            % else:
+                <td>${simplelist.model.fields[field].show_formatted(row[field])|n}</td>
+            % endif
         % endfor
         
         % for extra_field_func in simplelist.arr_extra_options:

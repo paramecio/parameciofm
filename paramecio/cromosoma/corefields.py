@@ -72,8 +72,8 @@ class BooleanField(IntegerField):
         
         required=False
         
-        self.yes=I18n.lang('common', 'yes', 'Yes')
-        self.no=I18n.lang('common', 'no', 'No')
+        self.yes_text=I18n.lang('common', 'yes', 'Yes')
+        self.no_text=I18n.lang('common', 'no', 'No')
         
         super(IntegerField, self).__init__(name, size, required)
     

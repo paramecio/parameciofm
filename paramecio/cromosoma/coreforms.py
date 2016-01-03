@@ -72,7 +72,7 @@ class SelectForm(BaseForm):
         
         for k,v in self.arr_select.items():
             arr_selected[k]=arr_selected.get(k, '')
-            the_form+="<option value=\""+str(k)+"\" "+arr_selected[k]+">"+v+"</option>"
+            the_form+="<option value=\""+self.setform(str(k))+"\" "+arr_selected[k]+">"+v+"</option>"
         
         the_form+='</select>\n'
         

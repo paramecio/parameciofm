@@ -98,6 +98,8 @@ class WebModel:
         self.valid_fields=[]
         
         self.last_id=0
+        
+        self.distinct=''
     
     # A method where create the new fields of this model
     
@@ -310,7 +312,7 @@ class WebModel:
             self.query_error="Error: without fields to search"
             return False
         
-        sql= ("select "+", ".join(final_fields)+extra_sql_field+" from "+", ".join(tables_to_select)+' '+conditions[0]+' '+self.order_by+' '+self.limit).strip()
+        sql= ("select "+" "+self.distinct+", ".join(final_fields)+extra_sql_field+" from "+", ".join(tables_to_select)+' '+conditions[0]+' '+self.order_by+' '+self.limit).strip()
         
         self.last_query=sql
         
@@ -398,7 +400,7 @@ class WebModel:
         
         cursor=self.select(fields_selected, raw_query)
         
-        results={}
+        results=OrderedDict()
         
         for row in cursor:
             
@@ -844,6 +846,10 @@ class PhangoField:
         # Define the form, when is created forms with create_forms you can change the properties of this class
         
         self.name_form=BaseForm
+        
+        # Property that define if make escape in show_formatted
+        
+        self.escape=True
      
     # This method is used for describe the new field in a sql language format.
     

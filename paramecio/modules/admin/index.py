@@ -7,6 +7,7 @@ from paramecio.citoplasma.urls import make_url, add_get_parameters
 from paramecio.citoplasma.sessions import get_session
 from bottle import get,post,response,request
 from settings import config
+from settings import config_admin
 from paramecio.citoplasma.lists import SimpleList
 from paramecio.citoplasma.generate_admin_class import GenerateAdminClass
 from paramecio.citoplasma.httputils import GetPostFiles
@@ -40,9 +41,7 @@ def home(module='', submodule=''):
     if submodule!='':
         module+='/'+submodule
     
-    from settings import config_admin
-    
-    t.clean_header_cache()
+    #t.clean_header_cache()
     
     #check if login
     
