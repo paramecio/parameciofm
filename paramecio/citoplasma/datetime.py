@@ -129,6 +129,13 @@ def checkdatetime(y, m, d, h, mi, s):
     except:
         return False
     
+# Obtain the actual time in gmt
+    
+def now():
+    
+    actual=datetime.today()
+    
+    return actual.strftime(sql_format_time)
 
 def obtain_timestamp(timeform):
     

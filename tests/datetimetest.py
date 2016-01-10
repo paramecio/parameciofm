@@ -38,6 +38,9 @@ class TestFieldMethods(unittest.TestCase):
         
         self.assertEqual(date_from_utc, '2012/10/27')
         
+        #today=datetime.now()
+        
+        #print(today)
         
         """
         tz=datetime.obtain_timezone('Europe/Madrid')
