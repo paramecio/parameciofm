@@ -30,6 +30,34 @@ class IntegerField(PhangoField):
 
         return 'INT('+str(self.size)+') NOT NULL DEFAULT "0"'
 
+class FloatField(PhangoField):
+    
+    def __init__(self, name, size=11, required=False):
+        super(FloatField, self).__init__(name, size, required)
+    
+    def check(self, value):
+        
+        self.error=False
+        self.txt_error=''
+        
+        try:
+        
+            value=str(float(value))
+        
+            if value=="0" and self.required==True:
+                self.txt_error="The value is zero"
+                self.error=True
+        except:
+            
+            value="0"
+            self.error=True
+        
+        return value
+    
+    def get_type_sql(self):
+
+        return 'FLOAT NOT NULL DEFAULT "0"'
+
 class CharField(PhangoField):
     
     pass

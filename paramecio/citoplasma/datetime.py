@@ -131,11 +131,17 @@ def checkdatetime(y, m, d, h, mi, s):
     
 # Obtain the actual time in gmt
     
-def now():
+def now(gmt=False):
     
     actual=datetime.today()
     
-    return actual.strftime(sql_format_time)
+    final_date=actual.strftime(sql_format_time)
+    
+    if gmt:
+        
+        final_date=local_to_gmt(final_date)
+        
+    return final_date
 
 def obtain_timestamp(timeform):
     
