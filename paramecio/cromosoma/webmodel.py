@@ -529,6 +529,33 @@ class WebModel:
             
     def update_table(self, fields_to_add, fields_to_modify, fields_to_add_index, fields_to_add_constraint, fields_to_add_unique, fields_to_delete_index, fields_to_delete_unique, fields_to_delete_constraint, fields_to_delete):
         
+        # First delete fields
+        
+        for field in fields_to_delete_index:
+            
+            print("---Deleting index from "+field+" in "+self.name)
+            
+            WebModel.query(WebModel, 'DROP INDEX `index_'+self.name+'_'+field+'` ON '+self.name, [], self.connection_id)
+        
+        for field in fields_to_delete_unique:
+            
+            print("---Deleting unique from "+field+" in "+self.name)
+            
+            WebModel.query(WebModel, 'DROP INDEX `'+field+'` ON '+self.name, [], self.connection_id)
+        
+        for field in fields_to_delete_constraint:
+            
+            print("---Deleting foreignkey from "+field+" in "+self.name)
+            
+            WebModel.query(WebModel, 'ALTER TABLE `'+self.name+'` DROP FOREIGN KEY '+field+'_'+self.name+'IDX', [], self.connection_id)
+        
+        for field in fields_to_delete:
+            
+            print("---Deleting "+field+" from "+self.name)
+            
+            WebModel.query(WebModel, 'ALTER TABLE `'+self.name+'` DROP `'+field+'`', [], self.connection_id)
+            #Deleting indexes and constraints.
+        
         #Obtain new fields
         
         for field in fields_to_modify:
@@ -559,30 +586,7 @@ class WebModel:
             
             WebModel.query(WebModel, 'ALTER TABLE `'+self.name+'` ADD UNIQUE (`'+field+'`)', [], self.connection_id)
             
-        for field in fields_to_delete_index:
-            
-            print("---Deleting index from "+field+" in "+self.name)
-            
-            WebModel.query(WebModel, 'DROP INDEX `index_'+self.name+'_'+field+'` ON '+self.name, [], self.connection_id)
         
-        for field in fields_to_delete_unique:
-            
-            print("---Deleting unique from "+field+" in "+self.name)
-            
-            WebModel.query(WebModel, 'DROP INDEX `'+field+'` ON '+self.name, [], self.connection_id)
-        
-        for field in fields_to_delete_constraint:
-            
-            print("---Deleting foreignkey from "+field+" in "+self.name)
-            
-            WebModel.query(WebModel, 'ALTER TABLE `'+self.name+'` DROP FOREIGN KEY '+field+'_'+self.name+'IDX', [], self.connection_id)
-        
-        for field in fields_to_delete:
-            
-            print("---Deleting "+field+" from "+self.name)
-            
-            WebModel.query(WebModel, 'ALTER TABLE `'+self.name+'` DROP `'+field+'`', [], self.connection_id)
-            #Deleting indexes and constraints.
         
     # Method for drop sql tables and related
     
