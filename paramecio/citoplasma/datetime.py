@@ -129,7 +129,7 @@ def checkdatetime(y, m, d, h, mi, s):
     except:
         return False
     
-# Obtain the actual time in gmt
+# Obtain the actual time in local or gmt
     
 def now(gmt=False):
     
@@ -186,6 +186,10 @@ def format_time(timeform):
 def format_date(timeform):
     
     return format_datetime(format_date_txt, timeform, time.localtime)
+
+def format_fulldate(timeform):
+    
+    return format_datetime(format_date_txt+' '+format_time_txt, timeform, time.localtime)
 
 def sum_utc(timestamp, offset):
 

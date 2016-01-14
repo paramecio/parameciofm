@@ -38,6 +38,10 @@ t=ptemplate(__file__)
 @post('/'+config.admin_folder+'/<module>/<submodule>')
 def home(module='', submodule=''):
     
+    # A simple boolean used for show or not the code of admin module in standard template
+    
+    ptemplate.show_basic_template=True
+    
     if submodule!='':
         module+='/'+submodule
     
@@ -101,11 +105,16 @@ def home(module='', submodule=''):
                     except ImportError:
                         
                         return "No exists admin module"
-                        
-                        
+
+                    content_index=new_module.admin(t)
+
+                    if ptemplate.show_basic_template==True:   
                     
-                    return t.load_template('admin/content.html', title=menu[module][0], content_index=new_module.admin(t), menu=menu, lang_selected=lang_selected, arr_i18n=I18n.dict_i18n)
-                    
+                        return t.load_template('admin/content.html', title=menu[module][0], content_index=content_index, menu=menu, lang_selected=lang_selected, arr_i18n=I18n.dict_i18n)
+                    else:
+                        
+                        return content_index
+                        
                 else:
                     return t.load_template('admin/index.html', title=I18n.lang('admin', 'welcome_to_paramecio', 'Welcome to Paramecio Admin!!!'), menu=menu, lang_selected=lang_selected, arr_i18n=I18n.dict_i18n)
                 

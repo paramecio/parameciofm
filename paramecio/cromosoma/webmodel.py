@@ -477,6 +477,28 @@ class WebModel:
             
             return False
     
+    def set_conditions(self, sql_text, values:list) -> None:
+        
+        self.conditions=[sql_text, values]
+    
+    def set_order(self, order:list, position:list) -> None:
+        
+        order=[]
+        
+        for o in enumerate(order):
+        
+            order.append('order by '+order[o]+' '+position[o])
+    
+        self.order=", ".join(order)
+    
+    def set_limit(self, limit: tuple) -> None:
+        
+        sql_limit=str(limit[0])
+        
+        if len(limit)>1:
+            sql_limit+=', '+str(limit[1])
+        
+        self.limit='limit '+sql_limit
     
     # Method for create sql tables
     

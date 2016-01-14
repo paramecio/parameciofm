@@ -29,6 +29,10 @@ class ptemplate:
     
     template_context=None
     
+    # A simple method used in internal things of paramecio
+    
+    show_basic_template=True
+    
     def __init__(self, module):
         
         module=path.dirname(module)
