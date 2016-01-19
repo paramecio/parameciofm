@@ -4,6 +4,7 @@ import argparse
 import os,traceback
 import sys, inspect
 import shutil
+import re
 from datetime import date
 from pathlib import Path
 from colorama import init, Fore, Back, Style
@@ -47,7 +48,9 @@ def start():
     
     if '/' in args.model:
         
-        args.model=args.model.replace('/', '.').replace('.py', '')
+        args.model=args.model.replace('/', '.')[:-3] #.replace('.py', '')
+
+        
     
     try:
     
