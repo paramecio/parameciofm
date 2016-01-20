@@ -100,6 +100,10 @@ class WebModel:
         self.last_id=0
         
         self.distinct=''
+        
+        # A simple dictionary where post values are saved for use of fields classes
+        
+        self.post={}
     
     # A method where create the new fields of this model
     
@@ -149,6 +153,8 @@ class WebModel:
         
         # Connect to db
 
+        self.post=dict_values
+
         self.connect_to_db()
         
         self.query_error=''
@@ -180,6 +186,8 @@ class WebModel:
     # Update method. For update one or many rows.
     
     def update(self, dict_values, external_agent=True):
+        
+        self.post=dict_values
         
         # Connect to db
         

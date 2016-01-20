@@ -54,7 +54,7 @@ def slugify(str_in, respect_upper=False, replace_space='-', replace_dot=False, r
 	str_out=str_out.replace(" ", replace_space)
 	
 	if respect_upper==False:
-		pass
+		str_out=str_out.lower()
 	
 	return str_out
 	

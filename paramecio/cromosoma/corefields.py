@@ -58,6 +58,12 @@ class FloatField(PhangoField):
 
         return 'FLOAT NOT NULL DEFAULT "0"'
 
+class DoubleField(FloatField):
+    
+    def get_type_sql(self):
+
+        return 'DOUBLE NOT NULL DEFAULT "0"'
+
 class CharField(PhangoField):
     
     pass
