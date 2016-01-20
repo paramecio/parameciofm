@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+import traceback, sys
 from paramecio.citoplasma.mtemplates import ptemplate
 from paramecio.modules.admin.models.admin import UserAdmin
 from paramecio.citoplasma.i18n import load_lang, I18n
@@ -103,6 +104,11 @@ def home(module='', submodule=''):
                             reload(new_module)
                     
                     except ImportError:
+                        
+                        print("Exception in user code:")
+                        print("-"*60)
+                        traceback.print_exc(file=sys.stdout)
+                        print("-"*60)
                         
                         return "No exists admin module"
 
