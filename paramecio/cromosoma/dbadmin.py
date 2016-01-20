@@ -117,8 +117,11 @@ def start():
         for table in new_tables:
             print(Style.NORMAL+"--Creating table "+table+"...")
             WebModel.query(WebModel, WebModel.model[table].create_table())
-            print("--Adding indexes and constraints for the new table")
+
+        for table in new_tables:
             
+            print("--Adding indexes and constraints for the new table "+table)
+
             for k_field, index in WebModel.arr_sql_index[table].items():
                 print("---Added index to "+k_field)
                 WebModel.query(WebModel, index)
