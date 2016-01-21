@@ -87,6 +87,8 @@ class GenerateAdminClass:
             
             post=GetPostFiles.post
             
+            self.model.reset_conditions()
+            
             insert_row=self.model.insert
             
             try:

@@ -100,6 +100,10 @@ class ForeignKeyField(IntegerField):
     
         self.foreignkey=True
 
+    def get_type_sql(self):
+
+        return 'INT NULL'
+
 class BooleanField(IntegerField):
     
     def __init__(self, name, size=1):
