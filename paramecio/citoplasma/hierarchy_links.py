@@ -2,7 +2,7 @@
 
 class HierarchyLinks:
 
-    def __init__(arr_links):
+    def __init__(arr_links, t=None):
 
         self.arr_links=arr_links
         
