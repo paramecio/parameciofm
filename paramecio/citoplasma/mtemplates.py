@@ -35,7 +35,11 @@ class ptemplate:
     
     def __init__(self, module):
         
-        module=path.dirname(module)
+        ext=module[len(module)-3:]
+        
+        if ext=='.py':
+        
+            module=path.dirname(module)
         
         self.autoescape_ext=('html', 'htm', 'xml', 'phtml')
         
@@ -66,6 +70,10 @@ class ptemplate:
         
         self.add_filter(add_header_home)
         
+        self.filters['HeaderHTML']=HeaderHTML
+        
+        self.filters['show_flash_message']=show_flash_message
+        
         #self.auto_reload=True
         
         # Clean HeaderHTML
@@ -76,7 +84,8 @@ class ptemplate:
         HeaderHTML.cache_header=[]
         HeaderHTML.css_local={}
         HeaderHTML.js_local={}
-    
+        
+        
     @staticmethod
     def clean_header_cache():
         
@@ -97,13 +106,13 @@ class ptemplate:
 
     def env_theme(self, module):
 
-        theme_templates='themes/'+config.theme+'/templates'
+        standard_templates=path.dirname(__file__)+'/templates'
 
         module_templates=module+'/templates'
         
-        #Standard templates
+        theme_templates='themes/'+config.theme+'/templates'
         
-        standard_templates=path.dirname(__file__)+'/templates'
+        #Standard templates
         #print(standard_templates)
         return TemplateLookup(directories=[theme_templates, module_templates, standard_templates], default_filters=['h'], input_encoding='utf-8', encoding_errors='replace')
 
@@ -113,14 +122,11 @@ class ptemplate:
         
         template = self.env.get_template(template_file)
         
-        arguments['HeaderHTML']=HeaderHTML
-        
-        arguments['show_flash_message']=show_flash_message
-        
-        for filter_name, filter_ in self.filters.items():
-            arguments[filter_name]=filter_
-        
         #Will be nice add hooks here
+        
+        #z = x.copy()
+        
+        arguments.update(self.filters)
         
         return template.render(**arguments)
 
