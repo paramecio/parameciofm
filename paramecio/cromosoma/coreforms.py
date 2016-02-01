@@ -77,4 +77,28 @@ class SelectForm(BaseForm):
         the_form+='</select>\n'
         
         return the_form
+
+class SelectModelForm(SelectForm):
+    
+    def __init__(self, name, value):
+        super(SelectModelForm, self).__init__(name, value)
+        self.arr_select=OrderedDict()
+        self.model=None
+        self.field_name=''
+        self.field_value='id'
+        
+    def form(self):
+        
+        self.arr_select['']=''
+        
+        cur=self.model.select([self.field_name, self.field_value])
+        
+        for arr_value in cur:
+            
+            self.arr_select[arr_value[self.field_value]]=arr_value[self.field_name]
+        
+        return super().form()
+        
+
+        
     

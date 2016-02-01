@@ -9,7 +9,7 @@ class GetPostFiles:
     
     post={}
     
-    files=None
+    files={}
 
     @staticmethod
     def obtain_get():

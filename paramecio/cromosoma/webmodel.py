@@ -104,6 +104,10 @@ class WebModel:
         # A simple dictionary where post values are saved for use of fields classes
         
         self.post={}
+        
+        # A simple dictionary that save the fields that have files related. If i delete the row in database i need delete the files related
+        
+        self.files_delete={}
     
     # A method where create the new fields of this model
     
@@ -122,6 +126,8 @@ class WebModel:
         self.fields[field_model.name].model=self
         
         self.fields[field_model.name].required=required
+        
+        self.files_delete[field_model.name]=field_model.file_related
     
     # A method for create the id field.
     
@@ -884,6 +890,10 @@ class PhangoField:
         # Property that define if make escape in show_formatted
         
         self.escape=True
+        
+        # File related: if the field have a file related, delete the file
+        
+        self.file_related=False
      
     # This method is used for describe the new field in a sql language format.
     
