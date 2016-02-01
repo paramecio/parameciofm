@@ -3,6 +3,7 @@ from pathlib import Path
 from paramecio.cromosoma.corefields import CharField
 from paramecio.citoplasma.httputils import GetPostFiles
 from PIL import Image
+from uuid import uuid4
 #from paramecio.cromosoma.extraforms.fileform import FileForm
 
 class ImageField(CharField):
@@ -11,7 +12,7 @@ class ImageField(CharField):
         
         super().__init__(name, size, required)
         
-        self.yes_prefix=False
+        self.yes_prefix=True
         
         #self.name_form=FileForm
         
@@ -73,7 +74,12 @@ class ImageField(CharField):
         
         realfilename, ext = os.path.splitext(filename)
         
-        save_file=self.save_folder+'/'+filename
+        prefix=''
+        
+        if self.yes_prefix==True:
+            prefix=uuid4().hex+'_'
+        
+        save_file=self.save_folder+'/'+prefix+filename
         
         if self.yes_thumbnail:
         
