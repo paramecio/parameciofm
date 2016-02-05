@@ -49,8 +49,6 @@ def start():
     if '/' in args.model:
         
         args.model=args.model.replace('/', '.')[:-3] #.replace('.py', '')
-
-        
     
     try:
     
@@ -307,7 +305,35 @@ def start():
     else:
         if not os.path.isfile(backup_path):
             create_backup(original_file_path, backup_path)
+    
+    # Execute script
+    
+    arr_script_model=args.model.split('.')
+    
+    arr_script_model.pop()
+    
+    script_model='.'.join(arr_script_model)+'.scripts.install'
+    
+    script_py=script_model.replace('.', '/')+'.py'
+
+    if os.path.isfile(script_py):
         
+        locked_file='/'.join(arr_script_model)+'/scripts/locked'
+        
+        if not os.path.isfile(locked_file):
+
+            script_install=import_module(script_model)
+            
+            script_install.run()
+            
+            f=open(locked_file, 'w')
+            
+            f.write('OK')
+            
+            f.close()
+    
+    
+    #script_model=args.model+''
     
     print(Style.BRIGHT+"All tasks finished")
         

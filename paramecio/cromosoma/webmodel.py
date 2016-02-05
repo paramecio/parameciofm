@@ -309,6 +309,8 @@ class WebModel:
                 # Add extra fields from related table from select_fields ForeignKeyField class member
                 
                 for extra_field in self.fields[field].select_fields:
+                    
+                    # Check if extra_field is ForeignKeyField, if yes, call this function recursively.
                 
                     extra_fields.append("`"+table_name+"`.`"+extra_field+"` as `"+table_name+"_"+extra_field+"`")
             else:
