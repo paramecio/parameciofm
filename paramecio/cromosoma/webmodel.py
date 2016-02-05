@@ -127,7 +127,7 @@ class WebModel:
         
         self.fields[field_model.name].required=required
         
-        self.files_delete[field_model.name]=field_model.file_related
+        #self.files_delete[field_model.name]=field_model.file_related
     
     # A method for create the id field.
     
@@ -894,6 +894,10 @@ class PhangoField:
         # File related: if the field have a file related, delete the file
         
         self.file_related=False
+        
+        # Extra parameters for the form
+        
+        self.extra_parameters=[]
      
     # This method is used for describe the new field in a sql language format.
     
@@ -929,12 +933,23 @@ class PhangoField:
         pass
     
     def create_form(self):
-        form=self.name_form(self.name, self.default_value)
+        #self.name, self.default_value, 
+        
+        self.extra_parameters.insert(0, self.name)
+        self.extra_parameters.insert(1, self.default_value)
+        form=self.name_form(*self.extra_parameters)
         form.default_value=self.default_value
         form.required=self.required
         form.label=self.label
         form.field=self
         return form
+    
+    def change_form(self, new_form, parameters):
+        
+        self.name_form=new_form
+        
+        self.extra_parameters=parameters
+        
 
 class PrimaryKeyField(PhangoField):
     

@@ -72,7 +72,8 @@ class SelectForm(BaseForm):
         
         for k,v in self.arr_select.items():
             arr_selected[k]=arr_selected.get(k, '')
-            the_form+="<option value=\""+self.setform(str(k))+"\" "+arr_selected[k]+">"+v+"</option>"
+            
+            the_form+="<option value=\""+self.setform(str(k))+"\" "+arr_selected[k]+">"+self.setform(str(v))+"</option>"
         
         the_form+='</select>\n'
         
@@ -80,18 +81,18 @@ class SelectForm(BaseForm):
 
 class SelectModelForm(SelectForm):
     
-    def __init__(self, name, value):
+    def __init__(self, name, value, model, field_name, field_value):
         super(SelectModelForm, self).__init__(name, value)
         self.arr_select=OrderedDict()
-        self.model=None
-        self.field_name=''
-        self.field_value='id'
+        self.model=model
+        self.field_name=field_name
+        self.field_value=field_value
         
     def form(self):
         
         self.arr_select['']=''
         
-        cur=self.model.select([self.field_name, self.field_value])
+        cur=self.model.select([self.field_name, self.field_value], True)
         
         for arr_value in cur:
             

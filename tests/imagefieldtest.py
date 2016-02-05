@@ -17,6 +17,8 @@ class TestFieldMethods(unittest.TestCase):
         
         field=ImageField('image', 'tests/images/uploads', module=None, size=255, required=False)
         
+        field.yes_thumbnail=True
+        
         field.check('')
         
         print(field.txt_error)

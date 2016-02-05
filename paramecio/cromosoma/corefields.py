@@ -85,7 +85,9 @@ class TextField(PhangoField):
 class ForeignKeyField(IntegerField):
     
     def __init__(self, name, related_table, size=11, required=False, identifier_field='id', named_field="id", select_fields=[]):
-    
+        
+        super(ForeignKeyField, self).__init__(name, size, required)
+        
         self.table_id=related_table.name_field_id
     
         self.table_name=related_table.name
@@ -95,10 +97,10 @@ class ForeignKeyField(IntegerField):
         self.named_field=named_field
         
         self.select_fields=select_fields
-        
-        super(ForeignKeyField, self).__init__(name, size, required)
     
         self.foreignkey=True
+        
+        self.change_form(coreforms.SelectModelForm, [related_table, self.named_field, self.identifier_field])
 
     def get_type_sql(self):
 

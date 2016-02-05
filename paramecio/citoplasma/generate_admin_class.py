@@ -71,7 +71,7 @@ class GenerateAdminClass:
             title_edit=I18n.lang('common', 'add_new_item', 'Add new item')
             
             if GetPostFiles.get['id']!='0':
-                post=self.model.select_a_row(GetPostFiles.get['id'])
+                post=self.model.select_a_row(GetPostFiles.get['id'], [], True)
                 title_edit=I18n.lang('common', 'edit_new_item', 'Edit item')
             
             if post==None:

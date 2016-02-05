@@ -79,7 +79,9 @@ class ImageField(CharField):
         if self.yes_prefix==True:
             prefix=uuid4().hex+'_'
         
-        save_file=self.save_folder+'/'+prefix+filename
+        filename=prefix+filename
+        
+        save_file=self.save_folder+'/'+filename
         
         if self.yes_thumbnail:
         
@@ -90,16 +92,18 @@ class ImageField(CharField):
                 
                 im_thumb=im.copy()
                 
-                height_t=150
+                ratio=(real_width/width_t)
+                height_t=round(real_height/ratio)
                 
-                size=(self.width_t, height_t)
+                size=(width_t, height_t)
+                
+                save_file_thumb=self.save_folder+'/'+name+filename
                 
                 im_thumb.thumbnail(size, self.default_quality_thumb)
-                im_thumb.save(self.save_folder, "JPEG")
+                im_thumb.save(save_file_thumb, "JPEG")
                 
                 im_thumb.close()
                 
-                pass 
         # Save file
         
         try:
@@ -130,7 +134,7 @@ class ImageField(CharField):
             
             im.save(save_file)
             
-            # Delete old files if have a different name
+            # Delete old files
             
             if self.model!=None:
                 
@@ -142,7 +146,9 @@ class ImageField(CharField):
                 
                 for arr_image in cur:
                     
-                    os.remove(arr_image[self.name])
+                    if arr_image[self.name]!=save_file:
+                    
+                        os.remove(arr_image[self.name])
                 
                 self.model.yes_reset_conditions=old_reset
             
