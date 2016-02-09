@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-
+import os
 import smtplib
 import mimetypes
 from email import encoders
@@ -98,5 +98,61 @@ class SendMail:
             self.smtp.send_message(msg)
             
             return True
+
+        else:
             
-    
+            outer=MIMEMultipart()
+            
+            outer['Subject']=subject
+            outer['From']=from_address
+            
+            outer['To']=COMMASPACE.join(to_address)
+            
+            # Attach message text
+            
+            msg=MIMEText(message, content_type)
+            
+            outer.attach(msg)
+            
+            for path in attachments:
+                
+                ctype, encoding = mimetypes.guess_type(path)
+                
+                if ctype is None or encoding is not None:
+                    # No guess could be made, or the file is encoded (compressed), so
+                    # use a generic bag-of-bits type.
+                    ctype = 'application/octet-stream'
+                    
+                maintype, subtype = ctype.split('/', 1)
+                
+                if maintype == 'text':
+                    with open(path) as fp:
+                            # Note: we should handle calculating the charset
+                        msg = MIMEText(fp.read(), _subtype=subtype)
+                        
+                elif maintype == 'image':
+                    with open(path, 'rb') as fp:
+                        msg = MIMEImage(fp.read(), _subtype=subtype)
+                
+                elif maintype == 'audio':
+                    with open(path, 'rb') as fp:
+                        msg = MIMEAudio(fp.read(), _subtype=subtype)
+                
+                else:
+                    with open(path, 'rb') as fp:
+                        msg = MIMEBase(maintype, subtype)
+                        msg.set_payload(fp.read())
+                    # Encode the payload using Base64
+                    encoders.encode_base64(msg)
+                
+                # Set the filename parameter
+                msg.add_header('Content-Disposition', 'attachment', filename=os.path.basename(path))
+                    
+                outer.attach(msg)
+            
+            self.smtp.send_message(outer)
+            
+            return True
+        
+            
+            
