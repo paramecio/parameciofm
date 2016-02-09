@@ -20,7 +20,7 @@ class SendMail:
     
     password=''
 
-    ssl=False
+    ssl=True
     
     txt_error=''
 
@@ -36,23 +36,31 @@ class SendMail:
             
                 self.smtp.starttls()
                 
-            except SMTPHeloError:
+            except smtplib.SMTPHeloError:
                 
                 self.txt_error='Error: cannot make HELO to this server'
                 
                 return False
-            
-            except SMTPNotSupportedError:
-                
-                self.txt_error='Error: SSL/TLS is not supported'
-                
-                return False
-        
+
             except RuntimeError:
                 
                 self.txt_error='Error: SSL/TLS is not supported in your python interpreter'
                 
                 return False
+            
+            except smtplib.SMTPException as e:
+                
+                self.txt_error=e.__str__
+                
+                return False
+            
+            """
+            except smtplib.SMTPNotSupportedError:
+                
+                self.txt_error='Error: SSL/TLS is not supported'
+                
+                return False
+            """
         
         if self.username!='':
             
@@ -60,29 +68,31 @@ class SendMail:
             
                 self.smtp.login(self.username, self.password)
                 
-            except SMTPHeloError:
+            except smtplib.SMTPHeloError:
                 
                 self.txt_error='Error: cannot make HELO to this server'
                 
                 return False
             
-            except SMTPAuthenticationError:
+            except smtplib.SMTPAuthenticationError:
                 
                 self.txt_error='Error: cannot login. Wrong username or password'
                 
                 return False
-                
-            except SMTPNotSupportedError:
-                
-                self.txt_error='Error: AUTH is not supported'
-                
-                return False
             
-            except SMTPException:
+            except smtplib.SMTPException:
                 
                 self.txt_error='Error: any method for login is avaliable'
                 
                 return False
+            
+            """
+            except smtplib.SMTPNotSupportedError:
+                
+                self.txt_error='Error: AUTH is not supported'
+                
+                return False
+            """
 
         COMMASPACE=', '
 
