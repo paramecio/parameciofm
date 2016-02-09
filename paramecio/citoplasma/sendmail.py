@@ -12,7 +12,7 @@ from email.mime.text import MIMEText
 
 class SendMail:
     
-    port=25
+    port=587
     
     host='localhost'
     
@@ -50,7 +50,7 @@ class SendMail:
             
             except smtplib.SMTPException as e:
                 
-                self.txt_error=e.__str__
+                self.txt_error=e.__str__()
                 
                 return False
             
