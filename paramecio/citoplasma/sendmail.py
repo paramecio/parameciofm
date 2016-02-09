@@ -154,5 +154,7 @@ class SendMail:
             
             return True
         
-            
+    def quit(self):
+        
+        self.smtp.quit()
             

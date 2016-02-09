@@ -16,4 +16,4 @@ class TestFieldMethods(unittest.TestCase):
         
         self.assertTrue( s.send(config.portal_email, config.email_test, 'This is a test', 'A message for test a simple email method in <b>html</b> and attachments', content_type='html', attachments=['tests/images/image.jpg']) )
         
-        s.smtp.quit()
+        s.quit()
