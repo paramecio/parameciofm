@@ -12,6 +12,6 @@ class I18nForm(BaseForm):
         
         self.form_child=form
     
-    def form():
-        
-        return standard_t.load_template('forms/i18nform.phtml', form=self.form_child)
+    def form(self):
+        print(self.name)
+        return standard_t.load_template('forms/i18nform.phtml', name_form=self.name, form=self.form_child, arr_i18n=I18n.dict_i18n, lang_selected=I18n.default_lang)

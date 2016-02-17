@@ -854,9 +854,6 @@ class PhangoField:
         
         self.txt_error=""
         
-        # Array for create initial parameters for form..
-        self.parameters=[]
-        
         # Themodel where this component or field live
     
         self.model=None

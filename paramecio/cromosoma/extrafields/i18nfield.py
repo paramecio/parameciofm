@@ -2,7 +2,7 @@
 
 import json
 from paramecio.cromosoma.webmodel import PhangoField
-from paramecio.cromosoma.coreforms import TextForm
+from paramecio.cromosoma.coreforms import BaseForm
 from paramecio.cromosoma.extraforms.i18nform import I18nForm
 from paramecio.citoplasma.i18n import I18n
 from paramecio.citoplasma.httputils import GetPostFiles
@@ -14,7 +14,7 @@ class I18nField(PhangoField):
         super().__init__(name)
         
         self.name_form=I18nForm
-        self.parameters=[TextForm(name, '')]
+        self.extra_parameters=[BaseForm(name, '')]
     
     def check(self, value):
         

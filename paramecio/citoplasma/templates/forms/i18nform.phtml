@@ -1,6 +1,6 @@
 ${add_js_home_local('tools.js', 'admin')}
 <div id="languages_form">
-${form.show()}
+${form.form()|n}
 <%def name="select_lang(i18n, lang_selected)">
     % if i18n==lang_selected:
         choose_flag
@@ -10,7 +10,7 @@ ${form.show()}
 </%def>
 % if lang_selected!=None:
     % for i18n in arr_i18n:
-        <a class="${select_lang(i18n, lang_selected)} lang_form" href="#"><img src="${make_media_url_module('images/languages/'+i18n+'.png', 'admin')}" alt="${i18n}"/></a> 
+        <a class="${select_lang(i18n, lang_selected)} lang_form" href="#"><img src="${make_media_url_module('images/languages/'+i18n+'.png', 'admin')}" alt="${name_form}_${i18n}"/></a> 
     % endfor 
 % endif
 </div>
