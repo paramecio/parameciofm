@@ -32,6 +32,12 @@ class BaseForm:
         value=str(value)
         
         return value.replace('"', '&quot;').replace("'", '&#39;')
+    
+    def change_name(self, new_name):
+        
+        self.name=new_name
+        
+        return ""
 
 class TextForm(BaseForm):
     

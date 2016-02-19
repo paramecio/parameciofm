@@ -34,7 +34,7 @@ class I18n:
     l={}
     
     @staticmethod
-    def lang(module, symbol, text_default):
+    def get_default_lang():
         
         lang=I18n.default_lang
         
@@ -46,6 +46,12 @@ class I18n:
             
             lang=s['lang']
             
+        return lang
+    
+    @staticmethod
+    def lang(module, symbol, text_default):
+        
+        lang=I18n.get_default_lang()
         
         I18n.l[lang]=I18n.l.get(lang, {})
         
