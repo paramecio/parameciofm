@@ -48,8 +48,8 @@ else:
     
     def make_media_url(file_path):
 
-        return config.media_url+'media/'+file_path
+        return config.media_url+'/media/'+file_path
     
     def make_media_url_module(file_path, module):
 
-        return config.media_url+'media/'+module+'/'+file_path
+        return config.media_url+'/media/'+module+'/'+file_path
