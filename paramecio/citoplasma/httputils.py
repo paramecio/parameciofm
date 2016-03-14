@@ -19,11 +19,15 @@ class GetPostFiles:
         GetPostFiles.get=request.query.decode()
     
     @staticmethod
-    def obtain_post():
+    def obtain_post(required_post=[]):
         
         GetPostFiles.post={}
         
         GetPostFiles.post=request.forms.decode()
+        
+        for post in required_post:
+            
+            GetPostFiles.post[post]=GetPostFiles.post.get(post, '')
     
     @staticmethod
     def obtain_files():

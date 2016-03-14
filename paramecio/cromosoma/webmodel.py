@@ -801,6 +801,17 @@ class WebModel:
                 
         self.forms=new_dict
     
+    def show_errors(self):
+        
+        error_txt=''
+        
+        for k_error in self.fields_errors.values():
+            
+            for error in k_error:
+                error_txt+=error+"\n"
+                
+        return error_txt
+    
     @staticmethod
     def close():
         WebModel.make_connection=SqlClass.connect_to_db

@@ -12,7 +12,7 @@ from settings import config_admin
 from paramecio.citoplasma.lists import SimpleList
 from paramecio.citoplasma.generate_admin_class import GenerateAdminClass
 from paramecio.citoplasma.httputils import GetPostFiles
-from paramecio.cromosoma.formsutils import show_form, pass_values_to_form
+from paramecio.cromosoma.formsutils import show_form, pass_values_to_form, set_extra_forms_user
 from paramecio.cromosoma.coreforms import PasswordForm
 from importlib import import_module, reload
 from bottle import redirect
@@ -304,7 +304,7 @@ def logout():
     
     redirect('/'+config.admin_folder)
     
-
+"""
 def set_extra_forms_user(user_admin):
     
     user_admin.fields['password'].required=True
@@ -317,10 +317,10 @@ def set_extra_forms_user(user_admin):
     user_admin.forms['repeat_password'].required=1
     
     user_admin.forms['repeat_password'].label=I18n.lang('common', 'repeat_password', 'Repeat Password')
+"""
 
 
-
-    """user_admin.create_forms()
+"""user_admin.create_forms()
     
     users=user_admin.select()"""
 

@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 
 from paramecio.cromosoma import corefields
+from paramecio.cromosoma.coreforms import PasswordForm
+from paramecio.citoplasma.i18n import I18n
 from bottle import request
 
 # Need unittest
@@ -37,6 +39,21 @@ def show_form(post, arr_form, t, yes_error=True, modelform_tpl='forms/modelform.
         pass_values_to_form(post, arr_form, yes_error)
         
         return t.load_template(modelform_tpl, forms=arr_form)
+
+#Simple Function for add repeat_password form to user model
+
+def set_extra_forms_user(user_admin):
+    
+    user_admin.fields['password'].required=True
+    user_admin.fields['email'].required=True
+
+    user_admin.create_forms(['username', 'email', 'password'])
+    
+    user_admin.forms['repeat_password']=PasswordForm('repeat_password', '')
+    
+    user_admin.forms['repeat_password'].required=True
+    
+    user_admin.forms['repeat_password'].label=I18n.lang('common', 'repeat_password', 'Repeat Password')
 
 #Function for initial values for necessary fields.
 
