@@ -1,5 +1,5 @@
 import os, sys, traceback, inspect
-from importlib import import_module, reload
+from importlib import import_module
 from bottle import route, get, post, run, default_app, abort, request, static_file
 from settings import config
 from beaker.middleware import SessionMiddleware
