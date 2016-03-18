@@ -48,9 +48,15 @@ module_loaded=None
 
 for module in config.modules:
     
-    module=module.replace('.', '/')
+    controller_path=load(module)
+        
+    controller_base=os.path.dirname(controller_path.__file__)
     
-    controller_base=os.path.basename(module)
+    base_module=module.split('.')[-1]
+    
+    arr_module_path[base_module]=controller_base
+    
+    dir_controllers=os.listdir(controller_base)
     
     add_func_static_module(controller_base)
     
