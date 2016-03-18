@@ -11,7 +11,7 @@ if sys.version_info < (3, 3):
 #import paramecio
 
 setup(name='paramecio',
-      version='0.1.0b2',
+      version='0.1.1b',
       description='Fast and simple Framework based in bottle and Mako.',
       long_description='This framework is simple framework used for create web apps. Paramecio is modular and fast. By default have a module called admin that can be used for create ',
       author='Antonio de la Rosa Caballero',

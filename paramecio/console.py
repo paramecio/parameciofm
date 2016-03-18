@@ -7,6 +7,7 @@ import getpass
 from pathlib import Path
 from paramecio.cromosoma.webmodel import WebModel
 from paramecio.modules.admin.models.admin import UserAdmin
+from paramecio.create_module import regenerate_modules_config
 
 def start():
 
@@ -74,6 +75,22 @@ def start():
     except:
         
         print('Error: cannot copy the file i18nadmin.py. Check if exists and if you have permissions for this task')
+        
+    try:
+        
+        shutil.copy(workdir+'/frontend/regenerate.py', args.path+'/regenerate.py')
+        
+    except:
+        
+        print('Error: cannot copy the file regenerate.py. Check if exists and if you have permissions for this task')
+    
+    try:
+        
+        shutil.copy(workdir+'/frontend/create_module.py', args.path+'/create_module.py')
+        
+    except:
+        
+        print('Error: cannot copy the file create_module.py. Check if exists and if you have permissions for this task')
     
     if args.symlink!=None:
         try:
@@ -81,6 +98,10 @@ def start():
             
         except:
             print('Error: cannot symlink paramecio in new site')
+    
+    #Regenerate modules
+    
+    regenerate_modules_config()
     
     # Question about mysql configuration? If yes, install configuration
     
