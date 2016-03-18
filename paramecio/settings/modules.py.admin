@@ -1,0 +1,10 @@
+#!/usr/bin/python3
+
+list_modules=[]
+
+from paramecio.modules.welcome import index
+
+from paramecio.modules.admin import index
+
+from paramecio.modules.lang import index
+

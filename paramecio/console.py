@@ -91,6 +91,15 @@ def start():
     except:
         
         print('Error: cannot copy the file create_module.py. Check if exists and if you have permissions for this task')
+        
+
+    try:
+        
+        shutil.copy(workdir+'/settings/modules.py.admin', path_settings+'/modules.py')
+        
+    except:
+        
+        print('Error: cannot copy the file modules.py. Check if exists and if you have permissions for this task')
     
     if args.symlink!=None:
         try:
@@ -98,10 +107,6 @@ def start():
             
         except:
             print('Error: cannot symlink paramecio in new site')
-    
-    #Regenerate modules
-    
-    regenerate_modules_config()
     
     # Question about mysql configuration? If yes, install configuration
     
@@ -179,6 +184,14 @@ def start():
                             f.write(config_text)
                             
                             f.close()
+
+                        try:
+        
+                            shutil.copy(workdir+'/settings/modules.py.admin', path_settings+'/modules.py')
+                            
+                        except:
+                            
+                            print('Error: cannot copy the file modules.py. Check if exists and if you have permissions for this task')
                         
                         print('Created admin site...')
                 
@@ -190,7 +203,6 @@ def start():
         pass
     
         # Question about install admin site.
-
 
 if __name__=="__main__":
     start()
