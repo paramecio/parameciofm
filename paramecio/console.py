@@ -7,7 +7,6 @@ import getpass
 from pathlib import Path
 from paramecio.cromosoma.webmodel import WebModel
 from paramecio.modules.admin.models.admin import UserAdmin
-from paramecio.create_module import regenerate_modules_config
 
 def start():
 
