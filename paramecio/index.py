@@ -3,42 +3,47 @@ from importlib import import_module
 from bottle import route, get, post, run, default_app, abort, request, static_file, load
 from settings import config, modules
 from beaker.middleware import SessionMiddleware
+from mimetypes import guess_type
 
 #Prepare links for static.
 #WARNING: only use this feature in development, not in production.
 
 #def create_app():
-    
+workdir=os.getcwd()
 arr_module_path={}
-
 if config.yes_static==True:
     
     @route('/media/<filename:path>')
     def send_static(filename):
-        return static_file(filename, root='themes/'+config.theme+'/media/')
+        mimetype=guess_type(workdir+'/themes/'+config.theme+'/media/'+filename)
+        return static_file(filename, root=workdir+'/themes/'+config.theme+'/media/', mimetype=mimetype)
     
-    def add_func_static_module(module):
+    #def add_func_static_module(module):
         
-        @route('/mediafrom/<module>/<filename:path>')
-        def send_static_module(module, filename):
+    @route('/mediafrom/<module>/<filename:path>')
+    def send_static_module(module, filename):
+        
+        path_module=arr_module_path[module]+'/media/'
+        
+        file_path_module=path_module+filename
+        
+        path=workdir+'/themes/'+config.theme+'/media/'+module
+        
+        file_path=path+filename
+        
+        if os.path.isfile(file_path):
+            mimetype=guess_type(path+'/'+filename)
+            return static_file(filename, root=path)
             
-            path_module=arr_module_path[module]+'/media/'
-            
-            file_path_module=path_module+filename
-            
-            path='themes/'+config.theme+'/media/'+module
-            
-            file_path=path+filename
-            
-            if os.path.isfile(file_path):
-                return static_file(filename, root=path)
-                
-            else:
-                return static_file(filename, root=path_module)
+        else:
+            mimetype=guess_type(path_module+'/'+filename)
+            return static_file(filename, root=path_module)
+"""
 else:
     
     def add_func_static_module(module):
         pass
+"""
 
 routes={}
 
@@ -58,8 +63,9 @@ for module in config.modules:
     
     dir_controllers=os.listdir(controller_base)
     
-    add_func_static_module(controller_base)
-    
+    #add_func_static_module(controller_base)
+
+
 """
     try:
         

@@ -1,9 +1,9 @@
 #!/usr/bin/python
 
 from jinja2 import Template, Environment, FileSystemLoader
-from citoplasma.urls import make_url, make_media_url, make_media_url_module, add_get_parameters
-from citoplasma.i18n import I18n
-from citoplasma.sessions import get_session
+from paramecio.citoplasma.urls import make_url, make_media_url, make_media_url_module, add_get_parameters
+from paramecio.citoplasma.i18n import I18n
+from paramecio.citoplasma.sessions import get_session
 from settings import config
 
 # Preparing envs for views of modules, and views of 
@@ -62,9 +62,11 @@ class ptemplate:
 
     def env_theme(self, module):
 
-        theme_templates='themes/'+config.theme+'/templates'
+        #standard_templates=path.dirname(__file__)+'/templates'
 
-        module_templates=config.base_modules+'/'+module+'/templates'
+        module_templates=module+'/templates'
+        
+        theme_templates='themes/'+config.theme+'/templates'
 
         return Environment(autoescape=self.guess_autoescape, auto_reload=True, loader=FileSystemLoader([theme_templates, module_templates]))
 
@@ -107,6 +109,8 @@ class HeaderHTML:
         for js in HeaderHTML.js:
             final_js.append('<script language="Javascript" src="'+make_media_url('js/'+js)+'"></script>')
         
+        HeaderHTML.js=[]
+        
         return "\n".join(final_js)
 
     def css_home():
@@ -115,6 +119,8 @@ class HeaderHTML:
         
         for css in HeaderHTML.css:
             final_css.append('<link href="'+make_media_url('css/'+css)+'" rel="stylesheet" type="text/css"/>')
+
+        HeaderHTML.css=[]
 
         return "\n".join(final_css)
 
@@ -170,3 +176,4 @@ def show_flash_message():
     
     return message
     
+standard_t=ptemplate(__file__)

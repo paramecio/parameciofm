@@ -33,7 +33,7 @@ class ptemplate:
     
     show_basic_template=True
     
-    def __init__(self, module):
+    def __init__(self, module, cache_enabled=True, cache_impl='', cache_args={}):
         
         ext=module[len(module)-3:]
         
@@ -43,9 +43,21 @@ class ptemplate:
         
         self.autoescape_ext=('html', 'htm', 'xml', 'phtml')
         
+        self.cache_enabled=cache_enabled
+        
+        self.cache_impl=cache_impl
+        
+        self.cache_args=cache_args
+        
+        self.module_directory="./tmp/modules"
+        
         self.env=self.env_theme(module)
         
         self.filters={}
+        
+        #Place where templates contexts is loaded
+        
+        self.templates={}
         
         #Adding basic filters for urls
         self.add_filter(make_url)
@@ -114,21 +126,33 @@ class ptemplate:
         
         #Standard templates
         #print(standard_templates)
-        return TemplateLookup(directories=[theme_templates, module_templates, standard_templates], default_filters=['h'], input_encoding='utf-8', encoding_errors='replace')
+        return TemplateLookup(directories=[theme_templates, module_templates, standard_templates], default_filters=['h'], input_encoding='utf-8', encoding_errors='replace', cache_enabled=self.cache_enabled, cache_impl=self.cache_impl, cache_args=self.cache_args, module_directory=self.module_directory)
+
+        #, cache_enabled=self.cache_enabled, cache_impl=self.cache_impl, cache_args=self.cache_args
 
         #return Environment(autoescape=self.guess_autoescape, auto_reload=True, loader=FileSystemLoader([theme_templates, module_templates]))
+
+    def load_templates(self, template_files):
+        
+        for template_file in template_files:
+            
+            self.templates[template_file]=self.env.get_template(template_file)
 
     def load_template(self, template_file, **arguments):
         
         template = self.env.get_template(template_file)
         
-        #Will be nice add hooks here
-        
-        #z = x.copy()
-        
         arguments.update(self.filters)
         
+        #arguments['make_media_url']=make_media_url
+        
         return template.render(**arguments)
+
+    def render_template(self, template_file, **arguments):
+        
+        arguments['make_media_url']=make_media_url
+        
+        return self.templates[template_file].render(**arguments)
 
     def add_filter(self, filter_name):
 
