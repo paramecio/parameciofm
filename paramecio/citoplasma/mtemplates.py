@@ -150,7 +150,7 @@ class ptemplate:
 
     def render_template(self, template_file, **arguments):
         
-        arguments['make_media_url']=make_media_url
+        arguments.update(self.filters)
         
         return self.templates[template_file].render(**arguments)
 
