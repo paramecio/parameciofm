@@ -70,15 +70,20 @@ def regenerate_modules_config():
             
             modules.append('from '+module+' import ')
             
+            arr_controllers=[]
+            
             for controller in dir_controllers:
                 
                 if controller.find('.py')!=-1 and controller.find('__init__')==-1:
                     
                     controller_py=controller.replace('.py', '')
                     
-                    modules.append(controller_py)
+                    arr_controllers.append(controller_py)
                     
                     #load(module+'.'+controller_py)
+
+
+            modules.append(", ".join(arr_controllers))
 
             modules.append("\n\n")
 
