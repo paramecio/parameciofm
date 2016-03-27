@@ -22,6 +22,7 @@ class IntegerField(PhangoField):
         except:
             
             value="0"
+            self.txt_error="The value is zero"
             self.error=True
         
         return value
@@ -50,6 +51,7 @@ class FloatField(PhangoField):
         except:
             
             value="0"
+            self.txt_error="The value is zero"
             self.error=True
         
         return value
@@ -133,6 +135,7 @@ class BooleanField(IntegerField):
         except:
             
             self.error=True
+            self.txt_error="Need 0 or 1 value"
             value=0
 
         value=str(value)
@@ -152,4 +155,4 @@ class BooleanField(IntegerField):
         else:
             value=self.no_text
     
-        return value
+        return str(value)

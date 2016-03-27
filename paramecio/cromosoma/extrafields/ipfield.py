@@ -12,6 +12,7 @@ class IpField(CharField):
         except:
             
             self.error=True
+            self.txt_error='No Valid IP'
             value=""
 
             
