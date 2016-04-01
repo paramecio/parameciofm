@@ -45,6 +45,10 @@ else:
         pass
 """
 
+def print_cookie():
+    pass
+    #print(request.cookies)
+
 routes={}
 
 module_loaded=None
@@ -112,6 +116,8 @@ if config.ssl==True:
 #Prepare app
 
 app = application  = default_app()
+
+app.add_hook('before_request', print_cookie)
 
 if config.session_enabled==True:
     #Create dir for sessions

@@ -64,6 +64,8 @@ def home(module='', submodule=''):
         
         if s['lang']!=None:
             lang_selected=s['lang']
+        else:
+            s['lang']=I18n.default_lang
         
         user_admin.conditions=['WHERE id=%s', [s['id']]]
         
@@ -235,7 +237,7 @@ def login():
                     response.set_cookie('remember_login', random_text, expires=timestamp, secret=key_encrypt)
                 #else:
                     #print(user_admin.query_error)
-            
+            s.save()
             
             return {'error': 0}
         else:

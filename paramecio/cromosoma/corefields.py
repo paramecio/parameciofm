@@ -104,6 +104,15 @@ class ForeignKeyField(IntegerField):
         
         self.change_form(coreforms.SelectModelForm, [related_table, self.named_field, self.identifier_field])
 
+    def check(self, value):
+        
+        value=super().check(value)
+        
+        if value=='0' or value==0:
+            value='NULL'
+            
+        return value
+
     def get_type_sql(self):
 
         return 'INT NULL'

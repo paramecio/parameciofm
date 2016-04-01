@@ -41,12 +41,10 @@ class I18n:
         s=get_session()
         
         if s==None:
-            
-            s={}
         
-            s['lang']=s.get('lang', I18n.default_lang)
+            s={'lang': lang}
             
-            lang=s['lang']
+        lang=s.get('lang', lang)
             
         return lang
     
