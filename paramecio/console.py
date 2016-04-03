@@ -5,6 +5,7 @@ import os
 import shutil
 import getpass
 from pathlib import Path
+from base64 import b64encode
 from paramecio.cromosoma.webmodel import WebModel
 from paramecio.modules.admin.models.admin import UserAdmin
 
@@ -41,7 +42,7 @@ def start():
     except:
         print('Error: cannot create the directory. Check if exists and if you have permissions')
         
-    # Copy the files
+    # Copy the files. Need optimization, use an array for save the filenames and a simple for loop.
     
     try:
         
@@ -94,7 +95,7 @@ def start():
 
     try:
         
-        shutil.copy(workdir+'/settings/modules.py.admin', path_settings+'/modules.py')
+        shutil.copy(workdir+'/settings/modules.py', path_settings+'/modules.py')
         
     except:
         
@@ -106,6 +107,23 @@ def start():
             
         except:
             print('Error: cannot symlink paramecio in new site')
+
+    f=open(path_settings+'/config.py', 'r')
+    
+    conf=f.read()
+    
+    f.close()
+    
+    random_bytes = os.urandom(24)
+    secret_key_session = b64encode(random_bytes).decode('utf-8').strip()
+    
+    conf=conf.replace('im smoking fool', secret_key_session)
+    
+    f=open(path_settings+'/config.py', 'w')
+    
+    f.write(conf)
+    
+    f.close()
     
     # Question about mysql configuration? If yes, install configuration
     
@@ -158,6 +176,8 @@ def start():
             if admin=='y' or admin=='Y':
                 
                 try:
+        
+                    shutil.copy(workdir+'/settings/modules.py.admin', path_settings+'/modules.py')
         
                     shutil.copy(workdir+'/settings/config_admin.py.sample', path_settings+'/config_admin.py')
                 

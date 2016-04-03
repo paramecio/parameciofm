@@ -16,7 +16,8 @@ if config.yes_static==True:
     @route('/media/<filename:path>')
     def send_static(filename):
         mimetype=guess_type(workdir+'/themes/'+config.theme+'/media/'+filename)
-        return static_file(filename, root=workdir+'/themes/'+config.theme+'/media/', mimetype=mimetype)
+        
+        return static_file(filename, root=workdir+'/themes/'+config.theme+'/media/', mimetype=mimetype[0])
     
     #def add_func_static_module(module):
         
@@ -122,8 +123,9 @@ app.add_hook('before_request', print_cookie)
 if config.session_enabled==True:
     #Create dir for sessions
     
-    if not os.path.isdir(config.session_opts['session.data_dir']):
-        os.makedirs(config.session_opts['session.data_dir'], 0o700, True)
+    if 'session_data_dir' in config.session_opts:
+        if not os.path.isdir(config.session_opts['session.data_dir']):
+            os.makedirs(config.session_opts['session.data_dir'], 0o700, True)
 
     app = SessionMiddleware(app, config.session_opts, environ_key=config.cookie_name)
 
