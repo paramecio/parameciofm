@@ -6,6 +6,7 @@ from mako.lookup import TemplateLookup
 from paramecio.citoplasma.urls import make_url, make_media_url, make_media_url_module, add_get_parameters
 from paramecio.citoplasma.i18n import I18n
 from paramecio.citoplasma.sessions import get_session
+from paramecio.cromosoma.formsutils import csrf_token
 from settings import config
 from os import path
 
@@ -67,6 +68,8 @@ class ptemplate:
         self.add_filter(make_media_url_module)
         
         self.add_filter(add_get_parameters)
+        
+        self.add_filter(csrf_token)
         
         I18n_lang=I18n.lang
         
@@ -261,9 +264,9 @@ def set_flash_message(message):
     
     s=get_session()
     
-    s['flash']=s.get('flash', "")
-    
     s['flash']=message
+    
+    s.save()
     
 def show_flash_message():
     
@@ -277,6 +280,8 @@ def show_flash_message():
         message='<div class="flash">'+s['flash']+'</div>'
     
     s['flash']=''
+    
+    s.save()
     
     return message
     

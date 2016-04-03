@@ -3,6 +3,8 @@
 from paramecio.cromosoma import corefields
 from paramecio.cromosoma.coreforms import PasswordForm
 from paramecio.citoplasma.i18n import I18n
+from paramecio.citoplasma.sessions import get_session
+from paramecio.citoplasma.keyutils import create_key_encrypt
 from bottle import request
 
 # Need unittest
@@ -36,6 +38,14 @@ def pass_values_to_form(post, arr_form, yes_error=True):
 
 def show_form(post, arr_form, t, yes_error=True, modelform_tpl='forms/modelform.phtml'):
         
+        # Create csrf_token in session
+        
+        s=get_session()
+        
+        s['csrf_token']=create_key_encrypt()
+        
+        s.save()
+        
         pass_values_to_form(post, arr_form, yes_error)
         
         return t.load_template(modelform_tpl, forms=arr_form)
@@ -60,4 +70,11 @@ def set_extra_forms_user(user_admin):
 def ini_fields(fields):
     pass
 
+def csrf_token():
     
+    s=get_session()
+    s['csrf_token']=create_key_encrypt()
+    s.save()
+    
+    return '<input type="hidden" name="csrf_token" id="csrf_token" value="'+s['csrf_token']+'" />'
+

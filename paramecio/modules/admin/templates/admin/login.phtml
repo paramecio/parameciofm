@@ -21,7 +21,7 @@
                 url: "${make_url('admin/login')}",
                 method: "POST",
                 dataType: "json",
-                data: {'username': $('#username_form').val(), 'password': $('#password_form').val(), 'remember_login': $('#remember_login').val()}
+                data: {'username': $('#username_form').val(), 'password': $('#password_form').val(), 'remember_login': $('#remember_login').val(), 'csrf_token': $('#csrf_token').val()}
                 }).done(function(data) {
                 
                     if(data.error==0)

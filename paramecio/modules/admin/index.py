@@ -298,6 +298,8 @@ def logout():
     
         del s['login']
         del s['privileges']
+        
+        s.save()
     
     if request.get_cookie("remember_login", secret=key_encrypt):
            
