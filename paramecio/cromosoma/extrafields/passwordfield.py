@@ -1,6 +1,7 @@
 from paramecio.cromosoma.corefields import PhangoField
 from paramecio.cromosoma.coreforms import PasswordForm
-from passlib.hash import bcrypt
+#from passlib.hash import bcrypt
+from passlib.hash import bcrypt_sha256
 
 class PasswordField(PhangoField):
     
@@ -36,7 +37,7 @@ class PasswordField(PhangoField):
                 self.error=True
             
         else:
-            value = bcrypt.encrypt(value)
+            value = bcrypt_sha256.encrypt(value)
             
         
         return value
@@ -44,6 +45,6 @@ class PasswordField(PhangoField):
     @staticmethod
     def verify( password, h):
         
-        return bcrypt.verify(password, h)
+        return bcrypt_sha256.verify(password, h)
     
     

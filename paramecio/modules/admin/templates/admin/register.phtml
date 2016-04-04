@@ -9,7 +9,7 @@
                 url: "${make_url('admin/register')}",
                 method: "POST",
                 dataType: "json",
-                data: {'username': $('#username_form').val(), 'email': $('#email_form').val(), 'password': $('#password_form').val(), 'repeat_password': $('#repeat_password_form').val()}
+                data: {'username': $('#username_form').val(), 'email': $('#email_form').val(), 'password': $('#password_form').val(), 'repeat_password': $('#repeat_password_form').val(),  'csrf_token': $('#csrf_token').val()}
                 }).done(function(data) {
                 //$( this ).addClass( "done" );
                 //Redirect if register
