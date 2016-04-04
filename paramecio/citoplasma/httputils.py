@@ -40,6 +40,12 @@ class GetPostFiles:
             if GetPostFiles.post['csrf_token']!=s['csrf_token']:
                 
                 raise NameError('Error: you need a valid csrf_token')
+            else:
+                #Clean csrf_token
+                
+                s['csrf_token']=''
+                s.save()
+                
 
         else:
             raise NameError('Error: you don\'t send any valid csrf_token')
