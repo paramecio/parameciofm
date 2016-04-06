@@ -15,9 +15,9 @@ class SimpleList:
         
         self.model=model
         
-        if len(self.model.forms)==0:
+        #if len(self.model.forms)==0:
         
-            self.model.create_forms()
+            #self.model.create_forms()
         
         self.fields=model.fields.keys()
         

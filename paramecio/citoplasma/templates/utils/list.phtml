@@ -4,9 +4,9 @@
     </script>
 {% endset %}
 {{ header_js_list|add_header_home() }}-->
-<%def name="select_field()">
+<%def name="select_field(field)">
     % if simplelist.search_field==field:
-        selected
+        selected \
     % endif
 </%def>
 <%def name="set_css_arrow(simplelist, field)">
@@ -16,11 +16,11 @@
 </%def>
 % if simplelist.yes_search:
 <div class="form">
-<form method="get" action="{{simplelist.url}}">
+<form method="get" action="${simplelist.url}">
     ${lang('common','search', 'Search')}: <input type="text" name="search_text" value="${simplelist.search_text|n}"> 
     <select name="search_field">
     % for field in simplelist.search_fields:
-        <option value="${simplelist.model.forms[field].name}" ${select_field()}>${simplelist.model.forms[field].label}</option>
+        <option value="${simplelist.model.fields[field].name}" ${select_field(field)}>${simplelist.model.fields[field].label}</option>
     % endfor 
     </select>
     <input type="submit" value="${lang('common', 'search', 'Search')}" />

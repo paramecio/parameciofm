@@ -781,7 +781,10 @@ class WebModel:
     def create_forms(self, arr_fields=[]):
         
         if len(arr_fields)==0:
-            arr_fields=self.fields.keys()
+            arr_fields=list(self.fields.keys())
+            
+        if self.name_field_id in arr_fields:
+            del arr_fields[arr_fields.index(self.name_field_id)]
         
         #for name_field, field in self.fields.items():
         for name_field in arr_fields:

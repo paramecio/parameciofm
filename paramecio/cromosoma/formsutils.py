@@ -78,3 +78,7 @@ def csrf_token():
     
     return '<input type="hidden" name="csrf_token" id="csrf_token" value="'+s['csrf_token']+'" />'
 
+def request_type():
+    
+    return request.environ['REQUEST_METHOD']
+    
