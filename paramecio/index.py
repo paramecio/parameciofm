@@ -30,7 +30,7 @@ if config.yes_static==True:
         
         path=workdir+'/themes/'+config.theme+'/media/'+module
         
-        file_path=path+filename
+        file_path=path+'/'+filename
         
         if os.path.isfile(file_path):
             mimetype=guess_type(path+'/'+filename)
