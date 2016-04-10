@@ -4,6 +4,7 @@ from bottle import route, get, post, run, default_app, abort, request, static_fi
 from settings import config, modules
 from beaker.middleware import SessionMiddleware
 from mimetypes import guess_type
+from paramecio.cromosoma.webmodel import WebModel
 
 #Prepare links for static.
 #WARNING: only use this feature in development, not in production.
@@ -118,7 +119,9 @@ if config.ssl==True:
 
 app = application  = default_app()
 
-app.add_hook('before_request', print_cookie)
+#app.add_hook('before_request', print_cookie)
+
+app.add_hook('after_request', WebModel.close)
 
 if config.session_enabled==True:
     #Create dir for sessions

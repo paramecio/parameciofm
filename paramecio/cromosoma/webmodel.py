@@ -835,8 +835,19 @@ class WebModel:
     
     @staticmethod
     def close():
+        
+        connection_to_delete=[]
+        
         WebModel.make_connection=SqlClass.connect_to_db
-        SqlClass.close(SqlClass)
+        
+        for key in SqlClass.connection:
+            SqlClass.close(SqlClass, key)
+            #connection_to_delete.append(key)
+         
+        SqlClass.connection={} 
+            
+        #for key in connection_to_delete:
+            #del SqlClass.connection[key]
     
     @staticmethod
     def escape_sql(value):
