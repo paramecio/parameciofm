@@ -13,4 +13,11 @@ except:
     
 
 def get_session():
-    return request.environ.get(config.cookie_name)
+    
+    try: 
+        
+        return request.environ.get(config.cookie_name)
+    
+    except:
+        
+        return {}

@@ -184,9 +184,14 @@ class WebModel:
             
             self.last_id=cursor.lastrowid
             
+            cursor.close()
+            
             return True
         else:
             self.query_error='Cannot insert the new row'
+            
+            cursor.close()
+            
             return False
     
     # Update method. For update one or many rows.
@@ -222,6 +227,8 @@ class WebModel:
         
         if self.yes_reset_conditions:
             self.reset_conditions()
+        
+        cursor.close()
         
         return True
         
@@ -339,6 +346,7 @@ class WebModel:
         
         if cursor==False:
             self.query_error=SqlClass.error_connection
+            cursor.close()
             return False
         else:
             return cursor
@@ -385,6 +393,8 @@ class WebModel:
         if row==None:
             row=False
 
+        cursor.close()
+
         return row
     
     def select_a_row_where(self, fields_selected=[], raw_query=0):
@@ -397,6 +407,8 @@ class WebModel:
         
         if row==None:
             row=False
+
+        cursor.close()
         
         return row
     
@@ -422,6 +434,8 @@ class WebModel:
             
             results[row[self.name_field_id]]=row
             del_row_id(results[row[self.name_field_id]])
+        
+        cursor.close()
         
         return results
         
@@ -467,6 +481,8 @@ class WebModel:
         if self.yes_reset_conditions:
             self.reset_conditions()
         
+        cursor.close()
+        
         return count
         
         #+' ORDER BY '+self.order_by+' '+self.limit).strip()
@@ -488,9 +504,11 @@ class WebModel:
         
         if result.rowcount>0:
         
+            result.close()
             return True
         else:
             
+            result.close()
             return False
     
     def set_conditions(self, sql_text, values:list) -> None:
