@@ -44,7 +44,6 @@ class GetPostFiles:
                 #Clean csrf_token
                 
                 s['csrf_token']=''
-                s.save()
                 
 
         else:

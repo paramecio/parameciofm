@@ -44,8 +44,6 @@ def show_form(post, arr_form, t, yes_error=True, modelform_tpl='forms/modelform.
         
         s['csrf_token']=create_key_encrypt()
         
-        s.save()
-        
         pass_values_to_form(post, arr_form, yes_error)
         
         return t.load_template(modelform_tpl, forms=arr_form)
@@ -74,7 +72,6 @@ def csrf_token():
     
     s=get_session()
     s['csrf_token']=create_key_encrypt()
-    s.save()
     
     return '<input type="hidden" name="csrf_token" id="csrf_token" value="'+s['csrf_token']+'" />'
 

@@ -266,8 +266,6 @@ def set_flash_message(message):
     
     s['flash']=message
     
-    s.save()
-    
 def show_flash_message():
     
     message=""
@@ -280,8 +278,6 @@ def show_flash_message():
         message='<div class="flash">'+s['flash']+'</div>'
     
     s['flash']=''
-    
-    s.save()
     
     return message
     

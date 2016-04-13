@@ -12,8 +12,6 @@ def index(lang):
         
         s['lang']=lang
         
-        s.save()
-        
         redirect_url=request.headers.get('Referer')
         
         if redirect_url!=None:

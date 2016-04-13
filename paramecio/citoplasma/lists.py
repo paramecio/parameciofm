@@ -92,8 +92,6 @@ class SimpleList:
         self.order_by=self.order_defaults[ order_k ]
         
         self.s['order']=order_k
-        
-        self.s.save()
     
     def obtain_field_search(self):
         
@@ -115,8 +113,6 @@ class SimpleList:
             self.change_order[field_k]=1
         else:
             self.change_order[field_k]=0
-            
-        self.s.save()
         
         self.order_field=self.s['order_field']
         
@@ -182,5 +178,9 @@ class SimpleList:
         
         self.model.yes_reset_conditions=True
         
-        return self.t.load_template('utils/list.phtml', simplelist=self, list=list_items, pages=pages)
+        listing=self.t.load_template('utils/list.phtml', simplelist=self, list=list_items, pages=pages)
+        
+        list_items.close()
+        
+        return listing
     

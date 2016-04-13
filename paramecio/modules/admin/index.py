@@ -237,7 +237,7 @@ def login():
                     response.set_cookie('remember_login', random_text, expires=timestamp, secret=key_encrypt)
                 #else:
                     #print(user_admin.query_error)
-            s.save()
+            #s.save()
             
             return {'error': 0}
         else:
@@ -299,7 +299,7 @@ def logout():
         del s['login']
         del s['privileges']
         
-        s.save()
+        #s.save()
     
     if request.get_cookie("remember_login", secret=key_encrypt):
            
