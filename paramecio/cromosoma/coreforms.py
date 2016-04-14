@@ -66,9 +66,10 @@ class HiddenForm(BaseForm):
 
 class SelectForm(BaseForm):
     
-    def __init__(self, name, value):
+    def __init__(self, name, value, elements=OrderedDict(), default_value=""):
         super(SelectForm, self).__init__(name, value)
-        self.arr_select=OrderedDict()
+        self.arr_select=elements
+        self.default_value=default_value
     
     def form(self):
         

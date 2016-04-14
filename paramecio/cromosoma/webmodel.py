@@ -830,6 +830,10 @@ class WebModel:
             
             for error in k_error:
                 error_txt+=error+"\n"
+
+        for type_error in self.errors.values():
+            for error in type_error:
+                error_txt+=error+"\n"
                 
         return error_txt
     

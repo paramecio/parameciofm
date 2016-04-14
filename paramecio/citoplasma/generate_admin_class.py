@@ -111,7 +111,7 @@ class GenerateAdminClass:
                 set_flash_message(I18n.lang('common', 'task_successful', 'Task successful'))
                 redirect(self.url)
             else:
-
+                
                 form=show_form(post, edit_forms, self.t, True)
                 return self.t.load_template(self.template_insert, admin=self, title_edit=title_edit, form=form, model=self.model, id=GetPostFiles.get['id'])
 

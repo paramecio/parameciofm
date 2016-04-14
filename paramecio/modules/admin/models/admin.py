@@ -6,6 +6,7 @@ from paramecio.cromosoma.usermodel import UserModel
 from paramecio.cromosoma import corefields
 from paramecio.cromosoma.extrafields.emailfield import EmailField
 from paramecio.cromosoma.extrafields.passwordfield import PasswordField
+from paramecio.cromosoma.extrafields.langfield import LangField
 
 class PrivilegesField(corefields.IntegerField):
 
@@ -22,7 +23,10 @@ class PrivilegesField(corefields.IntegerField):
 
 class UserAdmin(UserModel):
     
-    def create_fields(self):
+    #def create_fields(self):
+    def __init__(self):
+
+        super().__init__()
 
         # I can change other fields here, how the name.
 
@@ -43,6 +47,8 @@ class UserAdmin(UserModel):
         self.register(corefields.CharField('token_login'))
 
         self.register(PrivilegesField('privileges'))
+        
+        self.register(LangField('lang', 20))
 
 """
 

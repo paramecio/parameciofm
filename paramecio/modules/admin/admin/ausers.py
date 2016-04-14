@@ -13,7 +13,7 @@ def admin(t):
     
     user_admin.fields['privileges'].name_form=SelectForm
     
-    user_admin.create_forms(['username', 'password', 'email', 'privileges'])
+    user_admin.create_forms(['username', 'password', 'email', 'privileges', 'lang'])
     
     user_admin.forms['privileges'].arr_select={0: I18n.lang('admin', 'without_privileges', 'Without privileges'), 1: I18n.lang('admin', 'selected_privileges', 'Selected privileges'), 2: I18n.lang('admin', 'administrator', 'Administrator')}
     
@@ -27,8 +27,12 @@ def admin(t):
     
     admin.list.search_fields=['username']
     
-    admin.arr_fields_edit=['username', 'password', 'repeat_password', 'email', 'privileges']
+    admin.arr_fields_edit=['username', 'password', 'repeat_password', 'email', 'privileges', 'lang']
     
     #admin.list.limit_pages=5
     
-    return admin.show()
+    form_admin=admin.show()
+    
+    print(user_admin.show_errors())
+    
+    return form_admin
