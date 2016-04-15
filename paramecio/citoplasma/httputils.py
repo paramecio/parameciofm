@@ -30,7 +30,7 @@ class GetPostFiles:
         for post in required_post:
             
             GetPostFiles.post[post]=GetPostFiles.post.get(post, '')
-
+        
         s=get_session()
         
         if 'csrf_token' in s:

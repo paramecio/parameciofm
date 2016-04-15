@@ -15,7 +15,7 @@ def admin(t):
     
     user_admin.create_forms(['username', 'password', 'email', 'privileges', 'lang'])
     
-    user_admin.forms['privileges'].arr_select={0: I18n.lang('admin', 'without_privileges', 'Without privileges'), 1: I18n.lang('admin', 'selected_privileges', 'Selected privileges'), 2: I18n.lang('admin', 'administrator', 'Administrator')}
+    user_admin.forms['privileges'].arr_select={'0': I18n.lang('admin', 'without_privileges', 'Without privileges'), '1': I18n.lang('admin', 'selected_privileges', 'Selected privileges'), '2': I18n.lang('admin', 'administrator', 'Administrator')}
     
     user_admin.fields['password'].protected=False
     
@@ -32,7 +32,5 @@ def admin(t):
     #admin.list.limit_pages=5
     
     form_admin=admin.show()
-    
-    print(user_admin.show_errors())
     
     return form_admin

@@ -85,7 +85,7 @@ class GenerateAdminClass:
             
             GetPostFiles.obtain_post()
             
-            post=GetPostFiles.post
+            #post=GetPostFiles.post
             
             self.model.reset_conditions()
             
@@ -107,12 +107,12 @@ class GenerateAdminClass:
                 title_edit=I18n.lang('common', 'edit_new_item', 'Edit item')
                 self.model.conditions=['WHERE `'+self.model.name+'`.`'+self.model.name_field_id+'`=%s', [GetPostFiles.get['id']]]
             
-            if insert_row(post):
+            if insert_row(GetPostFiles.post):
                 set_flash_message(I18n.lang('common', 'task_successful', 'Task successful'))
                 redirect(self.url)
             else:
                 
-                form=show_form(post, edit_forms, self.t, True)
+                form=show_form(GetPostFiles.post, edit_forms, self.t, True)
                 return self.t.load_template(self.template_insert, admin=self, title_edit=title_edit, form=form, model=self.model, id=GetPostFiles.get['id'])
 
             

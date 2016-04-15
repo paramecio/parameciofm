@@ -834,7 +834,9 @@ class WebModel:
         for type_error in self.errors.values():
             for error in type_error:
                 error_txt+=error+"\n"
-                
+
+        error_txt=self.query_error+"\n"
+
         return error_txt
     
     @staticmethod

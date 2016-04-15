@@ -85,8 +85,8 @@ class UserModel(WebModel):
             
             if self.updated:
                 # Need the id
-                GetPostFiles.obtain_get()
-                GetPostFiles.obtain_post()
+                #GetPostFiles.obtain_get()
+                #GetPostFiles.obtain_post()
                 
                 get_id=GetPostFiles.get.get(self.name_field_id, '0')
                 
