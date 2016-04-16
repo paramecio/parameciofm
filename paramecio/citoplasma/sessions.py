@@ -62,7 +62,9 @@ class ParamecioSession:
     def keys(self):
         return self.session.keys()
         
-        
+    def remove(self):
+        print("pepe")
+        response.delete_cookie(config.cookie_name)
 
 def generate_session():
     

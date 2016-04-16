@@ -306,6 +306,10 @@ def logout():
         # delete cookie
         response.delete_cookie("remember_login")
     
+    #Remove cookie session
+    
+    s.remove()
+    
     redirect('/'+config.admin_folder)
     
 """

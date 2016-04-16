@@ -131,7 +131,8 @@ if config.session_enabled==True:
     
     key_encrypt=config.key_encrypt
     
-    if 'session_data_dir' in config.session_opts:
+    if 'session.data_dir' in config.session_opts:
+        
         if not os.path.isdir(config.session_opts['session.data_dir']):
             os.makedirs(config.session_opts['session.data_dir'], 0o700, True)
 
@@ -178,12 +179,15 @@ if config.session_enabled==True:
         if 'save' in save_session:
             del save_session['save']
         # Here define the session type, if memcached, save data in memcached
+            try:
+                with open(config.session_opts['session.data_dir']+'/session_'+save_session['token'], 'w') as f:
+                    s = JSONWebSignatureSerializer(key_encrypt)
+                    json_encode=s.dumps(save_session)
+                    f.write(json_encode.decode('utf8'))
         
-            with open(config.session_opts['session.data_dir']+'/session_'+save_session['token'], 'w') as f:
-                s = JSONWebSignatureSerializer(key_encrypt)
-                json_encode=s.dumps(save_session)
-                f.write(json_encode.decode('utf8'))
-        
+            except:
+                pass
+
         #request.environ[config.cookie_name]['save']
     #def save_session()
     
