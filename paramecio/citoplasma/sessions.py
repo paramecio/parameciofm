@@ -63,13 +63,12 @@ class ParamecioSession:
         return self.session.keys()
         
     def remove(self):
-        print("pepe")
-        response.delete_cookie(config.cookie_name)
+        response.delete_cookie(config.cookie_name, path="/")
 
 def generate_session():
     
     random_text=create_key_encrypt_256(30)
-    response.set_cookie(config.cookie_name, random_text)
+    response.set_cookie(config.cookie_name, random_text, secret=config.key_encrypt, path="/")
     request.environ[config.cookie_name]={'token': random_text}
 
 def get_session():

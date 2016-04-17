@@ -215,7 +215,7 @@ def login():
             s['privileges']=arr_user['privileges']
             
             remember_login=GetPostFiles.post.get('remember_login', '0')
-            
+            """
             if remember_login=='1':
                 
                 timestamp=time()+315360000
@@ -238,7 +238,7 @@ def login():
                 #else:
                     #print(user_admin.query_error)
             #s.save()
-            
+            """
             return {'error': 0}
         else:
             return {'error': 1}
@@ -294,21 +294,21 @@ def logout():
     
     s=get_session()
     
-    if 'login' in s.keys():
+    #if 'login' in s.keys():
     
-        del s['login']
-        del s['privileges']
+    #    del s['login']
+    #    del s['privileges']
         
         #s.save()
+    
+    s.remove()
     
     if request.get_cookie("remember_login", secret=key_encrypt):
            
         # delete cookie
-        response.delete_cookie("remember_login")
+        response.delete_cookie("remember_login", path="/")
     
-    #Remove cookie session
-    
-    s.remove()
+    #return ""
     
     redirect('/'+config.admin_folder)
     

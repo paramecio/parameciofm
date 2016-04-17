@@ -136,57 +136,59 @@ if config.session_enabled==True:
         if not os.path.isdir(config.session_opts['session.data_dir']):
             os.makedirs(config.session_opts['session.data_dir'], 0o700, True)
 
-    def load_session():
-        
-        code_session=request.get_cookie(config.cookie_name)
-        
-        if code_session==None:
-            # Send cookie
-            generate_session()
-        else:
+    if config.session_opts['session.type']=='file':
+
+        def load_session():
             
-            # Check if file exists
+            code_session=request.get_cookie(config.cookie_name, secret=config.key_encrypt)
             
-            if os.path.isfile(config.session_opts['session.data_dir']+'/session_'+code_session):
-                with open(config.session_opts['session.data_dir']+'/session_'+code_session, 'r') as f:
-                    
-                    try:
-                    
-                        s = JSONWebSignatureSerializer(key_encrypt)
-                        session_dict=f.read()
-                        request.environ[config.cookie_name]=s.loads(session_dict)
-                        request.environ[config.cookie_name]['token']=code_session
-                    
-                    except:
+            if code_session==None:
+                # Send cookie
+                generate_session()
+            else:
+                
+                # Check if file exists
+                
+                if os.path.isfile(config.session_opts['session.data_dir']+'/session_'+code_session):
+                    with open(config.session_opts['session.data_dir']+'/session_'+code_session, 'r') as f:
                         
-                        # Clean fake session
+                        try:
                         
-                        try: 
-                            os.remove(config.session_opts['session.data_dir']+'/session_'+code_session)
+                            s = JSONWebSignatureSerializer(key_encrypt)
+                            session_dict=f.read()
+                            request.environ[config.cookie_name]=s.loads(session_dict)
+                            request.environ[config.cookie_name]['token']=code_session
                         
                         except:
                             
-                            pass
-                        
-                        generate_session()
-                
-            else:
-                request.environ[config.cookie_name]={'token': code_session}
+                            # Clean fake session
+                            
+                            try: 
+                                os.remove(config.session_opts['session.data_dir']+'/session_'+code_session)
+                            
+                            except:
+                                
+                                pass
+                            
+                            generate_session()
+                    
+                else:
+                    request.environ[config.cookie_name]={'token': code_session}
 
-    def save_session():
-        
-        save_session=request.environ[config.cookie_name]
-        if 'save' in save_session:
-            del save_session['save']
-        # Here define the session type, if memcached, save data in memcached
-            try:
-                with open(config.session_opts['session.data_dir']+'/session_'+save_session['token'], 'w') as f:
-                    s = JSONWebSignatureSerializer(key_encrypt)
-                    json_encode=s.dumps(save_session)
-                    f.write(json_encode.decode('utf8'))
-        
-            except:
-                pass
+        def save_session():
+            
+            save_session=request.environ[config.cookie_name]
+            if 'save' in save_session:
+                del save_session['save']
+            # Here define the session type, if memcached, save data in memcached
+                try:
+                    with open(config.session_opts['session.data_dir']+'/session_'+save_session['token'], 'w') as f:
+                        s = JSONWebSignatureSerializer(key_encrypt)
+                        json_encode=s.dumps(save_session)
+                        f.write(json_encode.decode('utf8'))
+            
+                except:
+                    pass
 
         #request.environ[config.cookie_name]['save']
     #def save_session()

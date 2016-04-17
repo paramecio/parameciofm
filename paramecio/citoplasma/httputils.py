@@ -37,13 +37,13 @@ class GetPostFiles:
             
             GetPostFiles.post['csrf_token']=GetPostFiles.post.get('csrf_token', '')
             
-            if GetPostFiles.post['csrf_token']!=s['csrf_token']:
+            if GetPostFiles.post['csrf_token']!=s['csrf_token'] and GetPostFiles.post['csrf_token'].strip()!="":
                 
                 raise NameError('Error: you need a valid csrf_token')
             else:
                 #Clean csrf_token
                 
-                s['csrf_token']=''
+                del s['csrf_token']
                 
 
         else:
