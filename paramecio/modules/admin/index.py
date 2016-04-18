@@ -5,7 +5,7 @@ from paramecio.citoplasma.mtemplates import ptemplate
 from paramecio.modules.admin.models.admin import UserAdmin
 from paramecio.citoplasma.i18n import load_lang, I18n
 from paramecio.citoplasma.urls import make_url, add_get_parameters
-from paramecio.citoplasma.sessions import get_session
+from paramecio.citoplasma.sessions import get_session, generate_session
 from bottle import get,post,response,request
 from settings import config
 from settings import config_admin
@@ -199,7 +199,7 @@ def login():
     
     user_admin.conditions=['WHERE username=%s', [username]]
     
-    arr_user=user_admin.select_a_row_where(['id', 'password', 'privileges'])
+    arr_user=user_admin.select_a_row_where(['id', 'password', 'privileges', 'lang'])
     
     if arr_user==False:
         
@@ -208,11 +208,17 @@ def login():
         
         if user_admin.fields['password'].verify(password, arr_user['password']):
             
+            generate_session()
+            
             s=get_session()
             
             s['id']=arr_user['id']
             s['login']=1
             s['privileges']=arr_user['privileges']
+            s['lang']=arr_user['lang']
+            
+            if s['lang']=='':
+                s['lang']=I18n.default_lang
             
             remember_login=GetPostFiles.post.get('remember_login', '0')
             
@@ -294,10 +300,10 @@ def logout():
     
     s=get_session()
     
-    #if 'login' in s.keys():
+    if 'login' in s.keys():
     
-    #    del s['login']
-    #    del s['privileges']
+        del s['login']
+        del s['privileges']
         
         #s.save()
     
