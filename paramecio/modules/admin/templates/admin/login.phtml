@@ -16,12 +16,20 @@
             $('#login_submit').click( function () {
             
                 $('#loading').show();
+                
+                data_form={'username': $('#username_form').val(), 'password': $('#password_form').val(), 'csrf_token': $('#csrf_token').val()};
+            
+                if($('#remember_login:checked').val())
+                {
+                    alert('pepe');
+                    data_form.remember_login=$('#remember_login').val();
+                }
             
                 $.ajax({
                 url: "${make_url('admin/login')}",
                 method: "POST",
                 dataType: "json",
-                data: {'username': $('#username_form').val(), 'password': $('#password_form').val(), 'remember_login': $('#remember_login').val(), 'csrf_token': $('#csrf_token').val()}
+                data: data_form
                 }).done(function(data) {
                 
                     if(data.error==0)

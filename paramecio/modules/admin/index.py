@@ -215,7 +215,7 @@ def login():
             s['privileges']=arr_user['privileges']
             
             remember_login=GetPostFiles.post.get('remember_login', '0')
-            """
+            
             if remember_login=='1':
                 
                 timestamp=time()+315360000
@@ -234,11 +234,11 @@ def login():
                 
                 if user_admin.update({'token_login': random_text}):
                     
-                    response.set_cookie('remember_login', random_text, expires=timestamp, secret=key_encrypt)
+                    response.set_cookie('remember_login', random_text, path="/", expires=timestamp, secret=key_encrypt)
                 #else:
                     #print(user_admin.query_error)
             #s.save()
-            """
+            
             return {'error': 0}
         else:
             return {'error': 1}
