@@ -40,7 +40,10 @@ class I18nField(PhangoField):
             return json.dumps(final_value)
         
         return json.dumps(final_value)
-    
+
+    def get_type_sql(self):
+
+        return 'TEXT NOT NULL DEFAULT ""'
 
     def obtain_lang_value(self, lang, value):
         
