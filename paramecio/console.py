@@ -15,6 +15,8 @@ def start():
 
     parser.add_argument('--path', help='The path where the paramecio site is located', required=True)
 
+    parser.add_argument('--modules', help='A list separated by commas with the git repos for download modules for this site', required=False)
+
     parser.add_argument('--symlink', help='Set if create direct symlink to paramecio in new site', required=False, nargs='?', const='1')
 
     args=parser.parse_args()
