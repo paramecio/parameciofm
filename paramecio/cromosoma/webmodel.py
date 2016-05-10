@@ -5,14 +5,15 @@ import re
 import uuid
 from importlib import import_module, reload
 from collections import OrderedDict
-from paramecio.cromosoma.databases.mysql import SqlClass
+from paramecio.cromosoma.databases.mysqldb import SqlClass
 from paramecio.cromosoma.coreforms import BaseForm, HiddenForm
 
 # The most important class for the framework
 #
 # Webmodel is a class for create objects that represent models. This models are a mirage of SQL tables. You can create fields, add indexes, foreign keys, and more.
 #
-#
+#        
+        
 
 class WebModel:
     
@@ -23,8 +24,7 @@ class WebModel:
     arr_sql_unique={}
     arr_sql_set_unique={}
     last_query=""
-    
-    make_connection=SqlClass.connect_to_db
+    connection_pool=[]
     
     #A dictionary for add models here
     
@@ -36,9 +36,18 @@ class WebModel:
     
     webmodel=True
     
+    #sqlclass=SqlClass()
+    
+    #make_connection=sqlclass.connect_to_db
+    
+    @staticmethod
+    def connection():
+        
+        return SqlClass()
+    
     # Init the class
     
-    def __init__(self, name_field_id="id"):
+    def __init__(self, sqlclass, name_field_id="id"):
         
         #The name of the table
         
@@ -108,6 +117,8 @@ class WebModel:
         # A simple dictionary that save the fields that have files related. If i delete the row in database i need delete the files related
         
         self.files_delete={}
+        
+        self.sqlclass=sqlclass
     
     # A method where create the new fields of this model
     
@@ -134,23 +145,34 @@ class WebModel:
     def create_id_field(self, field_name="id"):
         pass
     
-    # A method for select rows from a database. 
+    # A method for connect to database
     
     def connect_to_db(self):
         
-        if WebModel.make_connection(SqlClass, self.connections[self.connection_id])==False:
-            raise NameError(SqlClass.error_connection)
+        #if WebModel.make_connection(self.connections[self.connection_id])==False:
+            #raise NameError(sqlclass.error_connection)
         
-        WebModel.make_connection=SqlClass.dummy_connect
+        #self.connection_pool.append(True)
+        """
+        if not sqlclass.connected:
+            if WebModel.make_connection(self.connections[self.connection_id])==False:
+                raise NameError(sqlclass.error_connection)
+        """
+        
+        if self.sqlclass.connect_to_db(self.connections[self.connection_id])==False:
+            raise NameError(sqlclass.error_connection)
+        
+        #WebModel.make_connection=sqlclass.dummy_connect
     
     def dummy_connect(self, connection):
         return True
     
     # Static method for make queries
-    @staticmethod
-    def query(WebModel, str_query, args=[], connection_id='default'):
-        WebModel.connect_to_db(WebModel)
-        return SqlClass.query(SqlClass, str_query, args, connection_id)
+    
+    def query(self, str_query, args=[], connection_id='default'):
+        
+        self.connect_to_db()
+        return self.sqlclass.query(str_query, args, connection_id)
     
     # Insert method, for insert a row in database.using a dictionary
     # External agent define if the update is in code or from external source, how a form.
@@ -178,7 +200,7 @@ class WebModel:
         
         sql="insert into `"+self.name+"` (`"+"`, `".join(fields)+"`) VALUES ("+", ".join(values)+")"
         
-        cursor=SqlClass.query(SqlClass, sql, self.conditions[1], self.connection_id)
+        cursor=self.sqlclass.query(sql, self.conditions[1], self.connection_id)
         
         if cursor.rowcount>0:
             
@@ -223,7 +245,7 @@ class WebModel:
         
         sql="update `"+self.name+"` SET "+", ".join(update_values)+" "+self.conditions[0]
         
-        cursor=SqlClass.query(SqlClass, sql, self.conditions[1], self.connection_id)
+        cursor=self.sqlclass.query(sql, self.conditions[1], self.connection_id)
         
         if self.yes_reset_conditions:
             self.reset_conditions()
@@ -249,7 +271,7 @@ class WebModel:
         """
         except:
             
-            #self.query_error=SqlClass.error_connection
+            #self.query_error=sqlclass.error_connection
             e = sys.exc_info()[0]
             v = sys.exc_info()[1]
             
@@ -342,10 +364,10 @@ class WebModel:
         if self.yes_reset_conditions:
             self.reset_conditions()
         
-        cursor=SqlClass.query(SqlClass, sql, conditions[1], self.connection_id)
+        cursor=self.sqlclass.query(sql, conditions[1], self.connection_id)
         
         if cursor==False:
-            self.query_error=SqlClass.error_connection
+            self.query_error=self.sqlclass.error_connection
             cursor.close()
             return False
         else:
@@ -474,7 +496,7 @@ class WebModel:
                 
         sql= "select count(`"+field_to_count+"`) from "+", ".join(tables_to_select)+conditions[0]
         
-        cursor=SqlClass.query(SqlClass, sql, conditions[1], self.connection_id)
+        cursor=self.sqlclass.query(sql, conditions[1], self.connection_id)
         
         count=list(cursor.fetchone().values())[0]
         
@@ -497,7 +519,7 @@ class WebModel:
         
         sql="delete from `"+self.name+"` "+self.conditions[0]
         
-        result=SqlClass.query(SqlClass, sql, self.conditions[1], self.connection_id)
+        result=self.sqlclass.query(sql, self.conditions[1], self.connection_id)
         
         if self.yes_reset_conditions:
             self.reset_conditions()
@@ -591,40 +613,40 @@ class WebModel:
             
             print("---Deleting index from "+field+" in "+self.name)
             
-            WebModel.query(WebModel, 'DROP INDEX `index_'+self.name+'_'+field+'` ON '+self.name, [], self.connection_id)
+            self.query('DROP INDEX `index_'+self.name+'_'+field+'` ON '+self.name, [], self.connection_id)
         
         for field in fields_to_delete_unique:
             
             print("---Deleting unique from "+field+" in "+self.name)
             
-            WebModel.query(WebModel, 'DROP INDEX `'+field+'` ON '+self.name, [], self.connection_id)
+            self.query('DROP INDEX `'+field+'` ON '+self.name, [], self.connection_id)
         
         for field in fields_to_delete_constraint:
             
             print("---Deleting foreignkey from "+field+" in "+self.name)
             
-            WebModel.query(WebModel, 'ALTER TABLE `'+self.name+'` DROP FOREIGN KEY '+field+'_'+self.name+'IDX', [], self.connection_id)
+            self.query('ALTER TABLE `'+self.name+'` DROP FOREIGN KEY '+field+'_'+self.name+'IDX', [], self.connection_id)
         
         for field in fields_to_delete:
             
             print("---Deleting "+field+" from "+self.name)
             
-            WebModel.query(WebModel, 'ALTER TABLE `'+self.name+'` DROP `'+field+'`', [], self.connection_id)
+            self.query('ALTER TABLE `'+self.name+'` DROP `'+field+'`', [], self.connection_id)
             #Deleting indexes and constraints.
         
         #Obtain new fields
         
         for field in fields_to_modify:
             print("---Updating "+field+" in "+self.name)
-            WebModel.query(WebModel, 'ALTER TABLE `'+self.name+'` MODIFY `'+field+'` '+self.fields[field].get_type_sql(), [], self.connection_id)
+            self.query('ALTER TABLE `'+self.name+'` MODIFY `'+field+'` '+self.fields[field].get_type_sql(), [], self.connection_id)
         
         for field in fields_to_add:
             print("---Adding "+field+" in "+self.name)
-            WebModel.query(WebModel, 'ALTER TABLE `'+self.name+'` ADD `'+field+'` '+self.fields[field].get_type_sql(), [], self.connection_id)
+            self.query('ALTER TABLE `'+self.name+'` ADD `'+field+'` '+self.fields[field].get_type_sql(), [], self.connection_id)
             
         for field in fields_to_add_index:
             print("---Adding index to "+field+" in "+self.name)
-            WebModel.query(WebModel, 'CREATE INDEX `index_'+self.name+'_'+field+'` ON '+self.name+' (`'+field+'`);', [], self.connection_id)
+            self.query('CREATE INDEX `index_'+self.name+'_'+field+'` ON '+self.name+' (`'+field+'`);', [], self.connection_id)
             
         for field in fields_to_add_constraint:
             
@@ -634,20 +656,20 @@ class WebModel:
                 
             id_table_related=self.fields[field].table_id
             
-            WebModel.query(WebModel, 'ALTER TABLE `'+self.name+'` ADD CONSTRAINT `'+field+'_'+self.name+'IDX` FOREIGN KEY ( `'+field+'` ) REFERENCES `'+table_related+'` (`'+id_table_related+'`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [], self.connection_id)
+            self.query('ALTER TABLE `'+self.name+'` ADD CONSTRAINT `'+field+'_'+self.name+'IDX` FOREIGN KEY ( `'+field+'` ) REFERENCES `'+table_related+'` (`'+id_table_related+'`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [], self.connection_id)
             
         for field in fields_to_add_unique:
             
             print("---Adding unique to "+field+" in "+self.name)
             
-            WebModel.query(WebModel, 'ALTER TABLE `'+self.name+'` ADD UNIQUE (`'+field+'`)', [], self.connection_id)
+            self.query('ALTER TABLE `'+self.name+'` ADD UNIQUE (`'+field+'`)', [], self.connection_id)
             
         
         
     # Method for drop sql tables and related
     
     def drop(self):
-        return WebModel.query(WebModel, 'DROP TABLE '+self.name, [], self.connection_id)
+        return self.query('DROP TABLE '+self.name, [], self.connection_id)
     
     #Return an array with all fields
     
@@ -839,29 +861,33 @@ class WebModel:
 
         return error_txt
     
-    @staticmethod
-    def close():
+    def close(self):
         
-        connection_to_delete=[]
+        self.sqlclass.close()
         
-        WebModel.make_connection=SqlClass.connect_to_db
+        #connection_to_delete=[]
         
-        for key in SqlClass.connection:
-            SqlClass.close(SqlClass, key)
+        #WebModel.make_connection=self.sqlclass.connect_to_db
+        
+        #for key in self.sqlclass.connection:
+            #self.sqlclass.close(key)
             #connection_to_delete.append(key)
          
-        SqlClass.connection={} 
+        #self.sqlclass.connection={} 
             
         #for key in connection_to_delete:
-            #del SqlClass.connection[key]
+            #del sqlclass.connection[key]
     
-    @staticmethod
     def escape_sql(value):
         
         value=str(value)
         
         return value.replace("'","\\'").strip()
-    
+    """
+    def __del__(self):
+        
+        self.close()
+    """
     
 class PhangoField:
     

@@ -2,30 +2,44 @@ from settings import config
 from paramecio.cromosoma.webmodel import WebModel
 from paramecio.cromosoma import corefields
 import unittest
-
-
 # Create TestWebModelMethods
 
 class ExampleModel(WebModel):
     
-    def create_fields(self):
+    def __init__(self, connection):
+
+        super().__init__(connection)
+
+        # I can change other fields here, how the name.
+
+        self.register(corefields.CharField('title'))
+        self.register(corefields.CharField('content'))
+        
+class ExampleModel2(WebModel):
+    
+    def __init__(self, connection):
+
+        super().__init__(connection)
 
         # I can change other fields here, how the name.
 
         self.register(corefields.CharField('title'))
         self.register(corefields.CharField('content'))
 
-model=ExampleModel()
-
 class TestWebModelMethods(unittest.TestCase):
     
     def test_test_table(self):
+        
+        connection=WebModel.connection()
+        model=ExampleModel(connection)
+
         
         sql=model.create_table()
         
         print('Creating table')
         
-        self.assertTrue(WebModel.query(WebModel, sql))
+        self.assertTrue(model.query(sql))
+
         
         post={'title': 'Example title', 'content': 'New content'}
         
@@ -98,14 +112,21 @@ class TestWebModelMethods(unittest.TestCase):
         print('Check delete table')
         
         self.assertTrue(model.drop())
+        
+        connection.close()
+        
     
     def test_update_table(self):
+    
+        connection=WebModel.connection()
+        model=ExampleModel(connection)
+
     
         print('Check modifications in table')
     
         sql=model.create_table()
         
-        self.assertTrue(WebModel.query(WebModel, sql))
+        self.assertTrue(model.query(sql))
         
         fields_to_modify=[]
         fields_to_add_index=[] 
@@ -127,6 +148,31 @@ class TestWebModelMethods(unittest.TestCase):
         model.update_table([], fields_to_modify, fields_to_add_index, fields_to_add_constraint, fields_to_add_unique, ['description'], ['description'], fields_to_delete_constraint, ['description'])
         
         self.assertTrue(model.drop())
+        
+        connection.close()
+        
+    def test_zcheck_connections(self):
+        
+        print('Check connection of models...')
+        
+        connection=WebModel.connection()
+        model=ExampleModel(connection)
+        
+        model2=ExampleModel2(connection)
+        
+        sql=model.create_table()
+        sql2=model2.create_table()
+        #print(sql)
+        
+        self.assertTrue(model.query(sql))
+        self.assertTrue(model2.query(sql2))
+        
+        self.assertTrue(model.drop())
+        self.assertTrue(model2.drop())
+        
+        connection.close()
+        
+        pass
     
 if __name__ == '__main__':
     unittest.main()

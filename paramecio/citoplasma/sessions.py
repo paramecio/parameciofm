@@ -73,10 +73,16 @@ def generate_session():
 
 def get_session():
     
-    if config.cookie_name in request.environ:
+    try:
+    
+        if config.cookie_name in request.environ:
+            
+            return ParamecioSession()
+        else:
+            return None
+    
+    except:
         
-        return ParamecioSession()
-    else:
         return None
     
     """

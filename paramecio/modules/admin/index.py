@@ -14,6 +14,7 @@ from paramecio.citoplasma.generate_admin_class import GenerateAdminClass
 from paramecio.citoplasma.httputils import GetPostFiles
 from paramecio.cromosoma.formsutils import show_form, pass_values_to_form, set_extra_forms_user
 from paramecio.cromosoma.coreforms import PasswordForm
+from paramecio.cromosoma.webmodel import WebModel
 from importlib import import_module, reload
 from bottle import redirect
 from collections import OrderedDict
@@ -40,7 +41,7 @@ t=ptemplate(__file__)
 def home(module='', submodule=''):
     
     # A simple boolean used for show or not the code of admin module in standard template
-    
+    connection=WebModel.connection()
     ptemplate.show_basic_template=True
     
     if submodule!='':
@@ -50,7 +51,7 @@ def home(module='', submodule=''):
     
     #check if login
     
-    user_admin=UserAdmin()
+    user_admin=UserAdmin(connection)
     
     s=get_session()
     
@@ -114,7 +115,9 @@ def home(module='', submodule=''):
                         
                         return "No exists admin module"
 
-                    content_index=new_module.admin(t)
+                    #args={'t': t, 'connection': connection}
+
+                    content_index=new_module.admin(t=t, connection=connection)
 
                     if ptemplate.show_basic_template==True:   
                     
@@ -161,6 +164,7 @@ def home(module='', submodule=''):
                      redirect('/'+config.admin_folder)
             
             else:
+                
                 post={}
                 
                 user_admin.yes_repeat_password=False
@@ -170,6 +174,8 @@ def home(module='', submodule=''):
                 user_admin.create_forms(['username', 'password'])
                 
                 forms=show_form(post, user_admin.forms, t, yes_error=False)
+                
+                #connection.close()
                 
                 return t.load_template('admin/login.phtml', forms=forms)
                 
@@ -186,7 +192,9 @@ def home(module='', submodule=''):
 @post('/'+config.admin_folder+'/login')
 def login():
     
-    user_admin=UserAdmin()
+    connection=WebModel.connection()
+    
+    user_admin=UserAdmin(connection)
     
     GetPostFiles.obtain_post()
     
@@ -253,7 +261,9 @@ def login():
 @post('/'+config.admin_folder+'/register')
 def register():
     
-    user_admin=UserAdmin()
+    connection=WebModel.connection()
+    
+    user_admin=UserAdmin(connection)
     
     user_admin.conditions=['WHERE privileges=%s', 2]
     

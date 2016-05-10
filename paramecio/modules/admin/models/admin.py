@@ -24,9 +24,9 @@ class PrivilegesField(corefields.IntegerField):
 class UserAdmin(UserModel):
     
     #def create_fields(self):
-    def __init__(self):
+    def __init__(self, connection):
 
-        super().__init__()
+        super().__init__(connection)
 
         # I can change other fields here, how the name.
 

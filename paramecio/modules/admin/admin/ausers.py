@@ -7,9 +7,13 @@ from paramecio.citoplasma.i18n import I18n
 from paramecio.cromosoma.coreforms import SelectForm
 from settings import config
 
-def admin(t):
+def admin(**args):
     
-    user_admin=UserAdmin()
+    
+    t=args['t']
+    connection=args['connection']
+    
+    user_admin=UserAdmin(connection)
     
     user_admin.fields['privileges'].name_form=SelectForm
     
