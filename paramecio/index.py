@@ -2,12 +2,12 @@ import os, sys, traceback, inspect, resource
 from importlib import import_module
 from bottle import route, get, post, run, default_app, abort, request, response, static_file, load
 from settings import config, modules
-#from beaker.middleware import SessionMiddleware
+from beaker.middleware import SessionMiddleware
 from mimetypes import guess_type
 from paramecio.cromosoma.webmodel import WebModel
 from itsdangerous import JSONWebSignatureSerializer
 from paramecio.citoplasma.keyutils import create_key_encrypt, create_key_encrypt_256, create_key
-from paramecio.citoplasma.sessions import generate_session
+#from paramecio.citoplasma.sessions import generate_session
 
 #Prepare links for static.
 #WARNING: only use this feature in development, not in production.
@@ -128,7 +128,7 @@ app.add_hook('before_request', print_memory)
 
 if config.session_enabled==True:
     #Create dir for sessions
-    
+    """
     key_encrypt=config.key_encrypt
     
     if 'session.data_dir' in config.session_opts:
@@ -196,8 +196,8 @@ if config.session_enabled==True:
     app.add_hook('before_request', load_session)
     app.add_hook('after_request', save_session)
     #def 
-
-    #app = SessionMiddleware(app, config.session_opts, environ_key=config.cookie_name)
+    """
+    app = SessionMiddleware(app, config.session_opts, environ_key=config.cookie_name)
 
 def run_app(app):
 

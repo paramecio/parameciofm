@@ -317,7 +317,7 @@ def logout():
         
         #s.save()
     
-    s.remove()
+    s.delete()
     
     if request.get_cookie("remember_login", secret=key_encrypt):
            

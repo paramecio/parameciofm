@@ -14,7 +14,7 @@ except:
         cookie_name='paramecio_session'
         key_encrypt=create_key_encrypt_256(30)
         
-
+"""
 class ParamecioSession:
     
     def __init__(self):
@@ -70,6 +70,11 @@ def generate_session():
     random_text=create_key_encrypt_256(30)
     response.set_cookie(config.cookie_name, random_text, secret=config.key_encrypt, path="/")
     request.environ[config.cookie_name]={'token': random_text}
+"""
+
+def generate_session():
+    s=request.environ.get(config.cookie_name)
+    s.invalidate()
 
 def get_session():
     
@@ -77,7 +82,8 @@ def get_session():
     
         if config.cookie_name in request.environ:
             
-            return ParamecioSession()
+            return request.environ.get(config.cookie_name)
+            #ParamecioSession()
         else:
             return None
     

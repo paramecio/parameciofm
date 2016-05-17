@@ -48,15 +48,30 @@ session_enabled=True
 
 cookie_name = 'paramecio.session'
 
-#More simple sessions. Save the session in a file in ./sessions directory.
+#Go back to beaker sessions
 
-
-session_opts = {
-    'session.type': 'file',
-    'session.data_dir': './sessions'
-}
+#Keep this variable and don't show to anybody
 
 key_encrypt="im smoking fool"
+
+session_opts = {
+    #'session.domain': 'domain.com',
+    'session.cookie_expires': True,
+    'session.type': 'cookie',
+    'session.path': '/',
+    'session.auto': True,
+    'session.key': cookie_name,
+    'session.validate_key': key_encrypt    
+}
+
+"""
+session_opts = {
+    'session.type': 'file',
+    'session.data_dir': './sessions',
+    'session.auto': true
+    
+}
+"""
 
 cache_session_opts = {
     
