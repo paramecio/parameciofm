@@ -1,17 +1,19 @@
 #!/usr/bin/python3
 
 import sys
-import sqlalchemy.pool as pool
-import MySQLdb
 import MySQLdb.cursors
+import sqlalchemy.pool as pool
 
 class SqlClass:
     
-    connection={}
+    mypool=None
     
     def __init__(self):
     
+        self.max_overflow=30
+        self.pool_size=15
         self.error_connection=""
+        self.connection={}
         self.connected=False
         self.connection_method=self.connect_to_db_sql
     
@@ -23,23 +25,22 @@ class SqlClass:
         self.connection_method(connection, name_connection)
         
         self.connection_method=self.dummy_connect
-        
+    
     def connect_to_db_sql(self, connection, name_connection="default"):
         
         try:
-        
-            def getcoon():
-                c = MySQLdb.connect(connection['host'],
+            def getconn():
+                return MySQLdb.connect(connection['host'],
                     user=connection['user'],
                     passwd=connection['password'],
                     db=connection['db'],
                     charset='utf8mb4',
                     cursorclass=MySQLdb.cursors.DictCursor)
-                return c
             
-            mypool=pool.QueuePool(getcoon, max_overflow=30, pool_size=15)
+            if SqlClass.mypool==None:
+                SqlClass.mypool=pool.QueuePool(getconn, max_overflow=self.max_overflow, pool_size=self.pool_size)
             
-            self.connection[name_connection]=mypool.connect()
+            self.connection[name_connection]=SqlClass.mypool.connect()
             
             self.connected=True
             
@@ -99,7 +100,7 @@ class SqlClass:
         if self.connection[name_connection]:
         
             self.connection[name_connection].close()
-            #self.connection[name_connection]=False
+            self.connection[name_connection]=False
         
         pass
     

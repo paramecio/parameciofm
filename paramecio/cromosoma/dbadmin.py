@@ -10,10 +10,15 @@ from pathlib import Path
 from colorama import init, Fore, Back, Style
 from importlib import import_module, reload
 from paramecio.cromosoma.webmodel import WebModel
+from settings import config
 
 #from models import books
 
 def start():
+    
+    connection=WebModel.connection()
+    
+    connection.connect_to_db(WebModel.connections['default'])
     
     parser = argparse.ArgumentParser(description='A tool for create tables in databases using models from Cromosoma')
 
@@ -58,7 +63,7 @@ def start():
             if inspect.isclass(obj):
                 if obj.__module__==args.model and hasattr(obj, 'webmodel'):
                     
-                    WebModel.model[name.lower()]=obj()
+                    WebModel.model[name.lower()]=obj(connection)
                     
                     
                     #WebModel.modelobj
@@ -79,7 +84,7 @@ def start():
     
     #load the table of databases
     
-    cursor=WebModel.query(WebModel, "show tables")
+    cursor=connection.query("show tables")
     
     table_exists=[]
     
@@ -114,7 +119,7 @@ def start():
         
         for table in new_tables:
             print(Style.NORMAL+"--Creating table "+table+"...")
-            WebModel.query(WebModel, WebModel.model[table].create_table())
+            connection.query(WebModel.model[table].create_table())
 
         for table in new_tables:
             
@@ -122,12 +127,12 @@ def start():
 
             for k_field, index in WebModel.arr_sql_index[table].items():
                 print("---Added index to "+k_field)
-                WebModel.query(WebModel, index)
+                connection.query(index)
                 
             for k_set, index_set in WebModel.arr_sql_set_index[table].items():
                 
                 if index_set!="":
-                    WebModel.query(WebModel, index_set)
+                    connection.query(index_set)
                     print("---Added constraint to "+k_set)
                 
             print("--Adding uniques elements for the new table")
@@ -144,12 +149,12 @@ def start():
             if inspect.isclass(obj):
                 if obj.__module__=='backups.'+args.model and hasattr(obj, 'webmodel'):
                     
-                    WebModel.model['old_'+name.lower()]=obj()
+                    WebModel.model['old_'+name.lower()]=obj(connection)
         
         print(Style.BRIGHT+"Checking old versions of model for find changes...")
         
         for table in tables:
-        #WebModel.query(WebModel, "")
+        #connection.query("")
             #Check if new table
             
             #fields_to_add, fields_to_modify, fields_to_add_index, fields_to_add_constraint, fields_to_add_unique, fields_to_delete_index, fields_to_delete_unique, fields_to_delete_constraint, fields_to_delete
