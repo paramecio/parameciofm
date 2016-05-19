@@ -25,11 +25,12 @@ class ArrayField(PhangoField):
             value=[]
             self.error=True
             self.txt_error='Sorry, the json array is invalid'
-            
-        for k,v in enumerate(value):
-            
-            value[k]=self.field_type.check(v)
-            
+        
+        if type(self.field_type).__name__!='ArrayField':        
+            for k,v in enumerate(value):
+                
+                value[k]=self.field_type.check(v)
+        
         final_value=json.dumps(value)
         
         final_value=super().check(final_value)
@@ -44,3 +45,11 @@ class ArrayField(PhangoField):
         
         return ", ".join(value)
     
+    def loads(self, value):
+        
+        try:
+        
+            return json.loads(value)
+        except:
+            
+            return False
