@@ -122,19 +122,20 @@ if config.ssl==True:
 
 app = application  = default_app()
 
-app.add_hook('before_request', print_memory)
+#app.add_hook('before_request', print_memory)
 
 #app.add_hook('after_request', WebModel.close)
 
 if config.session_enabled==True:
     #Create dir for sessions
-    """
-    key_encrypt=config.key_encrypt
     
     if 'session.data_dir' in config.session_opts:
         
         if not os.path.isdir(config.session_opts['session.data_dir']):
             os.makedirs(config.session_opts['session.data_dir'], 0o700, True)
+    
+    """
+    key_encrypt=config.key_encrypt
 
     if config.session_opts['session.type']=='file':
 

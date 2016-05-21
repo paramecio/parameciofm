@@ -10,8 +10,8 @@ class SqlClass:
     
     def __init__(self):
     
-        self.max_overflow=30
-        self.pool_size=15
+        self.max_overflow=45
+        self.pool_size=30
         self.error_connection=""
         self.connection={}
         self.connected=False
@@ -90,9 +90,7 @@ class SqlClass:
     """
     def __del__(self):
         
-        for key in self.connection:
-        
-            self.close(self.connection)
+        self.close()
     """
     
     def close(self, name_connection="default"):
@@ -100,7 +98,7 @@ class SqlClass:
         if self.connection[name_connection]:
         
             self.connection[name_connection].close()
-            self.connection[name_connection]=False
+            #self.connection[name_connection]=False
         
         pass
     

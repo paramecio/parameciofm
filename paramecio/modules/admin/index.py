@@ -33,6 +33,12 @@ module_admin=path.dirname(__file__)
 
 t=ptemplate(__file__)
 
+def make_admin_url(url):
+    
+    return make_url('%s/%s' % (config.admin_folder, url))
+
+t.add_filter(make_admin_url)
+
 @get('/'+config.admin_folder)
 @get('/'+config.admin_folder+'/<module>')
 @post('/'+config.admin_folder+'/<module>')
@@ -102,7 +108,12 @@ def home(module='', submodule=''):
                     
                     try:
                         new_module=import_module(menu[module][1])
-                    
+                        
+                        #t.inject_folder=path.dirname(new_module.__file__).replace('/admin', '')
+                        
+                        #t.env=t.env_theme(path.dirname(__file__))
+                        t.env.directories.insert(1, path.dirname(new_module.__file__).replace('/admin', '')+'/templates')
+                        #print(t.env.directories)
                         if config.reloader:
                             reload(new_module)
                     
@@ -327,7 +338,7 @@ def logout():
     #return ""
     
     redirect('/'+config.admin_folder)
-    
+
 """
 def set_extra_forms_user(user_admin):
     

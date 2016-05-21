@@ -52,7 +52,7 @@ class ptemplate:
         
         self.module_directory="./tmp/modules"
         
-        self.env=self.env_theme(module)
+        self.inject_folder=None
         
         self.filters={}
         
@@ -75,41 +75,35 @@ class ptemplate:
         
         self.add_filter(I18n.lang)
         
-        self.add_filter(add_css_home)
+        self.headerhtml=HeaderHTML()
         
-        self.add_filter(add_js_home)
+        self.add_filter(self.headerhtml.add_css_home)
         
-        self.add_filter(add_css_home_local)
+        self.add_filter(self.headerhtml.add_js_home)
         
-        self.add_filter(add_js_home_local)
+        self.add_filter(self.headerhtml.add_css_home_local)
         
-        self.add_filter(add_header_home)
+        self.add_filter(self.headerhtml.add_js_home_local)
         
-        self.filters['HeaderHTML']=HeaderHTML
+        self.add_filter(self.headerhtml.add_header_home)
         
-        self.filters['show_flash_message']=show_flash_message
+        self.filters['HeaderHTML']=self.headerhtml
+        
+        self.filters['show_flash_message']=self.headerhtml.show_flash_message
+        
+        self.env=self.env_theme(module)
         
         #self.auto_reload=True
         
         # Clean HeaderHTML
-        
+        """
         HeaderHTML.css=[]
         HeaderHTML.js=[]
         HeaderHTML.header=[]
         HeaderHTML.cache_header=[]
         HeaderHTML.css_local={}
         HeaderHTML.js_local={}
-        
-        
-    @staticmethod
-    def clean_header_cache():
-        
-        HeaderHTML.css=[]
-        HeaderHTML.js=[]
-        HeaderHTML.css_local={}
-        HeaderHTML.js_local={}
-        HeaderHTML.header=[]
-        HeaderHTML.cache_header=[]
+        """
     
     def guess_autoescape(self, template_name):
         
@@ -127,9 +121,14 @@ class ptemplate:
         
         theme_templates='themes/'+config.theme+'/templates'
         
+        search_folders=[theme_templates, module_templates, standard_templates]
+        
+        #if self.inject_folder is not None:
+            #search_folders.insert(1, self.inject_folder+'/templates')
+        
         #Standard templates
         #print(standard_templates)
-        return TemplateLookup(directories=[theme_templates, module_templates, standard_templates], default_filters=['h'], input_encoding='utf-8', encoding_errors='replace', cache_enabled=self.cache_enabled, cache_impl=self.cache_impl, cache_args=self.cache_args, module_directory=self.module_directory)
+        return TemplateLookup(directories=search_folders, default_filters=['h'], input_encoding='utf-8', encoding_errors='replace', cache_enabled=self.cache_enabled, cache_impl=self.cache_impl, cache_args=self.cache_args, module_directory=self.module_directory)
 
         #, cache_enabled=self.cache_enabled, cache_impl=self.cache_impl, cache_args=self.cache_args
 
@@ -164,121 +163,125 @@ class ptemplate:
 
 class HeaderHTML:
     
-    css=[]
-    js=[]
-    header=[]
-    cache_header={}
+    def __init__(self):
+    
+        self.css=[]
+        self.js=[]
+        self.header=[]
+        self.cache_header={}
+        self.css_local={}
+        self.js_local={}
 
-    def header_home():
+    def header_home(self):
         
-        final_header="\n".join(HeaderHTML.header)
+        final_header="\n".join(self.header)
         
-        HeaderHTML.header=[]
+        self.header=[]
         
         return final_header
 
-    def js_home():
+    def js_home(self):
 
         final_js=[]
         
-        for js in HeaderHTML.js:
+        for js in self.js:
             final_js.append('<script language="Javascript" src="'+make_media_url('js/'+js)+'"></script>')
         
-        for module, arr_js in HeaderHTML.js_local.items():
+        for module, arr_js in self.js_local.items():
             for js in arr_js:
                 final_js.append('<script language="Javascript" src="'+make_media_url_module('js/'+js, module)+'"></script>')
         
-        HeaderHTML.js=[]
-        HeaderHTML.js_local={}
+        self.js=[]
+        self.js_local={}
         
         return "\n".join(final_js)
 
-    def css_home():
+    def css_home(self):
         
         final_css=[]
         
-        for css in HeaderHTML.css:
+        for css in self.css:
             final_css.append('<link href="'+make_media_url('css/'+css)+'" rel="stylesheet" type="text/css"/>')
-
-        for module, arr_css in HeaderHTML.css_local.items():
+        
+        for module, arr_css in self.css_local.items():
             
             for css in arr_css:
             
                 final_css.append('<link href="'+make_media_url_module('css/'+css, module)+'" rel="stylesheet" type="text/css"/>')
 
-        HeaderHTML.css=[]
-        HeaderHTML.css_local={}
+        self.css=[]
+        self.css_local={}
 
         return "\n".join(final_css)
 
 
-def add_header_home(variable, only_one_time=False):
-        
-        
-        if only_one_time==True:
-            HeaderHTML.cache_header.get(variable, 0)
+    def add_header_home(self, variable, only_one_time=False):
             
-            if cache_header[variable]==1:
-                return ''
-        #HeaderHTML.cache_header[variable]=1
+            
+            if only_one_time==True:
+                self.cache_header.get(variable, 0)
+                
+                if cache_header[variable]==1:
+                    return ''
+            #self.cache_header[variable]=1
+            
+            self.header.append(variable)
+            
+            return ''
+
+    def add_css_home(self, css):
         
-        HeaderHTML.header.append(variable)
+        if not css in self.css:
+            self.css.append(css)
+            
+        return ''
+            
+    def add_js_home(self, js):
         
+        if not js in self.js:
+            self.js.append(js)
+
         return ''
 
-def add_css_home(css):
-    
-    if not css in HeaderHTML.css:
-        HeaderHTML.css.append(css)
+    def add_css_home_local(self, css, module):
         
-    return ''
+        if not css in self.css_local:
+            
+            self.css_local[module]=self.css_local.get(module, [])
+            
+            self.css_local[module].append(css)
+
+        return ''
+
+    def add_js_home_local(self, js, module):
         
-def add_js_home(js):
-    
-    if not js in HeaderHTML.js:
-        HeaderHTML.js.append(js)
+        if not js in self.js_local:
+            
+            self.js_local[module]=self.js_local.get(module, [])
+            
+            self.js_local[module].append(js)
 
-    return ''
-
-def add_css_home_local(css, module):
-    
-    if not css in HeaderHTML.css_local:
+        return ''
         
-        HeaderHTML.css_local[module]=HeaderHTML.css_local.get(module, [])
+    def show_flash_message(self):
         
-        HeaderHTML.css_local[module].append(css)
-
-    return ''
-
-def add_js_home_local(js, module):
-    
-    if not js in HeaderHTML.js_local:
+        message=""
         
-        HeaderHTML.js_local[module]=HeaderHTML.js_local.get(module, [])
+        s=get_session()
         
-        HeaderHTML.js_local[module].append(js)
+        s['flash']=s.get('flash', "")
+        
+        if s['flash']!="":
+            message='<div class="flash">'+s['flash']+'</div>'
+        
+        s['flash']=''
+        
+        return message
 
-    return ''
-
-def set_flash_message(message):
-    
+def set_flash_message(self, message):
+        
     s=get_session()
     
     s['flash']=message
-    
-def show_flash_message():
-    
-    message=""
-    
-    s=get_session()
-    
-    s['flash']=s.get('flash', "")
-    
-    if s['flash']!="":
-        message='<div class="flash">'+s['flash']+'</div>'
-    
-    s['flash']=''
-    
-    return message
-    
+
 standard_t=ptemplate(__file__)

@@ -421,7 +421,9 @@ class WebModel:
     
     def select_a_row_where(self, fields_selected=[], raw_query=0):
         
-        self.limit="limit 1"
+        if self.limit=='':
+        
+            self.limit="limit 1"
         
         cursor=self.select(fields_selected, raw_query)
         
@@ -846,18 +848,21 @@ class WebModel:
     
     def show_errors(self):
         
+        arr_error=[]
         error_txt=''
         
         for k_error in self.fields_errors.values():
             
             for error in k_error:
-                error_txt+=error+"\n"
+                arr_error.append(error)
 
         for type_error in self.errors.values():
             for error in type_error:
-                error_txt+=error+"\n"
+                arr_error.append(error)
 
-        error_txt=self.query_error+"\n"
+        arr_error.append(self.query_error)
+        
+        error_txt="\n".join(arr_error)
 
         return error_txt
     
