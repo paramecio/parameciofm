@@ -212,14 +212,16 @@ def login():
     
     user_admin=UserAdmin(connection)
     
-    GetPostFiles.obtain_post()
+    getpostfiles=GetPostFiles()
     
-    GetPostFiles.post['username']=GetPostFiles.post.get('username', '')
-    GetPostFiles.post['password']=GetPostFiles.post.get('password', '')
+    getpostfiles.obtain_post()
     
-    username=user_admin.fields['username'].check(GetPostFiles.post['username'])
+    getpostfiles.post['username']=getpostfiles.post.get('username', '')
+    getpostfiles.post['password']=getpostfiles.post.get('password', '')
     
-    password=GetPostFiles.post['password'].strip()
+    username=user_admin.fields['username'].check(getpostfiles.post['username'])
+    
+    password=getpostfiles.post['password'].strip()
     
     user_admin.conditions=['WHERE username=%s', [username]]
     
@@ -244,7 +246,7 @@ def login():
             if s['lang']=='':
                 s['lang']=I18n.default_lang
             
-            remember_login=GetPostFiles.post.get('remember_login', '0')
+            remember_login=getpostfiles.post.get('remember_login', '0')
             
             if remember_login=='1':
                 
@@ -277,6 +279,8 @@ def login():
 @post('/'+config.admin_folder+'/register')
 def register():
     
+    getpostfiles=GetPostFiles()
+    
     connection=WebModel.connection()
     
     user_admin=UserAdmin(connection)
@@ -287,15 +291,15 @@ def register():
     
     if c==0:
         
-        GetPostFiles.obtain_post()
+        getpostfiles.obtain_post()
         
-        GetPostFiles.post['privileges']=2
+        getpostfiles.post['privileges']=2
         
         user_admin.valid_fields=['username', 'email', 'password', 'privileges']
         
         user_admin.create_forms()
         
-        if user_admin.insert(GetPostFiles.post, False):
+        if user_admin.insert(getpostfiles.post, False):
         
             error= {'error': 0}
             
@@ -303,9 +307,9 @@ def register():
         
         else:
             
-            user_admin.check_all_fields(GetPostFiles.post, False)
+            user_admin.check_all_fields(getpostfiles.post, False)
             
-            pass_values_to_form(GetPostFiles.post, user_admin.forms, yes_error=True)
+            pass_values_to_form(getpostfiles.post, user_admin.forms, yes_error=True)
             
             error={'error': 1}
             

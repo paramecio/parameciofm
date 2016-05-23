@@ -88,9 +88,13 @@ class UserModel(WebModel):
                 #GetPostFiles.obtain_get()
                 #GetPostFiles.obtain_post()
                 
-                get_id=GetPostFiles.get.get(self.name_field_id, '0')
+                getpostfiles=GetPostFiles()
                 
-                post_id=GetPostFiles.post.get(self.name_field_id, '0')
+                getpostfiles.obtain_get()
+                
+                get_id=getpostfiles.get.get(self.name_field_id, '0')
+                
+                post_id=getpostfiles.post.get(self.name_field_id, '0')
                 
                 if get_id!='0':
                     get_id=int(get_id)
@@ -125,6 +129,7 @@ class UserModel(WebModel):
                 self.conditions[1].append([dict_values[self.email_field]])
             
             if get_id>0:
+                
                 self.conditions[0]+=' AND '+self.name_field_id+'!=%s'
                 self.conditions[1].append(get_id)
             

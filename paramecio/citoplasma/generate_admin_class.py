@@ -49,11 +49,13 @@ class GenerateAdminClass:
 
     def show(self):
         
-        GetPostFiles.obtain_get()
+        getpostfiles=GetPostFiles()
         
-        GetPostFiles.get['op_admin']=GetPostFiles.get.get('op_admin', '0')
+        getpostfiles.obtain_get()
         
-        GetPostFiles.get['id']=GetPostFiles.get.get('id', '0')
+        getpostfiles.get['op_admin']=getpostfiles.get.get('op_admin', '0')
+        
+        getpostfiles.get['id']=getpostfiles.get.get('id', '0')
         
         if len(self.model.forms)==0:
 
@@ -64,14 +66,14 @@ class GenerateAdminClass:
         for key_form in self.arr_fields_edit:
             edit_forms[key_form]=self.model.forms[key_form]
         
-        if GetPostFiles.get['op_admin']=='1':
+        if getpostfiles.get['op_admin']=='1':
             
             post=None
             
             title_edit=I18n.lang('common', 'add_new_item', 'Add new item')
             
-            if GetPostFiles.get['id']!='0':
-                post=self.model.select_a_row(GetPostFiles.get['id'], [], True)
+            if getpostfiles.get['id']!='0':
+                post=self.model.select_a_row(getpostfiles.get['id'], [], True)
                 title_edit=I18n.lang('common', 'edit_new_item', 'Edit item')
             
             if post==None:
@@ -79,13 +81,13 @@ class GenerateAdminClass:
             
             form=show_form(post, edit_forms, self.t, False)
                 
-            return self.t.load_template(self.template_insert, admin=self, title_edit=title_edit, form=form, model=self.model, id=GetPostFiles.get['id'])
+            return self.t.load_template(self.template_insert, admin=self, title_edit=title_edit, form=form, model=self.model, id=getpostfiles.get['id'])
         
-        elif GetPostFiles.get['op_admin']=='2':
+        elif getpostfiles.get['op_admin']=='2':
             
-            GetPostFiles.obtain_post()
+            getpostfiles.obtain_post()
             
-            #post=GetPostFiles.post
+            #post=getpostfiles.post
             
             self.model.reset_conditions()
             
@@ -93,46 +95,45 @@ class GenerateAdminClass:
             
             try:
                 
-                GetPostFiles.get['id']=str(int(GetPostFiles.get['id']))
+                getpostfiles.get['id']=str(int(getpostfiles.get['id']))
             
             except:
                 
-                GetPostFiles.get['id']='0'
+                getpostfiles.get['id']='0'
             
             title_edit=I18n.lang('common', 'add_new_item', 'Add new item')
                 
             
-            if GetPostFiles.get['id']!='0':
+            if getpostfiles.get['id']!='0':
                 insert_row=self.model.update
                 title_edit=I18n.lang('common', 'edit_new_item', 'Edit item')
-                self.model.conditions=['WHERE `'+self.model.name+'`.`'+self.model.name_field_id+'`=%s', [GetPostFiles.get['id']]]
+                self.model.conditions=['WHERE `'+self.model.name+'`.`'+self.model.name_field_id+'`=%s', [getpostfiles.get['id']]]
             
-            if insert_row(GetPostFiles.post):
+            if insert_row(getpostfiles.post):
                 set_flash_message(I18n.lang('common', 'task_successful', 'Task successful'))
                 redirect(self.url)
             else:
-                
-                form=show_form(GetPostFiles.post, edit_forms, self.t, True)
-                return self.t.load_template(self.template_insert, admin=self, title_edit=title_edit, form=form, model=self.model, id=GetPostFiles.get['id'])
+                form=show_form(getpostfiles.post, edit_forms, self.t, True)
+                return self.t.load_template(self.template_insert, admin=self, title_edit=title_edit, form=form, model=self.model, id=getpostfiles.get['id'])
 
             
             pass
             
-        elif GetPostFiles.get['op_admin']=='3':
+        elif getpostfiles.get['op_admin']=='3':
             
-            verified=GetPostFiles.get.get('verified', '0')
+            verified=getpostfiles.get.get('verified', '0')
             
             if verified=='1':
     
-                if GetPostFiles.get['id']!='0':
-                    self.model.conditions=['WHERE `'+self.model.name+'`.`'+self.model.name_field_id+'`=%s', [GetPostFiles.get['id']]]
+                if getpostfiles.get['id']!='0':
+                    self.model.conditions=['WHERE `'+self.model.name+'`.`'+self.model.name_field_id+'`=%s', [getpostfiles.get['id']]]
                     self.model.delete()
                     set_flash_message(I18n.lang('common', 'task_successful', 'Task successful'))
                     redirect(self.url)
     
             else:
                 
-                return self.t.load_template(self.template_verify_delete, url=self.url, item_id=GetPostFiles.get['id'], op_admin=3, verified=1)
+                return self.t.load_template(self.template_verify_delete, url=self.url, item_id=getpostfiles.get['id'], op_admin=3, verified=1)
     
         else:
             return self.t.load_template(self.template_admin, admin=self)

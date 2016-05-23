@@ -7,37 +7,38 @@ from paramecio.citoplasma.keyutils import create_key_encrypt
 class GetPostFiles:
 
     # Need this for obtain utf8 valid values
-    get={}
     
-    post={}
+    def __init__(self):
     
-    files={}
+        self.get={}
+        
+        self.post={}
+        
+        self.files={}
 
-    @staticmethod
-    def obtain_get():
+    def obtain_get(self):
         
-        GetPostFiles.get={}
+        self.get={}
         
-        GetPostFiles.get=request.query.decode()
+        self.get=request.query.decode()
     
-    @staticmethod
-    def obtain_post(required_post=[]):
+    def obtain_post(self, required_post=[]):
         
-        GetPostFiles.post={}
+        self.post={}
         
-        GetPostFiles.post=request.forms.decode()
+        self.post=request.forms.decode()
         
         for post in required_post:
             
-            GetPostFiles.post[post]=GetPostFiles.post.get(post, '')
+            self.post[post]=self.post.get(post, '')
         
         s=get_session()
         
         if 'csrf_token' in s:
             
-            GetPostFiles.post['csrf_token']=GetPostFiles.post.get('csrf_token', '')
+            self.post['csrf_token']=self.post.get('csrf_token', '')
             
-            if GetPostFiles.post['csrf_token']!=s['csrf_token'] and GetPostFiles.post['csrf_token'].strip()!="":
+            if self.post['csrf_token']!=s['csrf_token'] and self.post['csrf_token'].strip()!="":
                 
                 raise NameError('Error: you need a valid csrf_token')
             else:
@@ -51,7 +52,6 @@ class GetPostFiles:
 
         #Check post_token
     
-    @staticmethod
-    def obtain_files():
+    def obtain_files(self):
         
-        GetPostFiles.files=request.files
+        self.files=request.files

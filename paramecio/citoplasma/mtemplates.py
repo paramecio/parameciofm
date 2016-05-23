@@ -316,7 +316,7 @@ class HeaderHTML:
         
         return message
 
-def set_flash_message(self, message):
+def set_flash_message(message):
         
     s=get_session()
     
