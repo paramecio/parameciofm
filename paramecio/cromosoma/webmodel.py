@@ -83,6 +83,8 @@ class WebModel:
         
         self.query_error=""
         
+        self.values_query=[]
+        
         self.conditions=["WHERE 1=1", []]
         
         self.order_by="ORDER BY `"+self.name+"`.`id` ASC"
@@ -198,9 +200,13 @@ class WebModel:
 
             return False
         
-        sql="insert into `"+self.name+"` (`"+"`, `".join(fields)+"`) VALUES ("+", ".join(values)+")"
+        c=len(values)
         
-        cursor=self.sqlclass.query(sql, self.conditions[1], self.connection_id)
+        arr_str=['%s' for x in range(c)]
+        
+        sql="insert into `"+self.name+"` (`"+"`, `".join(fields)+"`) VALUES ("+", ".join(arr_str)+")"
+        
+        cursor=self.sqlclass.query(sql, values+self.conditions[1], self.connection_id)
         
         if cursor.rowcount>0:
             
@@ -245,7 +251,7 @@ class WebModel:
         
         sql="update `"+self.name+"` SET "+", ".join(update_values)+" "+self.conditions[0]
         
-        cursor=self.sqlclass.query(sql, self.conditions[1], self.connection_id)
+        cursor=self.sqlclass.query(sql, values+self.conditions[1], self.connection_id)
         
         if self.yes_reset_conditions:
             self.reset_conditions()
@@ -419,11 +425,9 @@ class WebModel:
 
         return row
     
-    def select_a_row_where(self, fields_selected=[], raw_query=0):
+    def select_a_row_where(self, fields_selected=[], raw_query=0, begin=0):
         
-        if self.limit=='':
-        
-            self.limit="limit 1"
+        self.limit="limit "+str(begin)+", 1"
         
         cursor=self.select(fields_selected, raw_query)
         
@@ -697,7 +701,7 @@ class WebModel:
         error=False
         
         if yes_update==True:
-            f_update=lambda field, value: "`"+field+"`="+value+""
+            f_update=lambda field, value: "`"+field+"`=%s"
         else:
             f_update=lambda field, value: ""
         
@@ -745,11 +749,12 @@ class WebModel:
 
                                 fields.append(k)
                                 
-                                final_value=self.fields[k].quot_open+value+self.fields[k].quot_close
+                                #final_value=self.fields[k].quot_open+value+self.fields[k].quot_close
+                                #final_value=self.fields[k].quot_open+value+self.fields[k].quot_close
                                 
-                                values.append(final_value)
+                                values.append(value)
                                 
-                                update_values.append(f_update(k, final_value))
+                                update_values.append(f_update(k, value))
                     else:
                         self.num_errors+=1
 

@@ -6,21 +6,23 @@ pymysql.install_as_MySQLdb()
 
 class SqlClass:
     
+    connection={}
+    connection_method=''
+    
     def __init__(self):
     
-        self.error_connection=""
-        self.connection={}
+        self.error_connection=""       
         self.connected=False
-        self.connection_method=self.connect_to_db_sql
+        SqlClass.connection_method=self.connect_to_db_sql
     
     def dummy_connect(self, connection, name_connection="default"):
         pass
     
     def connect_to_db(self, connection, name_connection="default"):
         
-        self.connection_method(connection, name_connection)
+        SqlClass.connection_method(connection, name_connection)
         
-        self.connection_method=self.dummy_connect
+        SqlClass.connection_method=self.dummy_connect
         
     def connect_to_db_sql(self, connection, name_connection="default"):
         
@@ -84,7 +86,7 @@ class SqlClass:
         
             self.close(self.connection)
     """
-    
+    """
     def close(self, name_connection="default"):
         
         if self.connection[name_connection]:
@@ -93,5 +95,5 @@ class SqlClass:
             self.connection[name_connection]=False
         
         pass
-    
+    """
     

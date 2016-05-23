@@ -9,6 +9,7 @@ from paramecio.citoplasma.sessions import get_session
 from paramecio.cromosoma.formsutils import csrf_token
 from settings import config
 from os import path
+from collections import OrderedDict
 
 # Preparing envs for views of modules, and views of 
 
@@ -24,26 +25,61 @@ template = env.get_template('mytemplate.html')
     
     #ptemplate.clean_header_cache()
     #pass
-
-
-class ptemplate:
-    
-    template_context=None
-    
-    # A simple method used in internal things of paramecio
-    
-    show_basic_template=True
+"""
+class Environment:
     
     def __init__(self, module, cache_enabled=True, cache_impl='', cache_args={}):
         
+        self.cache_enable=cache_enabled
+        
+        self.cache_impl=cache_impl
+        
+        self.cache_args=cache_args
+        
+        self.module_directory="./tmp/modules"
+"""
+
+def env_theme(module, cache_enabled=True, cache_impl='', cache_args={}, module_directory="./tmp/modules"):
+
+    ext=module[len(module)-3:]
+        
+    if ext=='.py':
+    
+        module=path.dirname(module)
+
+    standard_templates=path.dirname(__file__)+'/templates'
+
+    module_templates=module+'/templates'
+    
+    theme_templates='themes/'+config.theme+'/templates'
+    
+    search_folders=[theme_templates, module_templates, standard_templates]
+    
+    #if self.inject_folder is not None:
+        #search_folders.insert(1, self.inject_folder+'/templates')
+    
+    #Standard templates
+    #print(standard_templates)
+    return TemplateLookup(directories=search_folders, default_filters=['h'], input_encoding='utf-8', encoding_errors='replace', cache_enabled=cache_enabled, cache_impl=cache_impl, cache_args=cache_args, module_directory=module_directory)
+
+class PTemplate:
+    
+    def __init__(self, environment):
+        
+        # A simple method used in internal things of paramecio
+    
+        self.show_basic_template=True
+        """
         ext=module[len(module)-3:]
         
         if ext=='.py':
         
             module=path.dirname(module)
+        """
         
         self.autoescape_ext=('html', 'htm', 'xml', 'phtml')
         
+        """
         self.cache_enabled=cache_enabled
         
         self.cache_impl=cache_impl
@@ -51,6 +87,7 @@ class ptemplate:
         self.cache_args=cache_args
         
         self.module_directory="./tmp/modules"
+        """
         
         self.inject_folder=None
         
@@ -91,7 +128,7 @@ class ptemplate:
         
         self.filters['show_flash_message']=self.headerhtml.show_flash_message
         
-        self.env=self.env_theme(module)
+        self.env=environment
         
         #self.auto_reload=True
         
@@ -112,7 +149,7 @@ class ptemplate:
         
         ext = template_name.rsplit('.', 1)[1]
         return ext in self.autoescape_ext
-
+    """
     def env_theme(self, module):
 
         standard_templates=path.dirname(__file__)+'/templates'
@@ -133,7 +170,8 @@ class ptemplate:
         #, cache_enabled=self.cache_enabled, cache_impl=self.cache_impl, cache_args=self.cache_args
 
         #return Environment(autoescape=self.guess_autoescape, auto_reload=True, loader=FileSystemLoader([theme_templates, module_templates]))
-
+    """
+    
     def load_templates(self, template_files):
         
         for template_file in template_files:
@@ -168,9 +206,9 @@ class HeaderHTML:
         self.css=[]
         self.js=[]
         self.header=[]
-        self.cache_header={}
-        self.css_local={}
-        self.js_local={}
+        self.cache_header=OrderedDict()
+        self.css_local=OrderedDict()
+        self.js_local=OrderedDict()
 
     def header_home(self):
         
@@ -192,7 +230,7 @@ class HeaderHTML:
                 final_js.append('<script language="Javascript" src="'+make_media_url_module('js/'+js, module)+'"></script>')
         
         self.js=[]
-        self.js_local={}
+        self.js_local=OrderedDict()
         
         return "\n".join(final_js)
 
@@ -210,7 +248,7 @@ class HeaderHTML:
                 final_css.append('<link href="'+make_media_url_module('css/'+css, module)+'" rel="stylesheet" type="text/css"/>')
 
         self.css=[]
-        self.css_local={}
+        self.css_local=OrderedDict()
 
         return "\n".join(final_css)
 
@@ -284,4 +322,4 @@ def set_flash_message(self, message):
     
     s['flash']=message
 
-standard_t=ptemplate(__file__)
+#standard_t=ptemplate(__file__)

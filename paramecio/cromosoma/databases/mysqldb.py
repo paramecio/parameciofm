@@ -3,6 +3,7 @@
 import sys
 import MySQLdb.cursors
 import sqlalchemy.pool as pool
+import traceback
 
 class SqlClass:
     
@@ -62,7 +63,7 @@ class SqlClass:
         
         #with self.connection[name_connection].cursor(MySQLdb.cursors.DictCursor) as cursor:
         cursor=self.connection[name_connection].cursor(MySQLdb.cursors.DictCursor)
-            
+        
         try:
             
             cursor.execute(sql_query, arguments)
@@ -76,8 +77,8 @@ class SqlClass:
             
             if hasattr(cursor, '_last_executed'):
                sql_query=cursor._last_executed 
-            
-            self.error_connection="Error in query ||"+sql_query+"||: %s %s" % (e, v)
+            #, traceback.format_exc()
+            self.error_connection="Error in query ||%s||Values: %s" % (sql_query, str(arguments))
         
             #return False
             raise NameError(self.error_connection)

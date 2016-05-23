@@ -1,17 +1,21 @@
 #!/usr/bin/python3
 
-from paramecio.citoplasma.mtemplates import ptemplate
+from paramecio.citoplasma.mtemplates import PTemplate, env_theme
 from paramecio.citoplasma.urls import make_url
 from bottle import route, request
 from settings import config
 
-t=ptemplate(__file__)
+#t=ptemplate(__file__)
+env=env_theme(__file__)
 
 @route('/welcome')
 def home():
+    
+    t=PTemplate(env)
 
     return t.load_template('welcome.html', title="Welcome to Paramecio!!!", content="The simple web framework writed in Python3!!!")
 
+"""
 @route('/welcome/<id:int>')
 def page(id):
     
@@ -21,6 +25,7 @@ def page(id):
 def test(id):
     
     return make_url('welcome/test/5', {'ohmygod': 'This is gooood', 'shutup':'Shut up!!'})
+"""
 
 if config.default_module=="welcome":
 

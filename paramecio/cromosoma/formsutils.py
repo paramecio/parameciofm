@@ -35,6 +35,29 @@ def pass_values_to_form(post, arr_form, yes_error=True):
         arr_form[key].field.error=None
 
     return arr_form
+    
+class CheckForm():
+    
+    def __init__(self):
+        
+        self.error=0
+
+    def check(self, post, arr_form):
+        
+        for k in arr_form.keys():
+            
+            post[k]=post.get(k, '')
+            
+            if arr_form[k].field==None:
+               arr_form[k].field=corefields.CharField(k, 255, required=False) 
+            
+            post[k]=arr_form[k].field.check(post[k])
+            arr_form[k].txt_error=arr_form[k].field.txt_error
+            
+            if arr_form[k].field.error==True and arr_form[k].required==True:
+                self.error+=1
+        
+        return post, arr_form
 
 def show_form(post, arr_form, t, yes_error=True, modelform_tpl='forms/modelform.phtml'):
         

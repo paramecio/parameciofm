@@ -57,7 +57,7 @@ class TestWebModelMethods(unittest.TestCase):
         
         model.conditions=['WHERE id=%s', [1]]  
         
-        print('Update row')
+        print('Updating row')
         
         self.assertTrue(model.update(post))
         

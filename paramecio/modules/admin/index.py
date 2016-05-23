@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 import traceback, sys
-from paramecio.citoplasma.mtemplates import ptemplate
+from paramecio.citoplasma.mtemplates import env_theme, PTemplate
 from paramecio.modules.admin.models.admin import UserAdmin
 from paramecio.citoplasma.i18n import load_lang, I18n
 from paramecio.citoplasma.urls import make_url, add_get_parameters
@@ -21,6 +21,7 @@ from collections import OrderedDict
 from time import time
 from paramecio.citoplasma.keyutils import create_key_encrypt
 from os import path
+import copy
 
 #from citoplasma.login import LoginClass
 # Check login
@@ -31,13 +32,11 @@ key_encrypt=create_key_encrypt()
 
 module_admin=path.dirname(__file__)
 
-t=ptemplate(__file__)
+env=env_theme(__file__)
 
 def make_admin_url(url):
     
     return make_url('%s/%s' % (config.admin_folder, url))
-
-t.add_filter(make_admin_url)
 
 @get('/'+config.admin_folder)
 @get('/'+config.admin_folder+'/<module>')
@@ -48,7 +47,13 @@ def home(module='', submodule=''):
     
     # A simple boolean used for show or not the code of admin module in standard template
     connection=WebModel.connection()
-    ptemplate.show_basic_template=True
+    #Fix, make local variable
+    
+    t=PTemplate(env)
+    
+    t.add_filter(make_admin_url)
+    
+    t.show_basic_template=True
     
     if submodule!='':
         module+='/'+submodule
@@ -130,7 +135,7 @@ def home(module='', submodule=''):
 
                     content_index=new_module.admin(t=t, connection=connection)
 
-                    if ptemplate.show_basic_template==True:   
+                    if t.show_basic_template==True:   
                     
                         return t.load_template('admin/content.html', title=menu[module][0], content_index=content_index, menu=menu, lang_selected=lang_selected, arr_i18n=I18n.dict_i18n)
                     else:
