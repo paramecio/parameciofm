@@ -206,7 +206,7 @@ class WebModel:
         
         sql="insert into `"+self.name+"` (`"+"`, `".join(fields)+"`) VALUES ("+", ".join(arr_str)+")"
         
-        cursor=self.sqlclass.query(sql, values+self.conditions[1], self.connection_id)
+        cursor=self.sqlclass.query(sql, values, self.connection_id)
         
         if cursor.rowcount>0:
             

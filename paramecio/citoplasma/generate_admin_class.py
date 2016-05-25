@@ -76,8 +76,12 @@ class GenerateAdminClass:
                 post=self.model.select_a_row(getpostfiles.get['id'], [], True)
                 title_edit=I18n.lang('common', 'edit_new_item', 'Edit item')
             
-            if post==None:
-                post={}
+            if post==None or post==False:
+                
+                if getpostfiles.get['id']=='0':
+                    post={}
+                else:
+                    return ""
             
             form=show_form(post, edit_forms, self.t, False)
                 

@@ -34,9 +34,9 @@ module_admin=path.dirname(__file__)
 
 env=env_theme(__file__)
 
-def make_admin_url(url):
+def make_admin_url(url, query_args={}):
     
-    return make_url('%s/%s' % (config.admin_folder, url))
+    return make_url('%s/%s' % (config.admin_folder, url), query_args)
 
 @get('/'+config.admin_folder)
 @get('/'+config.admin_folder+'/<module>')

@@ -74,39 +74,6 @@ for module in config.modules:
     
     #add_func_static_module(controller_base)
 
-
-"""
-    try:
-        
-        controller_path=load(module)
-        
-        controller_base=os.path.dirname(controller_path.__file__)
-        
-        base_module=module.split('.')[-1]
-        
-        arr_module_path[base_module]=controller_base
-        
-        dir_controllers=os.listdir(controller_base)
-        
-        for controller in dir_controllers:
-            
-            if controller.find('.py')!=-1 and controller.find('__init__')==-1:
-                
-                controller_py=controller.replace('.py', '')
-                
-                load(module+'.'+controller_py)
-
-        add_func_static_module(controller_base)
-        
-    except:
-        
-        print("Exception in user code:")
-        print("-"*60)
-        traceback.print_exc(file=sys.stdout)
-        print("-"*60)
-"""
-#exit()
-
 #Prepare ssl
 
 if config.ssl==True:

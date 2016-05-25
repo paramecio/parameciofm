@@ -287,7 +287,13 @@ class HeaderHTML:
             
             self.css_local[module]=self.css_local.get(module, [])
             
-            self.css_local[module].append(css)
+            try:
+                
+                self.css_local[module].index(css)
+                
+            except:
+            
+                self.css_local[module].append(css)
 
         return ''
 
@@ -297,7 +303,11 @@ class HeaderHTML:
             
             self.js_local[module]=self.js_local.get(module, [])
             
-            self.js_local[module].append(js)
+            try:
+                self.js_local[module].index(js)
+                
+            except:
+                self.js_local[module].append(js)
 
         return ''
         
