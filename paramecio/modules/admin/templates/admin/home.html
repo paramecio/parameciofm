@@ -43,9 +43,13 @@ ${HeaderHTML.header_home()|n}
             <div class="menu_title">${lang('admin', 'applications', 'Applications')}</div>
             % for module in menu:
                 % if type(menu[module]).__name__=='list':
-                    <a href="${make_url('admin/'+module)}">${menu[module][0]}</a>
+                    % if menu[module][0]!="":
+                        <a href="${make_url('admin/'+module)}">${menu[module][0]}</a>
+                    % endif
                 % else:
-                    <div class="father_admin">${menu[module]}</div>
+                    % if menu[module]!="":
+                        <div class="father_admin">${menu[module]}</div>
+                    % endif
                 % endif
             % endfor
         </div>

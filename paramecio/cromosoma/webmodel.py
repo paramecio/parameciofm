@@ -449,19 +449,29 @@ class WebModel:
         if (self.name_field_id not in fields_selected):
             fields_selected.append(self.name_field_id)
             def del_row_id(row):
-                del row[self.name_field_id]
+                
+                try:
+                
+                    index_id=row.index(self.name_field_id)
+                    
+                    del row[index_id]
+                    
+                except:
+                    
+                    pass
         else:
             def del_row_id(row):
                 pass
         
         cursor=self.select(fields_selected, raw_query)
         
-        results=OrderedDict()
+        results=[] #OrderedDict()
         
         for row in cursor:
             
-            results[row[self.name_field_id]]=row
-            del_row_id(results[row[self.name_field_id]])
+            results.append(row)
+        
+        del_row_id(results)
         
         cursor.close()
         

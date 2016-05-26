@@ -129,34 +129,64 @@ def checkdatetime(y, m, d, h, mi, s):
     except:
         return False
     
-# Obtain the actual time in local or gmt
+# Get the localtime
     
-def now(gmt=False):
+def now(utc=False):
     
     actual=datetime.today()
     
-    final_date=actual.strftime(sql_format_time)
+    # Get localtime
     
-    if gmt:
-        
+    final_date=actual.strftime(sql_format_time)
+    #Go to gmt
+    
+    if utc:
+    
         final_date=local_to_gmt(final_date)
         
     return final_date
+    
+# Get actual timestamp
 
-def obtain_timestamp(timeform):
+def obtain_timestamp(timeform, local=False):
     
     y, m, d, h, mi, s=format_timedata(timeform)
-        
+    
     if checkdatetime(y, m, d, h, mi, s):
         
-        return int(time.mktime((y, m, d, h, mi, s, 0, 1, 0)))
+        timestamp=int(time.mktime((y, m, d, h, mi, s, 0, 0, -1)))
+        
+        if local:
+            
+            offset=time.altzone
+        
+            return timestamp-offset
+         
+        return timestamp
+        
         #return mktime($h, $mi, $s, $m, $d, $y);
     else:
         return False
 
-def format_datetime(format_time, timestamp, func_utc_return):
+# timestamp is gmt time, convert in normal time
+
+def timestamp_to_datetime(timestamp):
     
-    timestamp=obtain_timestamp(timestamp)
+    time_set=substract_utc(timestamp)
+        
+    return time.strftime(sql_format_time, time_set)
+
+
+def timestamp_to_datetime_local(timestamp):
+    
+    time_set=time.localtime(timestamp)
+    
+    return time.strftime(sql_format_time, time_set)
+
+
+def format_datetime(format_time, timeform, func_utc_return):
+    
+    timestamp=obtain_timestamp(timeform)
     
     if timestamp:
     
@@ -174,30 +204,41 @@ def format_datetime(format_time, timestamp, func_utc_return):
     
         return False
         
+# This method parse local time to gmt
 
 def local_to_gmt(timeform):
     
     return format_datetime(sql_format_time, timeform, time.gmtime)
 
+# time.localtime is useless, you need sum the time offset to the date
+
+def gmt_to_local(timeform):
+    
+    return format_datetime(sql_format_time, timeform, sum_utc)
+
 def format_time(timeform):
     
-    return format_datetime(format_time_txt, timeform, time.localtime)
+    return format_datetime(format_time_txt, timeform, sum_utc)
 
 def format_date(timeform):
     
-    return format_datetime(format_date_txt, timeform, time.localtime)
+    return format_datetime(format_date_txt, timeform, sum_utc)
 
 def format_fulldate(timeform):
     
-    return format_datetime(format_date_txt+' '+format_time_txt, timeform, time.localtime)
+    return format_datetime(format_date_txt+' '+format_time_txt, timeform, sum_utc)
 
-def sum_utc(timestamp, offset):
+def sum_utc(timestamp):
+    
+    offset=time.altzone
 
-    return timestamp+offset
+    return time.localtime(timestamp-offset)
 
-def substract_utc(timestamp, offset):
+def substract_utc(timestamp):
+    
+    offset=time.altzone
 
-    return timestamp-offset
+    return time.localtime(timestamp+offset)
 
 
 """
