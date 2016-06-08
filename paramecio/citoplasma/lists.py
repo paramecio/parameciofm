@@ -170,7 +170,7 @@ class SimpleList:
         
         self.model.limit='limit '+str(begin_page)+','+str(self.limit_pages)
         
-        list_items=self.model.select(self.fields)
+        list_items=self.model.select(self.fields, True)
         
         pages=Pages.show( begin_page, total_elements, num_elements, link ,initial_num_pages=self.initial_num_pages, variable='begin_page', label='', func_jscript='')
         

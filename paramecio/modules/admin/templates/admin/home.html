@@ -1,3 +1,10 @@
+<%def name="check_menu(module)">\
+    % if module[:1]=='/':
+${module}\
+    % else:
+${'/admin/'+module}\
+    % endif
+</%def>
 <!DOCTYPE html>
 <html>
 <head>
@@ -44,7 +51,7 @@ ${HeaderHTML.header_home()|n}
             % for module in menu:
                 % if type(menu[module]).__name__=='list':
                     % if menu[module][0]!="":
-                        <a href="${make_url('admin/'+module)}">${menu[module][0]}</a>
+                        <a href="${make_url(check_menu(module).strip())|n}">${menu[module][0]}</a>
                     % endif
                 % else:
                     % if menu[module]!="":

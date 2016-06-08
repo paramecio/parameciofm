@@ -1,6 +1,6 @@
 import os, sys, traceback, inspect, resource
 from importlib import import_module
-from bottle import route, get, post, run, default_app, abort, request, response, static_file, load
+from bottle import route, get, post, run, default_app, abort, request, response, static_file, load, hook
 from settings import config, modules
 from beaker.middleware import SessionMiddleware
 from mimetypes import guess_type
@@ -166,6 +166,12 @@ if config.session_enabled==True:
     #def 
     """
     app = SessionMiddleware(app, config.session_opts, environ_key=config.cookie_name)
+
+# Clean last slash
+
+@hook('before_request')
+def strip_path():
+    request.environ['PATH_INFO'] = request.environ['PATH_INFO'].rstrip('/')
 
 def run_app(app):
 

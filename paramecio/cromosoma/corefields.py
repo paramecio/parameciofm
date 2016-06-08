@@ -160,8 +160,8 @@ class BooleanField(IntegerField):
         value=int(value)
         
         if value==0:
-            value=self.yes_text
-        else:
             value=self.no_text
+        else:
+            value=self.yes_text
     
         return str(value)

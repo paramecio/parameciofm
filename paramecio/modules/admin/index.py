@@ -10,6 +10,7 @@ from bottle import get,post,response,request
 from settings import config
 from settings import config_admin
 from paramecio.citoplasma.lists import SimpleList
+from paramecio.citoplasma.adminutils import get_menu, get_language
 from paramecio.citoplasma.generate_admin_class import GenerateAdminClass
 from paramecio.citoplasma.httputils import GetPostFiles
 from paramecio.cromosoma.formsutils import show_form, pass_values_to_form, set_extra_forms_user
@@ -28,7 +29,7 @@ import copy
 
 load_lang(['paramecio', 'admin'], ['paramecio', 'common'])
 
-key_encrypt=create_key_encrypt()
+key_encrypt=config.key_encrypt #create_key_encrypt()
 
 module_admin=path.dirname(__file__)
 
@@ -70,16 +71,9 @@ def home(module='', submodule=''):
         
         s['id']=s.get('id', 0)
         
-        s['lang']=s.get('lang', None)
+        lang_selected=get_language(s)
         
-        lang_selected=None
-        
-        if s['lang']!=None:
-            lang_selected=s['lang']
-        else:
-            s['lang']=I18n.default_lang
-        
-        user_admin.conditions=['WHERE id=%s', [s['id']]]
+        user_admin.set_conditions('WHERE id=%s', [s['id']])
         
         # Check if user id exists in session
         
@@ -91,19 +85,7 @@ def home(module='', submodule=''):
                 
                 #Load menu
                 
-                menu=OrderedDict()
-                
-                #modules_admin.append([I18n.lang('panel', 'servers_config', 'Server\'s configuration'), [I18n.lang('panel', 'servers_types', 'Server\'s types'), 'modules.panel.admin.types'], 'servers_config'])
-                
-                for mod in config_admin.modules_admin:
-                    if type(mod[1]).__name__!='list':
-                        menu[mod[2]]=mod
-                    else:
-                        
-                        menu[mod[2]]=mod[0]
-                        
-                        for submod in mod[1]:
-                            menu[submod[2]]=submod
+                menu=get_menu(config_admin.modules_admin)
                             #pass
                         
                 if module in menu:
@@ -285,7 +267,7 @@ def register():
     
     user_admin=UserAdmin(connection)
     
-    user_admin.conditions=['WHERE privileges=%s', 2]
+    user_admin.conditions=['WHERE privileges=%s', [2]]
     
     c=user_admin.select_count()
     
