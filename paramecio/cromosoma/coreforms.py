@@ -88,14 +88,21 @@ class SelectForm(BaseForm):
 
 class SelectModelForm(SelectForm):
     
-    def __init__(self, name, value, model, field_name, field_value):
+    def __init__(self, name, value, model, field_name, field_value, field_parent=None):
         super(SelectModelForm, self).__init__(name, value)
         self.arr_select=OrderedDict()
         self.model=model
         self.field_name=field_name
         self.field_value=field_value
+        self.field_parent=field_parent
         
-    def form(self):
+        self.form=self.normal_form
+        
+        if self.field_parent!=None:
+            self.form=self.parent_form
+            
+        
+    def normal_form(self):
         
         self.arr_select['']=''
         
@@ -107,6 +114,44 @@ class SelectModelForm(SelectForm):
         
         return super().form()
         
-
+    def parent_form(self):
         
-    
+        self.arr_select['']=''
+        
+        arr_son={}
+        
+        old_conditions=self.model.conditions
+        old_limit=self.model.limit
+        
+        self.model.limit=''
+        
+        self.model.set_conditions('WHERE 1=1', [])
+        
+        
+        with self.model.select([self.field_name, self.field_value, self.field_parent], True) as cur:
+        
+            for arr_value in cur:
+                
+                #self.arr_select[arr_value[self.field_value]]=arr_value[self.field_name]
+                if not self.field_parent in arr_son:
+                    arr_son[arr_value[self.field_parent]]=[]
+                
+                arr_son[arr_value[self.field_parent]].append([arr_value[self.field_value], arr_value[self.field_name]])
+        
+        self.create_son(0, arr_son)
+        
+        self.model.conditions=old_conditions
+        self.model.limit=old_limit
+        
+        return super().form()
+        
+
+    def create_son(self, parent_id, arr_son, separator=''):
+        
+        if parent_id in arr_son:        
+            for son in arr_son[parent_id]:
+                self.arr_select[son[0]]=separator+son[1]
+                
+                if son[0] in arr_son:    
+                    separator+='--'
+                    self.create_son(son[0],arr_son, separator)

@@ -116,6 +116,7 @@ class ForeignKeyField(IntegerField):
     def get_type_sql(self):
 
         return 'INT NULL'
+        
 
 class BooleanField(IntegerField):
     

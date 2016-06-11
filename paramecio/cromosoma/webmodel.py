@@ -140,6 +140,8 @@ class WebModel:
         
         self.fields[field_model.name].required=required
         
+        self.fields[field_model.name].post_register()
+        
         #self.files_delete[field_model.name]=field_model.file_related
     
     # A method for create the id field.
@@ -992,6 +994,10 @@ class PhangoField:
         # Extra parameters for the form
         
         self.extra_parameters=[]
+        
+        # Template manager for the form if needed
+        
+        self.t=None
      
     # This method is used for describe the new field in a sql language format.
     
@@ -1044,6 +1050,8 @@ class PhangoField:
         
         self.extra_parameters=parameters
         
+    def post_register(self):
+        pass
 
 class PrimaryKeyField(PhangoField):
     

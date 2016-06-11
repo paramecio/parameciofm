@@ -1,5 +1,7 @@
 #/usr/bin/python3
 
+from paramecio.citoplasma.urls import add_get_parameters
+
 class HierarchyLinks:
 
     def __init__(arr_links, t=None):
@@ -74,3 +76,58 @@ class HierarchyLinks:
     
         return text
 
+class HierarchyModelLinks:
+    
+    def __init__(self, model, first_element_title, field_name, field_parent, base_url):
+        
+        self.model=model
+        self.field_parent=field_parent
+        self.field_name=field_name
+        self.base_url=base_url
+        self.arr_parent={}
+        self.arr_son=[]
+        self.first_element_title=first_element_title
+    
+    def prepare(self):
+        
+        with self.model.select([self.model.name_field_id, self.field_name, self.field_parent]) as cur:
+            for arr_model in cur:
+                if self.field_parent not in self.arr_parent:
+                    self.arr_parent[arr_model[self.model.name_field_id]]=[]
+                
+                self.arr_parent[arr_model[self.model.name_field_id]]=[arr_model[self.field_name], arr_model[self.field_parent]]
+        
+    def parents(self,  son_id, url_func):
+        
+        if son_id not in self.arr_parent or son_id==0:
+            return 
+        
+        self.arr_son.insert(0, url_func(son_id, self.arr_parent[son_id][0]))
+        
+        self.parents(self.arr_parent[son_id][1], self.url)
+        
+    
+    def no_url(self, son_id, title):
+        return title
+        
+    def url(self, son_id, title):
+        
+        args={}
+        
+        args[self.field_parent]=str(son_id)
+        
+        return '<a href="%s">%s</a>' % (add_get_parameters(self.base_url, **args), title)
+    
+    def show(self, son_id, separator=' &gt;&gt; '):
+        
+        self.parents(son_id, self.no_url)
+        
+        self.arr_son.insert(0, self.url(0, self.first_element_title))
+        
+        return separator.join(self.arr_son)
+            
+        
+                
+            
+            
+        
