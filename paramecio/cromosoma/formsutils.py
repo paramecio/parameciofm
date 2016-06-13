@@ -15,8 +15,8 @@ def pass_values_to_form(post, arr_form, yes_error=True):
         
         post[key]=post.get(key, '')
         
-        if arr_form[key].default_value=='':
-            arr_form[key].default_value=post[key]
+        #if arr_form[key].default_value=='':
+        arr_form[key].default_value=post[key]
         
         if arr_form[key].field==None:
            arr_form[key].field=corefields.CharField(key, 255, required=False) 

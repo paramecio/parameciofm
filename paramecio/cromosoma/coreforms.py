@@ -16,10 +16,11 @@ class BaseForm:
         self.field=None
         self.required=False
         self.txt_error=''
+        self.name_field_id=self.name+'_form'
         
     def form(self):
         
-        return '<input type="'+self.type+'" class="'+self.css+'" name="'+self.name+'" id="'+self.name+'_form" value="'+self.setform(self.default_value)+'">'
+        return '<input type="'+self.type+'" class="'+self.css+'" name="'+self.name+'" id="'+self.name_field_id+'" value="'+self.setform(self.default_value)+'">'
     
     def show_formatted(self, value):
     
@@ -66,14 +67,13 @@ class HiddenForm(BaseForm):
 
 class SelectForm(BaseForm):
     
-    def __init__(self, name, value, elements=OrderedDict(), default_value=""):
+    def __init__(self, name, value, elements=OrderedDict()):
         super(SelectForm, self).__init__(name, value)
         self.arr_select=elements
-        self.default_value=default_value
     
     def form(self):
         
-        the_form='<select name="'+self.name+'">\n'
+        the_form='<select name="'+self.name+'" id="'+self.name_field_id+'">\n'
         
         arr_selected={self.default_value: 'selected'}
         
@@ -90,6 +90,7 @@ class SelectModelForm(SelectForm):
     
     def __init__(self, name, value, model, field_name, field_value, field_parent=None):
         super(SelectModelForm, self).__init__(name, value)
+        self.default_value=int(self.default_value)
         self.arr_select=OrderedDict()
         self.model=model
         self.field_name=field_name
@@ -111,6 +112,13 @@ class SelectModelForm(SelectForm):
         for arr_value in cur:
             
             self.arr_select[arr_value[self.field_value]]=arr_value[self.field_name]
+            
+        try:
+        
+            self.default_value=int(self.default_value)
+            
+        except:
+            self.default_value=0
         
         return super().form()
         
@@ -142,6 +150,13 @@ class SelectModelForm(SelectForm):
         
         self.model.conditions=old_conditions
         self.model.limit=old_limit
+        
+        try:
+        
+            self.default_value=int(self.default_value)
+            
+        except:
+            self.default_value=0
         
         return super().form()
         
