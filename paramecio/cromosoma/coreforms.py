@@ -90,7 +90,11 @@ class SelectModelForm(SelectForm):
     
     def __init__(self, name, value, model, field_name, field_value, field_parent=None):
         super(SelectModelForm, self).__init__(name, value)
-        self.default_value=int(self.default_value)
+        try:
+            self.default_value=int(self.default_value)
+        except:
+            self.default_value=0
+            
         self.arr_select=OrderedDict()
         self.model=model
         self.field_name=field_name
