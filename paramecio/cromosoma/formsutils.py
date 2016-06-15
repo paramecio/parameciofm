@@ -19,7 +19,7 @@ def pass_values_to_form(post, arr_form, yes_error=True):
         arr_form[key].default_value=post[key]
         
         if arr_form[key].field==None:
-           arr_form[key].field=corefields.CharField(key, 255, required=False) 
+            arr_form[key].field=corefields.CharField(key, 255, required=False) 
         
         # Recheck value if no set error field
         if arr_form[key].field.error == None:
@@ -67,7 +67,8 @@ def show_form(post, arr_form, t, yes_error=True, modelform_tpl='forms/modelform.
         
         s['csrf_token']=create_key_encrypt()
         
-        pass_values_to_form(post, arr_form, yes_error)
+        if yes_error==True:
+            pass_values_to_form(post, arr_form, yes_error)
         
         return t.load_template(modelform_tpl, forms=arr_form)
 

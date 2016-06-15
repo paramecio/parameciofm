@@ -90,6 +90,7 @@ class SelectModelForm(SelectForm):
     
     def __init__(self, name, value, model, field_name, field_value, field_parent=None):
         super(SelectModelForm, self).__init__(name, value)
+        
         try:
             self.default_value=int(self.default_value)
         except:
@@ -105,7 +106,7 @@ class SelectModelForm(SelectForm):
         
         if self.field_parent!=None:
             self.form=self.parent_form
-            
+        
         
     def normal_form(self):
         
