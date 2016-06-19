@@ -4,6 +4,22 @@ from bottle import request
 from paramecio.citoplasma.sessions import get_session
 from paramecio.citoplasma.keyutils import create_key_encrypt
 
+try:
+
+    from settings import config
+    
+    no_csrf=False
+    
+    if hasattr(config, 'no_csrf'):
+        no_csrf=config.no_csrf
+
+except:
+
+    class config:
+        no_csrf=False
+
+
+
 class GetPostFiles:
 
     # Need this for obtain utf8 valid values
@@ -36,7 +52,7 @@ class GetPostFiles:
         
         s=get_session()
         
-        if ignore_csrf_token==False:
+        if ignore_csrf_token==False and no_csrf==False:
         
             if 'csrf_token' in s:
                 
