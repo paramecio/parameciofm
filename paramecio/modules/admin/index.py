@@ -20,12 +20,22 @@ from importlib import import_module, reload
 from bottle import redirect
 from collections import OrderedDict
 from time import time
-from paramecio.citoplasma.keyutils import create_key_encrypt
+from paramecio.citoplasma.keyutils import create_key_encrypt, create_key_encrypt_256, create_key
+from paramecio.citoplasma.sendmail import SendMail
 from os import path
 import copy
 
 #from citoplasma.login import LoginClass
 # Check login
+
+yes_recovery_login=False
+email_address='localhost'
+
+if hasattr(config, 'yes_recovery_login'):
+    yes_recovery_login=config.yes_recovery_login
+
+if hasattr(config, 'email_address'):
+    email_address=config.email_address
 
 load_lang(['paramecio', 'admin'], ['paramecio', 'common'])
 
@@ -175,7 +185,7 @@ def home(module='', submodule=''):
                 
                 #connection.close()
                 
-                return t.load_template('admin/login.phtml', forms=forms)
+                return t.load_template('admin/login.phtml', forms=forms, yes_recovery_login=yes_recovery_login)
                 
         else:
         
@@ -207,53 +217,70 @@ def login():
     
     user_admin.conditions=['WHERE username=%s', [username]]
     
-    arr_user=user_admin.select_a_row_where(['id', 'password', 'privileges', 'lang'])
+    arr_user=user_admin.select_a_row_where(['id', 'password', 'privileges', 'lang', 'num_tries'])
     
     if arr_user==False:
         
         return {'error': 1}
     else:
         
-        if user_admin.fields['password'].verify(password, arr_user['password']):
-            
-            generate_session()
-            
-            s=get_session()
-            
-            s['id']=arr_user['id']
-            s['login']=1
-            s['privileges']=arr_user['privileges']
-            s['lang']=arr_user['lang']
-            
-            if s['lang']=='':
-                s['lang']=I18n.default_lang
-            
-            remember_login=getpostfiles.post.get('remember_login', '0')
-            
-            if remember_login=='1':
+        num_tries=int(arr_user['num_tries'])
+        
+        if arr_user['num_tries']<3:
+        
+            if user_admin.fields['password'].verify(password, arr_user['password']):
                 
-                timestamp=time()+315360000
+                generate_session()
                 
-                random_text=create_key_encrypt()
+                s=get_session()
                 
-                #Update user with autologin token
+                s['id']=arr_user['id']
+                s['login']=1
+                s['privileges']=arr_user['privileges']
+                s['lang']=arr_user['lang']
+                
+                if s['lang']=='':
+                    s['lang']=I18n.default_lang
+                
+                remember_login=getpostfiles.post.get('remember_login', '0')
+                
+                if remember_login=='1':
+                    
+                    timestamp=time()+315360000
+                    
+                    random_text=create_key_encrypt()
+                    
+                    #Update user with autologin token
+                    
+                    user_admin.check_user=False
+                    
+                    user_admin.conditions=['WHERE username=%s', [username]]
+                    
+                    user_admin.valid_fields=['token_login']
+                    
+                    user_admin.reset_require()
+                    
+                    if user_admin.update({'token_login': random_text}):
+                        
+                        response.set_cookie('remember_login', random_text, path="/", expires=timestamp, secret=key_encrypt)
+                    #else:
+                        #print(user_admin.query_error)
+                #s.save()
+                
+                return {'error': 0}
+            else:
                 
                 user_admin.check_user=False
-                
+                    
                 user_admin.conditions=['WHERE username=%s', [username]]
                 
-                user_admin.valid_fields=['token_login']
+                user_admin.valid_fields=['num_tries']
                 
                 user_admin.reset_require()
                 
-                if user_admin.update({'token_login': random_text}):
-                    
-                    response.set_cookie('remember_login', random_text, path="/", expires=timestamp, secret=key_encrypt)
-                #else:
-                    #print(user_admin.query_error)
-            #s.save()
-            
-            return {'error': 0}
+                user_admin.update({'num_tries': arr_user['num_tries']+1})
+                
+                return {'error': 1}
         else:
             return {'error': 1}
 
@@ -330,24 +357,127 @@ def logout():
     
     redirect('/'+config.admin_folder)
 
-"""
-def set_extra_forms_user(user_admin):
+@get('/'+config.admin_folder+'/recovery_password')
+def recovery_password():
     
-    user_admin.fields['password'].required=True
-    user_admin.fields['email'].required=True
+    t=PTemplate(env)
+    
+    connection=WebModel.connection()
+    
+    user_admin=UserAdmin(connection)
+    
+    post={}
+    
+    user_admin.create_forms(['email'])
+    
+    forms=show_form(post, user_admin.forms, t, yes_error=False)
+    
+    #connection.close()
+    
+    return t.load_template('admin/recovery.phtml', forms=forms)
 
-    user_admin.create_forms(['username', 'email', 'password'])
+@post('/'+config.admin_folder+'/recovery_password')
+def send_password():
     
-    user_admin.forms['repeat_password']=PasswordForm('repeat_password', '')
+    connection=WebModel.connection()
     
-    user_admin.forms['repeat_password'].required=1
+    user_admin=UserAdmin(connection)
     
-    user_admin.forms['repeat_password'].label=I18n.lang('common', 'repeat_password', 'Repeat Password')
-"""
+    t=PTemplate(env)
+    
+    getpost=GetPostFiles()
+    
+    getpost.obtain_post()
+    
+    email=getpost.post.get('email',  '')
+    
+    email=user_admin.fields['email'].check(email)
+    
+    if user_admin.fields['email'].error:
+        
+        return {'email': user_admin.fields['email'].txt_error, 'error': 1}
+        
+    else:
+        
+        user_admin.set_conditions('WHERE email=%s', [email])
+        
+        user_admin.yes_reset_conditions=False
+        
+        if user_admin.select_count()==1:
+            
+            user_admin.reset_require()
+            
+            user_admin.valid_fields=['token_recovery']
+            
+            user_admin.check_user=False
+            
+            token=create_key_encrypt_256()
+            
+            if user_admin.update({'token_recovery': token}):
+                
+                send_mail=SendMail()
+                
+                content_mail=t.load_template('admin/recovery_mail.phtml', token=token)
+                
+                if not send_mail.send(email_address, [email], I18n.lang('admin', 'send_email', 'Email for recovery your password'), content_mail):
+                    return {'email': 'Error: i cannot send mail', 'error': 1}
+                
+            
+        return {'email': '', 'error': 0}
+        
+        
+@get('/'+config.admin_folder+'/check_token')
+def check_token():
+    t=PTemplate(env)
+    
+    return t.load_template('admin/check_token.phtml')
+    
+@post('/'+config.admin_folder+'/check_token')
+def check_code_token():
+    
+    t=PTemplate(env)
+    
+    if yes_recovery_login==True:
+    
+        getpost=GetPostFiles()
+        
+        getpost.obtain_post()
+        
+        connection=WebModel.connection()
+    
+        user_admin=UserAdmin(connection)
+        
+        token=getpost.post.get('token',  '')
+        
+        token=user_admin.fields['token_recovery'].check(token)
+    
+        if token.strip()!='':
+            
+            user_admin.set_conditions('WHERE token_recovery=%s', [token])
+            
+            user_admin.yes_reset_conditions=False
+            
+            arr_user=user_admin.select_a_row_where(['id', 'email'])
+            
+            if arr_user:
+                
+                new_password=create_key()
+                           
+                user_admin.valid_fields=['password', 'token_recovery', 'num_tries']
 
-
-"""user_admin.create_forms()
-    
-    users=user_admin.select()"""
-
-#By default id is not showed
+                user_admin.reset_require()
+                
+                user_admin.check_user=False
+                
+                if user_admin.update({'password': new_password, 'token_recovery': "", 'num_tries': 0}, False):
+                    
+                    send_mail=SendMail()
+                    
+                    content_mail=t.load_template('admin/recovery_password.phtml', password=new_password)
+                    
+                    if not send_mail.send(email_address, [arr_user['email']], I18n.lang('admin', 'send_password_email', 'Your new password'), content_mail):
+                        return {'token': 'Error: i cannot send mail', 'error': 1}
+                    
+                    return {'token': 'Error: cannot send the maild with the new password', 'error': 0} 
+                
+    return {'token': 'Error: token is not valid', 'error': 1}

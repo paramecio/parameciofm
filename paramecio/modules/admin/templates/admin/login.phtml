@@ -64,11 +64,17 @@
                 ${lang('admin', 'login', 'Paramecio Login')}
             </div>
             ${forms|n}
-            <div class="form">${lang('admin', 'remember_login', 'Remember login?')} <input type="checkbox" id="remember_login" name="remember_login" value="1"></div>
+            <div class="form">
+                ${lang('admin', 'remember_login', 'Remember login?')} <input type="checkbox" id="remember_login" name="remember_login" value="1">
+            </div>
             <div id="submit_block">
                 <input type="submit" value="${lang('common', 'login', 'Login')}" class="submit" id="login_submit"/>
                 <span id="loading">&nbsp;</span>
             </div>
+            % if yes_recovery_login:
+                <div class="form"><a href="${make_url('admin/recovery_password')}">${lang('admin', 'recovery_password', 'Recovery password?')}</a></div>
+            % endif
+            <div class="form">${lang('admin', 'remember_tries', 'Remember that only have 3 attempts')}</div>
         </form>
         </%block>
     </body>

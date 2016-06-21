@@ -15,7 +15,8 @@ class LangField(CharField):
         for lang in I18n.dict_i18n:
             select_lang[lang]=lang
 
-        self.change_form(coreforms.SelectForm, [select_lang, I18n.default_lang])
+        self.change_form(coreforms.SelectForm, [select_lang])
+        self.default_value=I18n.default_lang
         
     def check(self, value):
         

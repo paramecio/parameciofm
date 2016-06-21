@@ -1,0 +1,66 @@
+<%inherit file="login.phtml"/>
+<%block name="ajax">
+    <script language="Javascript">
+        $(document).ready( function () {
+            
+            $("#register_submit").click( function () {
+                
+                $('#loading').show();
+                
+                $('#result_register').html('Sending an email to your email account');
+                
+                $.ajax({
+                url: "${make_url('admin/recovery_password')}",
+                method: "POST",
+                dataType: "json",
+                data: {'email': $('#email_form').val()}
+                }).done(function(data) {
+                //$( this ).addClass( "done" );
+                //Redirect if register
+                
+                    if(data.error==0)
+                    {
+                    
+                        $('#result_register').html('Redirecting to recovery password zone');
+                        
+                        setTimeout(function () {
+                        
+                            window.location.href="${make_url('admin/check_token')}";
+                        
+                        }, 5000);
+                        
+                        //window.location.href="${make_url('admin/login')}";
+                    
+                    }
+                    else
+                    {
+                        //alert(JSON.stringify(data));
+                        //$('#result_register').html('Error');
+                        $('#email_error').html(data.email);
+                        
+                    }
+                
+                });
+                
+                return false;
+                
+            });
+            
+        
+        });
+    </script>
+</%block>
+<%block name="title">${lang('common', 'recovery_password', 'Recovery password')}</%block>
+<%block name="content">
+<form id="login">
+    <div id="title">
+            ${lang('common', 'recovery_password', 'Recovery password')}
+    </div>
+    ${forms|n}
+    <div id="result_register" class="form"></div>
+    <div id="submit_block">
+        <input type="submit" value="${lang('common', 'recovery_password', 'Recovery password')}" class="submit" id="register_submit"/>
+        <span id="loading">&nbsp;</span>
+    </div>
+</form>
+</%block>

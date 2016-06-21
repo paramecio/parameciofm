@@ -1,0 +1,75 @@
+<%inherit file="login.phtml"/>
+<%block name="ajax">
+    <script language="Javascript">
+        $(document).ready( function () {
+            
+            $("#register_submit").click( function () {
+                
+                $('#loading').show();
+                
+                $('#result_register').html('Checking the code...');
+                
+                $.ajax({
+                url: "${make_url('admin/check_token')}",
+                method: "POST",
+                dataType: "json",
+                data: {'token': $('#token_form').val()}
+                }).done(function(data) {
+                //$( this ).addClass( "done" );
+                //Redirect if register
+                    
+                    if(data.error==0)
+                    {
+                    
+                        $('#result_register').html('Sucess!!!. Redirecting to login');
+                        
+                        setTimeout(function () {
+                        
+                            window.location.href="${make_url('admin/login')}";
+                        
+                        }, 5000);
+                        
+                        //window.location.href="${make_url('admin/login')}";
+                    
+                    }
+                    else
+                    {
+                        //alert(JSON.stringify(data));
+                        //$('#result_register').html('Error');
+                        $('#token_error').html(data.token);
+                        $('#loading').hide();
+                        $('#result_register').html('');
+                    }
+                
+                }).fail(function(data) {
+                    
+                        alert(JSON.stringify(data));
+                    
+                    });
+                
+                return false;
+                
+            });
+            
+        
+        });
+    </script>
+</%block>
+<%block name="title">${lang('common', 'recovery_password', 'Recovery password')}</%block>
+<%block name="content">
+<form id="login">
+    <div id="title">
+            ${lang('common', 'recovery_password', 'Recovery password')}
+    </div>
+    <div class="form">
+        <label>Put your email code</label>
+        <input type="text" name="token" value="" id="token_form"/>
+        <span class="error" id="token_error"></span>
+    </div>
+    <div id="result_register" class="form"></div>
+    <div id="submit_block">
+        <input type="submit" value="${lang('common', 'recovery_password', 'Recovery password')}" class="submit" id="register_submit"/>
+        <span id="loading">&nbsp;</span>
+    </div>
+</form>
+</%block>

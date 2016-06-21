@@ -7,6 +7,7 @@ from importlib import import_module, reload
 from collections import OrderedDict
 from paramecio.cromosoma.databases.mysqldb import SqlClass
 from paramecio.cromosoma.coreforms import BaseForm, HiddenForm
+import traceback
 
 # The most important class for the framework
 #
@@ -249,6 +250,9 @@ class WebModel:
             fields, values, update_values=self.check_all_fields(dict_values, external_agent, True, 'update')
             
         except: 
+            
+            #self.query_error+="\n"+traceback.format_exc()
+            
             return False
         
         sql="update `"+self.name+"` SET "+", ".join(update_values)+" "+self.conditions[0]
@@ -732,7 +736,7 @@ class WebModel:
                 
                 value=dict_values[k]
                 
-                # Need rewrite the error because shitty python don't clean nothing
+                # Cleaning the error
                 
                 self.fields[k].error=False
                 
@@ -769,7 +773,7 @@ class WebModel:
                                 update_values.append(f_update(k, value))
                     else:
                         self.num_errors+=1
-
+                        
                         self.fields_errors[k].append("Error: "+self.fields[k].label+" is not in valid fields")
                         self.fields[k].error=True
                         self.fields[k].txt_error="Error: "+self.fields[k].label+" is not in valid fields"

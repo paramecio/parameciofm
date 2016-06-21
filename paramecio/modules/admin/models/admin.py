@@ -49,6 +49,10 @@ class UserAdmin(UserModel):
         self.register(PrivilegesField('privileges'))
         
         self.register(LangField('lang', 20))
+        
+        self.register(corefields.BooleanField('disabled'))
+        
+        self.register(corefields.IntegerField('num_tries', 1))
 
 """
 

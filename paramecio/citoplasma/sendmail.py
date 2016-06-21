@@ -21,12 +21,11 @@ class SendMail:
     password=''
 
     ssl=True
-    
-    txt_error=''
 
     def __init__(self):
 
         self.smtp=smtplib.SMTP(host=self.host, port=self.port)
+        self.txt_error=''
     
     def send(self, from_address, to_address, subject, message, content_type='plain', attachments=[]):
         
@@ -168,3 +167,6 @@ class SendMail:
         
         self.smtp.quit()
             
+    def __del__(self):
+        
+        self.quit()

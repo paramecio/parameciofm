@@ -59,7 +59,7 @@ class CheckForm():
         
         return post, arr_form
 
-def show_form(post, arr_form, t, yes_error=True, modelform_tpl='forms/modelform.phtml'):
+def show_form(post, arr_form, t, yes_error=True, pass_values=True, modelform_tpl='forms/modelform.phtml'):
         
         # Create csrf_token in session
         
@@ -67,7 +67,7 @@ def show_form(post, arr_form, t, yes_error=True, modelform_tpl='forms/modelform.
         
         s['csrf_token']=create_key_encrypt()
         
-        if yes_error==True:
+        if pass_values==True:
             pass_values_to_form(post, arr_form, yes_error)
         
         return t.load_template(modelform_tpl, forms=arr_form)
