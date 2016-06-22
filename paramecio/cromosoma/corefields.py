@@ -30,6 +30,13 @@ class IntegerField(PhangoField):
     def get_type_sql(self):
 
         return 'INT('+str(self.size)+') NOT NULL DEFAULT "0"'
+        
+class BigIntegerField(IntegerField):
+    
+    def get_type_sql(self):
+
+        return 'BIGINT('+str(self.size)+') NOT NULL DEFAULT "0"'
+    
 
 class FloatField(PhangoField):
     
