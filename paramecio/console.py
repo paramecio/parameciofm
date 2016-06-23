@@ -4,10 +4,13 @@ import argparse
 import os
 import shutil
 import getpass
+import re
 from pathlib import Path
 from base64 import b64encode
 from paramecio.cromosoma.webmodel import WebModel
 from paramecio.modules.admin.models.admin import UserAdmin
+from subprocess import call
+from urllib.parse import urlparse
 
 def start():
 
@@ -22,7 +25,7 @@ def start():
     args=parser.parse_args()
     
     workdir=os.path.dirname(os.path.abspath(__file__))
-    
+
     # Create directory
     
     path=Path(args.path)
@@ -166,12 +169,16 @@ def start():
         
         sql='create database '+db
         
-        if not WebModel.query(WebModel, sql):
+        conn=WebModel.connection()
+        
+        useradmin=UserAdmin(conn)
+        
+        if not useradmin.query(sql):
             print('Error: cannot create database, check the data of database')
         
         else:
             
-            WebModel.query(WebModel, 'use '+db)
+            useradmin.query('use '+db)
             
             admin=input('Do you want create admin site? y/n: ')
         
@@ -183,11 +190,9 @@ def start():
         
                     shutil.copy(workdir+'/settings/config_admin.py.sample', path_settings+'/config_admin.py')
                 
-                    useradmin=UserAdmin()
-                
                     sql=useradmin.create_table()
                     
-                    if not WebModel.query(WebModel, sql):
+                    if not useradmin.query(sql):
                         print('Error: cannot create table admin, you can create this table with padmin.py')
                     else:
                         
@@ -219,11 +224,71 @@ def start():
                 except:
                     
                     print('Error: cannot copy the file padmin.py. Check if exists and if you have permissions for this task')
-                
+                    exit(1)
                 
         pass
     
-        # Question about install admin site.
+        # Install modules
+        
+        if args.modules.strip()!='':
+        
+            arr_modules=args.modules.split(',')
+            
+            final_modules=[]
+            
+            if len(arr_modules)>0:
+                
+                for k, module in enumerate(arr_modules):
+                    
+                    module=module.strip()
+                    
+                    try:
+                    
+                        u=urlparse(module)
+                    
+                        module_path=os.path.basename(u.path)
+                    
+                    except:
+                        print('Error: not valid url for repository')
+                        exit(1)
+                    
+                
+                    if call("git clone %s %s/modules/%s" % (module, path, module_path), shell=True) > 0:
+                        print('Error, cannot  install the module %s' % module_path)
+                        exit(1)
+                    else:
+                        print('Added module %s' % module_path)
+                        
+                    final_modules.append(("modules/%s" % (module_path)).replace('/', '.'))
+
+                    # Execute postscript
+                    
+                    postscript="%s/modules/%s/install/postinstall.py" % (path, module_path)
+                    
+                    if os.path.isfile(postscript):
+                        
+                        os.chmod(postscript, 0o755)
+                        
+                        if call(postscript, shell=True) > 0:
+                            print('Error, cannot execute the postinstall script')
+                            exit(1)
+                        else:
+                            print('Postinstall script finished')
+                            
+                # Edit  config.py
+                
+                with open(path_settings+'/config.py') as f:
+                    
+                    config_file=f.read()
+                    
+                    p=re.compile("^modules=\[(.*)\]\n$")
+                    
+                    modules_final='\''+'\', \''.join(final_modules)+'\''
+                    
+                    config_file=p.sub(r'\1, '+modules_final, config_file)
+                    
+                    print(config_file)
+                
 
 if __name__=="__main__":
     start()
