@@ -236,6 +236,8 @@ def start():
             
             final_modules=[]
             
+            final_modules_models=[]
+            
             if len(arr_modules)>0:
                 
                 for k, module in enumerate(arr_modules):
@@ -260,6 +262,7 @@ def start():
                         print('Added module %s' % module_path)
                         
                     final_modules.append(("modules/%s" % (module_path)).replace('/', '.'))
+                    final_modules_models.append("modules/%s/models" % (module_path))
 
                     # Execute postscript
                     
@@ -274,21 +277,74 @@ def start():
                             exit(1)
                         else:
                             print('Postinstall script finished')
-                            
+                        
+                    
                 # Edit  config.py
                 
                 with open(path_settings+'/config.py') as f:
                     
-                    config_file=f.read()
-                    
-                    p=re.compile("^modules=\[(.*)\]\n$")
-                    
                     modules_final='\''+'\', \''.join(final_modules)+'\''
                     
-                    config_file=p.sub(r'\1, '+modules_final, config_file)
+                    p=re.compile(r"^modules=\[(.*)\]$")
                     
-                    print(config_file)
+                    #config_file=p.sub(r"modules=[\1, "+modules_final+"]", "modules=['paramecio.modules.welcome', 'paramecio.modules.admin', 'paramecio.modules.lang', 'modules.pastafari', 'modules.monit', 'modules.example']")
+                    
+                    final_config=''
+                    
+                    for line in f:
+                        if p.match(line):
+                            line=p.sub(r"modules=[\1, "+modules_final+"]", line)
+                        final_config+=line
+                    
+                with open(path_settings+'/config.py', 'w') as f:
+                    
+                    f.write(final_config)
+                    
+                    print('Updated configuration for add new modules...')
                 
+                real_dir=os.getcwd()
+                    
+                os.chdir(args.path)
+                
+                #Regenerating modules.py
+                
+                regenerate='regenerate.py'
+                
+                os.chmod(regenerate, 0o755)
+                
+                if call('./regenerate.py', shell=True) > 0:
+                    print('Error, cannot regenerate the modules.py script')
+                    exit(1)
+                else:
+                    print('Regeneration of modules.py finished')
+                
+                # Installing models
+                    
+                padmin='padmin.py'
+                
+                os.chmod(padmin, 0o755)
+                
+                for models_path in final_modules_models:
+                    
+                    #models_path="modules/%s/models" % (module_path)
+                    
+                    if os.path.isdir(models_path):
+                        
+                        models_files=os.listdir(models_path)
+                        
+                        m=re.compile(".*\.py$")
+                        
+                        underscore=re.compile("^__.*")
+                        
+                        for f in models_files:
+                            
+                            if m.match(f) and not underscore.match(f):
+                                
+                                if call('./padmin.py --model '+models_path+'/'+f, shell=True) > 0:
+                                    print('Error, cannot create the modules of '+models_path+'/'+f)
+                                else:
+                                    print('Modules from '+models_path+'/'+f+' created')
+                    
 
 if __name__=="__main__":
     start()

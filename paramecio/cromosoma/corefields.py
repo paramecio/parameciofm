@@ -89,7 +89,7 @@ class TextField(PhangoField):
     
     def get_type_sql(self):
 
-        return 'TEXT NOT NULL DEFAULT ""'
+        return 'TEXT NOT NULL'
 
 class ForeignKeyField(IntegerField):
     
