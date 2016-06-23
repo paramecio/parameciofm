@@ -262,21 +262,8 @@ def start():
                         print('Added module %s' % module_path)
                         
                     final_modules.append(("modules/%s" % (module_path)).replace('/', '.'))
-                    final_modules_models.append("modules/%s/models" % (module_path))
+                    final_modules_models.append("modules/%s" % (module_path))
 
-                    # Execute postscript
-                    
-                    postscript="%s/modules/%s/install/postinstall.py" % (path, module_path)
-                    
-                    if os.path.isfile(postscript):
-                        
-                        os.chmod(postscript, 0o755)
-                        
-                        if call(postscript, shell=True) > 0:
-                            print('Error, cannot execute the postinstall script')
-                            exit(1)
-                        else:
-                            print('Postinstall script finished')
                         
                     
                 # Edit  config.py
@@ -302,6 +289,8 @@ def start():
                     
                     print('Updated configuration for add new modules...')
                 
+                #Change workdir
+                
                 real_dir=os.getcwd()
                     
                 os.chdir(args.path)
@@ -324,9 +313,9 @@ def start():
                 
                 os.chmod(padmin, 0o755)
                 
-                for models_path in final_modules_models:
+                for mod_path in final_modules_models:
                     
-                    #models_path="modules/%s/models" % (module_path)
+                    models_path=mod_path+'/models'
                     
                     if os.path.isdir(models_path):
                         
@@ -343,7 +332,29 @@ def start():
                                 if call('./padmin.py --model '+models_path+'/'+f, shell=True) > 0:
                                     print('Error, cannot create the modules of '+models_path+'/'+f)
                                 else:
-                                    print('Modules from '+models_path+'/'+f+' created')
+                                    print('Models from '+models_path+'/'+f+' created')
+                    
+                # Execute two times the loop because i can need good installed models for postscript script
+                
+                # Execute postscript
+                
+                print('Executing postscripts')
+                
+                for mod_path in final_modules_models:
+                
+                    postscript=mod_path+"/install/postinstall.py"
+                    
+                    os.chmod(padmin, 0o755)
+                    
+                    if os.path.isfile(postscript):
+                        
+                        os.chmod(postscript, 0o755)
+                        
+                        if call('./'+postscript, shell=True) > 0:
+                            print('Error, cannot execute the postinstall script')
+                            exit(1)
+                        else:
+                            print('Postinstall script finished')
                     
 
 if __name__=="__main__":

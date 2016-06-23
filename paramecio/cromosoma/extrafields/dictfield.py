@@ -38,7 +38,7 @@ class DictField(PhangoField):
 
     def get_type_sql(self):
 
-        return 'TEXT NOT NULL DEFAULT ""'
+        return 'TEXT NOT NULL'
     
     def show_formatted(self, value):
         
