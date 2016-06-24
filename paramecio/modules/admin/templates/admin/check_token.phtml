@@ -36,6 +36,8 @@
                     {
                         //alert(JSON.stringify(data));
                         //$('#result_register').html('Error');
+                        $('#csrf_token').attr('value', data.csrf_token);
+                        
                         $('#token_error').html(data.token);
                         $('#loading').hide();
                         $('#result_register').html('');
@@ -64,6 +66,7 @@
     <div class="form">
         <label>Put your email code</label>
         <input type="text" name="token" value="" id="token_form"/>
+        ${csrf_token()|n}
         <span class="error" id="token_error"></span>
     </div>
     <div id="result_register" class="form"></div>

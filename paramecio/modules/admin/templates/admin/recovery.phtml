@@ -20,7 +20,7 @@
                 
                     if(data.error==0)
                     {
-                    
+                        
                         $('#result_register').html('Redirecting to recovery password zone');
                         
                         setTimeout(function () {
@@ -36,7 +36,10 @@
                     {
                         //alert(JSON.stringify(data));
                         //$('#result_register').html('Error');
+                        $('#csrf_token').attr('value', data.csrf_token);
                         $('#email_error').html(data.email);
+                        
+                        $('#loading').hide();
                         
                     }
                 

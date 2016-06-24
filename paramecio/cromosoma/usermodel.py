@@ -144,7 +144,7 @@ class UserModel(WebModel):
             self.conditions=original_conditions
 
         if error>0:
-            self.sql_error+='Error:if is not expected, please, check that you disabled the special checkings of this model'
+            self.query_error+='Error:if is not expected, please, check that you disabled the special checkings of this model'
             return False
 
         return fields, values, update_values

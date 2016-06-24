@@ -221,7 +221,11 @@ def login():
     
     if arr_user==False:
         
-        return {'error': 1}
+        s=get_session()
+                
+        s['csrf_token']=create_key_encrypt()
+        
+        return {'error': 1, 'csrf_token': s['csrf_token']}
     else:
         
         num_tries=int(arr_user['num_tries'])
@@ -280,9 +284,17 @@ def login():
                 
                 user_admin.update({'num_tries': arr_user['num_tries']+1})
                 
-                return {'error': 1}
+                s=get_session()
+                
+                s['csrf_token']=create_key_encrypt()
+                
+                return {'error': 1, 'csrf_token': s['csrf_token']}
         else:
-            return {'error': 1}
+            s=get_session()
+                
+            s['csrf_token']=create_key_encrypt()
+            
+            return {'error': 1, 'csrf_token': s['csrf_token']}
 
 
 @post('/'+config.admin_folder+'/register')
@@ -320,11 +332,17 @@ def register():
             
             pass_values_to_form(getpostfiles.post, user_admin.forms, yes_error=True)
             
-            error={'error': 1}
+            s=get_session()
+                
+            s['csrf_token']=create_key_encrypt()
             
-            for field in user_admin.fields.values():
+            error={'error': 1, 'csrf_token': s['csrf_token']}
+            
+            for field in user_admin.valid_fields:
                     
-                    error[field.name]=field.txt_error
+                    error[field]=user_admin.forms[field].txt_error
+            
+            error['repeat_password']=user_admin.forms['repeat_password'].txt_error
             
             #error['password_repeat']=I18n.lang('common', 'password_no_match', 'Passwords doesn\'t match')
             
@@ -395,7 +413,11 @@ def send_password():
     
     if user_admin.fields['email'].error:
         
-        return {'email': user_admin.fields['email'].txt_error, 'error': 1}
+        s=get_session()
+                
+        s['csrf_token']=create_key_encrypt()
+        
+        return {'email': user_admin.fields['email'].txt_error, 'error': 1, 'csrf_token': s['csrf_token']}
         
     else:
         
@@ -479,5 +501,9 @@ def check_code_token():
                         return {'token': 'Error: i cannot send mail', 'error': 1}
                     
                     return {'token': 'Error: cannot send the maild with the new password', 'error': 0} 
+    
+    s=get_session()
                 
-    return {'token': 'Error: token is not valid', 'error': 1}
+    s['csrf_token']=create_key_encrypt()
+    
+    return {'token': 'Error: token is not valid', 'error': 1,  'csrf_token': s['csrf_token']}

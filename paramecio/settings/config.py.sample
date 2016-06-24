@@ -54,6 +54,7 @@ cookie_name = 'paramecio.session'
 
 key_encrypt="im smoking fool"
 
+"""
 session_opts = {
     #'session.domain': 'domain.com',
     'session.cookie_expires': True,
@@ -63,15 +64,18 @@ session_opts = {
     'session.key': cookie_name,
     'session.validate_key': key_encrypt    
 }
-
 """
+
 session_opts = {
+
+    'session.key': cookie_name,
     'session.type': 'file',
     'session.data_dir': './sessions',
-    'session.auto': true
+    'session.auto': True,
+    'session.secret': key_encrypt,
     
 }
-"""
+
 
 cache_session_opts = {
     

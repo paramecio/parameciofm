@@ -5,6 +5,8 @@
             
             $("#register_submit").click( function () {
                 
+                $('#loading').show();
+                
                 $.ajax({
                 url: "${make_url('admin/register')}",
                 method: "POST",
@@ -18,8 +20,7 @@
                     {
                     
                         //$('#result_register').html('Done!. Redirecting...');
-                        $('#loading').show();
-                        
+                        $('#loading').hide();
                         window.location.href="${make_url('admin/login')}";
                     
                     }
@@ -27,6 +28,11 @@
                     {
                         //alert(JSON.stringify(data));
                         //$('#result_register').html('Error');
+                        
+                        $('#loading').hide();
+                        
+                        $('#csrf_token').attr('value', data.csrf_token);
+                        
                         $('#username_error').html(data.username);
                         $('#email_error').html(data.email);
                         $('#password_error').html(data.password);

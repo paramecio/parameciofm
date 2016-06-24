@@ -17,11 +17,13 @@
             
                 $('#loading').show();
                 
-                data_form={'username': $('#username_form').val(), 'password': $('#password_form').val(), 'csrf_token': $('#csrf_token').val()};
+                //alert($("input[id=csrf_token]").val());
+                
+                data_form={'username': $('#username_form').val(), 'password': $('#password_form').val(), 'csrf_token': $("input[id=csrf_token]").val()};
             
                 if($('#remember_login:checked').val())
                 {
-                    alert('pepe');
+                    
                     data_form.remember_login=$('#remember_login').val();
                 }
             
@@ -40,6 +42,12 @@
                     }
                     else
                     {
+                        
+                        //$('#csrf_token').val(data.csrf_token);
+                        
+                        // Firefox have a horrible and stupid bug and you need attr for set de new csrf_token
+                        
+                        $('#csrf_token').attr('value', data.csrf_token);
                     
                         $('#loading').hide('slow');
 
