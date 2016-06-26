@@ -40,6 +40,10 @@ default_module="welcome"
 
 modules=['paramecio.modules.welcome']
 
+#The base url 
+
+base_url='/'
+
 #Activate sessions?
 
 session_enabled=True
@@ -68,6 +72,7 @@ session_opts = {
 
 session_opts = {
 
+    'session.path': base_url,
     'session.key': cookie_name,
     'session.type': 'file',
     'session.data_dir': './sessions',
@@ -80,10 +85,6 @@ session_opts = {
 cache_session_opts = {
     
 }
-
-#The base url 
-
-base_url='/'
 
 #Can be absolute or relative
 

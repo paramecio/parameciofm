@@ -39,17 +39,17 @@ if config.yes_static==True:
     
     def make_media_url(file_path):
         
-        return '/media/'+file_path
+        return config.media_url+'media/'+file_path
         
     def make_media_url_module(file_path, module):
         
-        return '/mediafrom/'+module+'/'+file_path
+        return config.media_url+'mediafrom/'+module+'/'+file_path
 else:
     
     def make_media_url(file_path):
 
-        return config.media_url+'/media/'+file_path
+        return config.media_url+'media/'+file_path
     
     def make_media_url_module(file_path, module):
 
-        return config.media_url+'/media/'+module+'/'+file_path
+        return config.media_url+'media/'+module+'/'+file_path
