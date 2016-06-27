@@ -17,6 +17,12 @@ def start():
     parser=argparse.ArgumentParser(description='A tool for create new paramecio sites')
 
     parser.add_argument('--path', help='The path where the paramecio site is located', required=True)
+    
+    parser.add_argument('--domain', help='The base domain for this site', required=True)
+    
+    parser.add_argument('--folder', help='If you deploy in a subdirectory, set it', required=False)
+    
+    parser.add_argument('--port', help='If you deploy in a  not standard port, set it', required=False)
 
     parser.add_argument('--modules', help='A list separated by commas with the git repos for download modules for this site', required=False)
 
