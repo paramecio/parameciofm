@@ -18,17 +18,24 @@ def start():
 
     parser.add_argument('--path', help='The path where the paramecio site is located', required=True)
     
-    parser.add_argument('--domain', help='The base domain for this site', required=True)
-    
-    parser.add_argument('--folder', help='If you deploy in a subdirectory, set it', required=False)
-    
-    parser.add_argument('--port', help='If you deploy in a  not standard port, set it', required=False)
-
     parser.add_argument('--modules', help='A list separated by commas with the git repos for download modules for this site', required=False)
 
     parser.add_argument('--symlink', help='Set if create direct symlink to paramecio in new site', required=False, nargs='?', const='1')
+    
+    # Options for deploy
+    
+    parser.add_argument('--domain', help='The base domain for this site', required=True)
+    
+    parser.add_argument('--folder', help='If you deploy in a subdirectory, set it, without beggining and ending slashes', required=False)
+    
+    parser.add_argument('--port', help='If you deploy for production, set it to 80 value', required=False)
+    
+    parser.add_argument('--ssl', help='Set if create direct symlink to paramecio in new site', required=False, nargs='?', const='1')
 
     args=parser.parse_args()
+    
+    #print(args)
+    #exit(0)
     
     workdir=os.path.dirname(os.path.abspath(__file__))
 
@@ -119,22 +126,46 @@ def start():
         except:
             print('Error: cannot symlink paramecio in new site')
 
-    f=open(path_settings+'/config.py', 'r')
-    
-    conf=f.read()
-    
-    f.close()
+    with open(path_settings+'/config.py', 'r') as f:
+        conf=f.read()
     
     random_bytes = os.urandom(24)
     secret_key_session = b64encode(random_bytes).decode('utf-8').strip()
     
     conf=conf.replace('im smoking fool', secret_key_session)
     
-    f=open(path_settings+'/config.py', 'w')
+    #domain='localhost'
     
-    f.write(conf)
+    conf=conf.replace("domain='localhost'", "domain='"+args.domain+"'")
+
+    if args.port==None:
+        args.port=':8080'
+        
+    elif args.port=='80':
+        args.port=''
+        
+    else:
+        args.port=':'+args.port
+        
+    if args.folder==None:
+        args.folder=''
+    else:
+        args.folder='/'+args.folder
+        
+    ssl='http'
     
-    f.close()
+    if args.ssl=='1':
+        args.ssl='https'
+        
+    
+    domain_url=args.ssl+'://'+args.domain+args.port+args.folder
+    
+    conf=conf.replace("domain_url='http://localhost:8080'", "domain_url='"+domain_url+"'")
+
+    #domain_url='http://localhost:8080'
+    
+    with open(path_settings+'/config.py', 'w') as f:
+        f.write(conf)
     
     # Question about mysql configuration? If yes, install configuration
     
@@ -180,7 +211,14 @@ def start():
         useradmin=UserAdmin(conn)
         
         if not useradmin.query(sql):
-            print('Error: cannot create database, check the data of database')
+            #print('Error: cannot create database, check the data of database')
+            
+            # Check if db exists
+            
+            cur=useradmin.query('SHOW DATABASES LIKE "%s"' % db)
+            
+            if cur.rowcount()==0:
+                print('Error: cannot create database or db doesn\'t exists, check database permissions for this user')
         
         else:
             
