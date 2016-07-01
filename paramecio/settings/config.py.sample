@@ -10,9 +10,9 @@ from paramecio.cromosoma.webmodel import WebModel
 
 port=8080
 
-debug=True
+debug=False
 
-reloader=True
+reloader=False
 
 admin_folder='admin'
 

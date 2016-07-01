@@ -1,6 +1,6 @@
 import os, sys, traceback, inspect, resource
 from importlib import import_module
-from bottle import route, get, post, run, default_app, abort, request, response, static_file, load, hook
+from bottle import route, get, post, run, default_app, abort, request, response, static_file, load, hook, error
 from settings import config, modules
 from beaker.middleware import SessionMiddleware
 from mimetypes import guess_type
@@ -172,6 +172,13 @@ if config.session_enabled==True:
 @hook('before_request')
 def strip_path():
     request.environ['PATH_INFO'] = request.environ['PATH_INFO'].rstrip('/')
+    
+# Set error screen if not debug setted
+
+if config.debug==False:
+    @error(404)
+    def error404(error):
+        return 'Error: page not found'
 
 def run_app(app):
 
