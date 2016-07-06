@@ -233,17 +233,18 @@ p {
 
 	font-size:18px;
 	font-weight:bold;
-	font-family:arial, sans;
+	font-family:helvetica, sans;
 	text-decoration:none;
-	color:#000000;
+	color:#fbfbfb;
 	padding:5px;
-	background-image:url('../images/background_title.png');
+	/*background-image:url('../images/background_title.png');
 	background-position:top;
-	background-repeat: repeat-x;
-	background-color: #fcf7fd;
+	background-repeat: repeat-x;*/
+	background-color: #337ab7;
 	border-radius: 8px 8px 0px 0px;
-	border:solid #cccccc;
+	border:solid #337ab7;
 	border-width:1px 1px 1px 1px;
+    margin-top:8px;
 }
 
 #inform {
@@ -371,7 +372,7 @@ margin-right:auto;
 	padding:10px 10px 10px 10px;
 	border:solid #dfdfdf;
 	border-width: 0px 1px 1px 1px;
-	font-size:12px;
+	font-size:14px;
 	position:relative;
 	overflow:auto;
 	margin-bottom:10px;
