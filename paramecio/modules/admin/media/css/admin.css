@@ -370,7 +370,7 @@ margin-right:auto;
 	margin:auto;
 	background-color:#ffffff;
 	padding:10px 10px 10px 10px;
-	border:solid #dfdfdf;
+	border:solid #cbcbcb;
 	border-width: 0px 1px 1px 1px;
 	font-size:14px;
 	position:relative;
@@ -489,7 +489,6 @@ a:hover.no_choose_flag
 
 	border: solid #bcbcbc;
 	border-width:1px;
-	height:20px;
 	border-radius:5px;
 	background: #eeeeee;
 
@@ -501,39 +500,40 @@ a:hover.no_choose_flag
 	
 }
 
-#center_body input[type="submit"]
+#center_body input[type="submit"], #center_body input[type="button"]
 {
 	
-	font-family: arial,sans;
-	font-size:12px;
-	height:25px;
-	border-radius:25px;
-	background: #eee;
-	
-}
-
-#center_body input:hover[type="submit"]
-{
-	
-	background: #fff;
+	font-family: helvetica, arial,sans;
+	font-size:16px;
+	border-radius:5px;
+    border: solid #205081 1px;
+	background: #205081;
+    padding: 5px 10px 5px 10px;
+    font-weight:bold;
+    color: #fbfbfb;
 	
 }
 
 #center_body input[type="button"]
 {
+
+    background:  #f0ad4e;
+
+}
+
+#center_body input:hover[type="submit"]
+{
 	
-	font-family: arial,sans;
-	font-size:12px;
-	height:25px;
-	border-radius:25px;
-	background: #eee;
+	background: #104070;
+    cursor: pointer;
 	
 }
 
 #center_body input:hover[type="button"]
 {
 	
-	background: #fff;
+	background:  #d09c3d;
+    cursor: pointer;
 	
 }
 
