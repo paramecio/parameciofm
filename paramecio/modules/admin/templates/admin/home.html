@@ -10,8 +10,9 @@ ${make_url('admin/'+module)}\
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <title>${title}</title>
-<!--<link href="{{'css/admin/admin.css'|make_media_url}}" rel="stylesheet" type="text/css"/>
-<link href="{{'css/font-awesome.min.css'|make_media_url}}" rel="stylesheet" type="text/css"/>-->
+<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
 ${add_css_home_local('admin.css', 'admin')}
 ${add_css_home_local('font-awesome.min.css', 'admin')}
 ${add_js_home_local('jquery.min.js', 'admin')}
@@ -23,13 +24,13 @@ ${HeaderHTML.header_home()|n}
 <div id="languages_general">
 </div>
 <div id="logout">
-<a href="${make_url('admin/logout')}">Logout</a>
+<a href="${make_url('admin/logout')}"><i class="fa fa-power-off" aria-hidden="true"></i> Logout</a>
 </div>
 
 <div id="center_body">
     <div id="header">
         <span id="title_phango">Paramecio</span> <span id="title_framework">Framework!</span> 
-        <div id="languages_general">
+        <!--<div id="languages_general">
         <%def name="select_lang(i18n, lang_selected)">
             % if i18n==lang_selected:
                 choose_flag
@@ -43,15 +44,15 @@ ${HeaderHTML.header_home()|n}
             
             % endfor 
         % endif
-        </div>
+        </div>-->
     </div>
     <div class="content_admin">
         <div id="menu">
-            <div class="menu_title">${lang('admin', 'applications', 'Applications')}</div>
+            <div class="menu_title"><i class="fa fa-gear" aria-hidden="true"></i> ${lang('admin', 'applications', 'Applications')}</div>
             % for module in menu:
                 % if type(menu[module]).__name__=='list':
                     % if menu[module][0]!="":
-                        <a href="${check_menu(module).strip()|n}">${menu[module][0]}</a>
+                        <a href="${check_menu(module).strip()|n}"><i class="fa fa-circle-o" aria-hidden="true"></i> ${menu[module][0]}</a>
                     % endif
                 % else:
                     % if menu[module]!="":
@@ -62,8 +63,10 @@ ${HeaderHTML.header_home()|n}
         </div>
         <div class="contents">
             <h1>${title}</h1>
-            <%block name="content">
-            </%block>
+            <div class="content">
+                <%block name="content">
+                </%block>
+            </div>
         </div>
     </div>
 </div>

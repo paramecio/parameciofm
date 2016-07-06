@@ -1,8 +1,8 @@
-<p><a href="${admin.url}">${lang('common', 'home', 'Home')}</a> &gt;&gt; 
-% if id!='0':
-    ${title_edit}
+<p><a href="${admin.url}">${lang('common', 'home', 'Home')}</a> &gt;&gt; \
+% if id!='0': 
+    ${title_edit} \
 %else:
-    ${title_edit}
+    ${title_edit} \
 %endif 
 </p>
 <form method="post" action="${add_get_parameters(admin.url, op_admin=2, id=id)}">

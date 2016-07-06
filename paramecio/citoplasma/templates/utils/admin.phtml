@@ -1,4 +1,4 @@
 ${show_flash_message()|n}
-<h1>${admin.title}</h1>
-<a href="${add_get_parameters(admin.url, op_admin='1')}">${lang('common', 'add_item', 'Add new item')}</a>
+<!--<h1>${admin.title}</h1>-->
+<p><a href="${add_get_parameters(admin.url, op_admin='1')}">${lang('common', 'add_item', 'Add new item')}</a></p>
 ${admin.list.show()|n}
