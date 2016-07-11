@@ -6,6 +6,7 @@ from mako.lookup import TemplateLookup
 from paramecio.citoplasma.urls import make_url, make_media_url, make_media_url_module, add_get_parameters
 from paramecio.citoplasma.i18n import I18n
 from paramecio.citoplasma.sessions import get_session
+from paramecio.citoplasma.adminutils import make_admin_url
 from paramecio.cromosoma.formsutils import csrf_token
 from settings import config
 from os import path
@@ -107,6 +108,8 @@ class PTemplate:
         self.add_filter(add_get_parameters)
         
         self.add_filter(csrf_token)
+        
+        self.add_filter(make_admin_url)
         
         I18n_lang=I18n.lang
         

@@ -11,7 +11,7 @@ if sys.version_info < (3, 3):
 #import paramecio
 
 setup(name='paramecio',
-      version='0.1.1b',
+      version='0.1.2',
       description='Fast and simple Framework based in bottle and Mako.',
       long_description='This framework is simple framework used for create web apps. Paramecio is modular and fast. By default have a module called admin that can be used for create ',
       author='Antonio de la Rosa Caballero',
@@ -19,7 +19,7 @@ setup(name='paramecio',
       url='http://paramecioproject.com/',
       packages=['paramecio'],
       include_package_data=True,
-      install_requires=['bottle', 'mako', 'passlib', 'bcrypt', 'mysqlclient', 'sqlalchemy', 'Pillow', 'beaker'],
+      install_requires=['bottle', 'mako', 'passlib', 'bcrypt', 'mysqlclient', 'sqlalchemy', 'Pillow', 'beaker>=1.8.0'],
       entry_points={'console_scripts': [
         'paramecio = paramecio.console:start',
       ]},
