@@ -120,9 +120,11 @@ p {
 {
 
 	float:left;
-	width:18%;
+	width:17%;
 	margin-right:0px;
 	position:relative;
+    border:solid #cccccc;
+    border-width:0px 1px 1px 0px;
 }
 
 #menu a
@@ -134,7 +136,8 @@ p {
 	color:#6183b0;
 	display:block;
 	border:solid #cccccc;
-	border-width:0px 1px 1px 1px;
+	/*border-width:0px 1px 1px 1px;*/
+    border-width:0px;
 	padding:5px;
 	background: #ececec;
 }
@@ -162,7 +165,7 @@ p {
 {
 
 	padding:5px;
-	font-size:22px;
+	font-size:18px;
 	font-family:"Helvetica", sans, serif;
 	font-weight:bold;
 	/*background-image:url('../images/background_title.png');
@@ -195,6 +198,19 @@ p {
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4c4c4c', endColorstr='#131313', GradientType=0 );*/
 
     
+}
+
+#menu ul {
+
+    margin:0px;
+    /*border: solid #000 1px;*/
+    padding:0px;
+}
+
+#menu li {
+
+    border-width: 0px;
+
 }
 
 .content_admin 
@@ -570,11 +586,12 @@ a:hover.no_choose_flag
 {
 
 	top:16px;
-	right:5px;
-    width:100px;
+	right:10px;
+    width:55px;
 	font-weight:bold;
 	font-size:12px;
     text-decoration: none;
+    /*border: solid #000 1px;*/
 }
 
 #logout a {
@@ -665,3 +682,119 @@ a.form_button_tab:hover
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff3019', endColorstr='#cf0404',GradientType=0 ); /* IE6-9 */
 	
 }
+
+#toggle {
+
+    position:absolute;
+    left:10px;
+    top:0px;
+    z-index:1;
+    display:none;
+    
+
+}
+
+#toggle span {
+
+    display:none;
+
+}
+
+.first_canvas {
+
+    width:48%;
+    float:right;
+
+}
+
+.other_canvas {
+
+    width:48%;
+    float:left;
+
+}
+
+/* Media queries */
+
+@media only screen and (max-width: 800px) {
+    
+    #toggle {
+    
+        display:block;
+    
+    }
+    
+    #toggle span {
+
+        display:none;
+
+    }
+    
+    .contents {
+    
+        width:100%;
+    
+    }
+    
+    #menu {
+    
+        width:100%;
+    
+    }
+    #title_phango
+    {
+        font-size:18px;
+        text-align:center;
+        color: #555555;        
+        border: solid #000 0px;
+    }
+    
+    #title_framework
+    {
+    
+        display:none;
+    
+    }
+    
+    #header {
+    
+        text-align:center;
+    
+    }
+    
+    .ip_td {
+    
+        display:none;
+    
+    }
+    
+    .num_updates_td {
+    
+        display:none;
+    
+    }
+    
+    .first_canvas {
+
+        width:100%;
+        clear:both;
+
+    }
+    
+    .first_canvas canvas {
+    
+        border:solid  #000 1px;
+        height:300px;
+        display:block;
+    
+    }
+
+    .other_canvas {
+
+        width:100%;
+        clear:both;
+
+    }
+    
+}
+
