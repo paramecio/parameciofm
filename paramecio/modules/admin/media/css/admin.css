@@ -64,7 +64,7 @@ h1, h2
 
 	font-family:"Helvetica", sans, serif;
     border: solid #cbcbcb;
-    border-width: 0px  0px 1px 0px;
+    border-width: 0px  0px 1px 1px;
 	font-size:26px;
 	color:#333333;
     margin:0px;
@@ -778,13 +778,13 @@ a.form_button_tab:hover
 
         width:100%;
         clear:both;
+        height:400px;
 
     }
     
     .first_canvas canvas {
     
         border:solid  #000 1px;
-        height:300px;
         display:block;
     
     }
