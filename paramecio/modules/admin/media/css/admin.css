@@ -778,16 +778,9 @@ a.form_button_tab:hover
 
         width:100%;
         clear:both;
-        height:400px;
 
     }
     
-    .first_canvas canvas {
-    
-        border:solid  #000 1px;
-        display:block;
-    
-    }
 
     .other_canvas {
 
