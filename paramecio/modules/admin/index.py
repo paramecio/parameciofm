@@ -4,7 +4,7 @@ import traceback, sys
 from paramecio.citoplasma.mtemplates import env_theme, PTemplate
 from paramecio.modules.admin.models.admin import UserAdmin
 from paramecio.citoplasma.i18n import load_lang, I18n
-from paramecio.citoplasma.urls import make_url, add_get_parameters
+from paramecio.citoplasma.urls import make_url, add_get_parameters, redirect
 from paramecio.citoplasma.sessions import get_session, generate_session
 from bottle import get,post,response,request
 from settings import config
@@ -17,7 +17,6 @@ from paramecio.cromosoma.formsutils import show_form, pass_values_to_form, set_e
 from paramecio.cromosoma.coreforms import PasswordForm
 from paramecio.cromosoma.webmodel import WebModel
 from importlib import import_module, reload
-from bottle import redirect
 from collections import OrderedDict
 from time import time
 from paramecio.citoplasma.keyutils import create_key_encrypt, create_key_encrypt_256, create_key
@@ -165,7 +164,7 @@ def home(module='', submodule=''):
                      s['login']=1
                      s['privileges']=arr_user['privileges']
                      
-                     redirect('/'+config.admin_folder)
+                     redirect(make_url(config.admin_folder))
             
             else:
                 
@@ -369,7 +368,7 @@ def logout():
     
     #return ""
     
-    redirect('/'+config.admin_folder)
+    redirect(make_url(config.admin_folder))
 
 @get('/'+config.admin_folder+'/recovery_password')
 def recovery_password():

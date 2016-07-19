@@ -1,6 +1,20 @@
 #!/usr/bin/python3
 
 from settings import config
+from bottle import request, response, HTTPResponse
+
+# A modified version of bottle url for don't need set x-proxy shit for redirect...
+
+def redirect(url, code=None):
+    """ Aborts execution and causes a 303 or 302 redirect, depending on
+        the HTTP protocol version. """
+    if not code:
+       	code = 303 if request.get('SERVER_PROTOCOL') == "HTTP/1.1" else 302
+    res = response.copy(cls=HTTPResponse)
+    res.status = code
+    res.body = ""
+    res.set_header('Location', url)
+    raise res
 
 #Simple method for make urls
 
