@@ -4,6 +4,14 @@
 
 from paramecio.cromosoma.webmodel import WebModel
 
+# No touch it if you don't know what are you doing
+
+import sys
+
+paramecio_root=os.path.dirname(sys.modules['paramecio'].__file__)
+
+#####
+
 #server_used="wsgiref"
 
 #Host/IP where bind the server
