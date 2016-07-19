@@ -30,7 +30,7 @@ def start():
     
     parser.add_argument('--port', help='If you deploy for production, set it to 80 value', required=False)
     
-    parser.add_argument('--ssl', help='Set if create direct symlink to paramecio in new site', required=False, nargs='?', const='1')
+    parser.add_argument('--ssl', help='If the site use ssl, set it', required=False, nargs='?', const='1')
 
     args=parser.parse_args()
     
@@ -152,13 +152,13 @@ def start():
     else:
         args.folder='/'+args.folder
         
-    ssl='http'
+    arg_ssl='http'
     
     if args.ssl=='1':
-        args.ssl='https'
+        arg_ssl='https'
         
     
-    domain_url=args.ssl+'://'+args.domain+args.port+args.folder
+    domain_url=arg_ssl+'://'+args.domain+args.port+args.folder
     
     conf=conf.replace("domain_url='http://localhost:8080'", "domain_url='"+domain_url+"'")
 
