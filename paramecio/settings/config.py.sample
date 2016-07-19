@@ -6,7 +6,7 @@ from paramecio.cromosoma.webmodel import WebModel
 
 # No touch it if you don't know what are you doing
 
-import sys
+import sys, os
 
 paramecio_root=os.path.dirname(sys.modules['paramecio'].__file__)
 
