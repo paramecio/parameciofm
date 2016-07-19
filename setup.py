@@ -19,7 +19,7 @@ setup(name='paramecio',
       url='http://paramecioproject.com/',
       packages=['paramecio'],
       include_package_data=True,
-      install_requires=['bottle', 'mako', 'passlib', 'bcrypt', 'mysqlclient', 'sqlalchemy', 'Pillow', 'beaker>=1.8.0', 'itsdangerous', 'colorama'],
+      install_requires=['bottle', 'mako', 'passlib', 'bcrypt', 'mysqlclient', 'sqlalchemy', 'Pillow', 'beaker>=1.8.0', 'itsdangerous', 'colorama','cherrypy'],
       entry_points={'console_scripts': [
         'paramecio = paramecio.console:start',
       ]},

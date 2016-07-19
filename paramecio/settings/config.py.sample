@@ -38,7 +38,7 @@ theme='default'
 
 #Type server used for connect to the internet...
 
-server_used="wsgiref"
+server_used="cherrypy"
 
 #Module showed in index
 
