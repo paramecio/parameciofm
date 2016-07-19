@@ -1,6 +1,6 @@
 from paramecio.citoplasma.lists import SimpleList
-from bottle import request, redirect 
-from paramecio.citoplasma.urls import add_get_parameters
+from bottle import request
+from paramecio.citoplasma.urls import add_get_parameters, redirect
 from paramecio.citoplasma.mtemplates import set_flash_message
 from paramecio.cromosoma.formsutils import show_form
 from paramecio.citoplasma.i18n import I18n

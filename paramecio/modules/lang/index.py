@@ -1,6 +1,7 @@
 from paramecio.citoplasma.i18n import I18n
-from bottle import get,response,request, redirect
+from bottle import get,response,request
 from paramecio.citoplasma.sessions import get_session
+from paramecio.citoplasma.urls import redirect
 import re
 
 @get('/change_lang/<lang>')
@@ -21,3 +22,4 @@ def index(lang):
             redirect(redirect_url)
         
     return ""
+
