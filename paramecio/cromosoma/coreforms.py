@@ -112,18 +112,17 @@ class SelectModelForm(SelectForm):
         
         self.arr_select['']=''
         
-        cur=self.model.select([self.field_name, self.field_value], True)
-        
-        for arr_value in cur:
+        with self.model.select([self.field_name, self.field_value], True) as cur:        
+            for arr_value in cur:
+                
+                self.arr_select[arr_value[self.field_value]]=arr_value[self.field_name]
+                
+            try:
             
-            self.arr_select[arr_value[self.field_value]]=arr_value[self.field_name]
-            
-        try:
-        
-            self.default_value=int(self.default_value)
-            
-        except:
-            self.default_value=0
+                self.default_value=int(self.default_value)
+                
+            except:
+                self.default_value=0
         
         return super().form()
         
@@ -145,8 +144,8 @@ class SelectModelForm(SelectForm):
         
             for arr_value in cur:
                 
-                #self.arr_select[arr_value[self.field_value]]=arr_value[self.field_name]
-                if not self.field_parent in arr_son:
+                if not arr_value[self.field_parent] in arr_son:
+                    
                     arr_son[arr_value[self.field_parent]]=[]
                 
                 arr_son[arr_value[self.field_parent]].append([arr_value[self.field_value], arr_value[self.field_name]])
@@ -172,6 +171,8 @@ class SelectModelForm(SelectForm):
             for son in arr_son[parent_id]:
                 self.arr_select[son[0]]=separator+son[1]
                 
+                son_separator=separator
+                
                 if son[0] in arr_son:    
-                    separator+='--'
-                    self.create_son(son[0],arr_son, separator)
+                    son_separator+='--'
+                    self.create_son(son[0],arr_son, son_separator)
