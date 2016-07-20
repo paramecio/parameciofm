@@ -43,6 +43,8 @@ class SqlClass:
             
             self.connection[name_connection]=SqlClass.mypool.connect()
             
+            self.connection[name_connection].ping(True)
+            
             self.connected=True
             
         except:
