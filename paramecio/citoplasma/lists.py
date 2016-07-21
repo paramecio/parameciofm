@@ -4,12 +4,17 @@ from paramecio.citoplasma.pages import Pages
 from paramecio.citoplasma.urls import add_get_parameters
 from paramecio.citoplasma.sessions import get_session
 from paramecio.citoplasma.i18n import I18n
+from paramecio.citoplasma.httputils import GetPostFiles
 from bottle import request
 import sys
 
 class SimpleList:
     
     def __init__(self, model, url, t):
+        
+        self.getpostfiles=GetPostFiles()
+            
+        self.getpostfiles.obtain_get()
         
         self.t=t
         
@@ -35,7 +40,7 @@ class SimpleList:
         
         #clean session
         
-        self.s['order']=0
+        self.s['order']='0'
         
         self.s['order_field']=self.model.name_field_id
         
@@ -76,15 +81,15 @@ class SimpleList:
     
     def obtain_order(self):
         
-        self.s['order']=self.s.get('order', 0)
+        self.s['order']=self.getpostfiles.get.get('order', self.s['order'])
         
-        order_k=self.s['order']
+        order_k=int(self.s['order'])
         
         #Obtain from get
-        
+        """
         if 'order' in request.query.keys():
-            
-            order_k=int(request.query.get('order', 0))
+        """
+        #order_k=int(request.query.get('order', 0))
         
         if order_k>1 or order_k<0:
             order_k=0
@@ -95,12 +100,14 @@ class SimpleList:
     
     def obtain_field_search(self):
         
-        self.s['order_field']=self.s.get('order_field', self.model.name_field_id)
+        self.s['order_field']=self.getpostfiles.get.get('order_field', self.s['order_field'])
         
         field_k=self.s['order_field']
         
+        """
         if 'order_field' in request.query.keys():
             field_k=request.query.order_field
+        """
         
         if field_k in self.model.fields.keys():
             
@@ -118,15 +125,15 @@ class SimpleList:
         
     def search(self):
         
-        request.query.get('search_text', '')
+        self.getpostfiles.get['search_text']=self.getpostfiles.get.get('search_text', '')
         
-        self.search_text=request.query.search_text
+        self.search_text=self.getpostfiles.get['search_text']
         
         self.search_text=self.search_text.replace('"', '&quot;')
         
         #self.model.conditions='AND 
         
-        self.search_field=request.query.get('search_field', '')
+        self.search_field=self.getpostfiles.get.get('search_field', '')
         
         if self.search_field not in self.model.fields.keys():
             self.search_field=''
@@ -162,7 +169,7 @@ class SimpleList:
         
         num_elements=self.limit_pages
         
-        link=add_get_parameters(self.url, search_text=self.search_text, search_field=self.search_field)
+        link=add_get_parameters(self.url, search_text=self.search_text, search_field=self.search_field, order=self.s['order'])
         
         begin_page=self.begin_page
         
