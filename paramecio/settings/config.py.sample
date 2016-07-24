@@ -60,7 +60,7 @@ session_enabled=True
 
 cookie_name = 'paramecio.session'
 
-domain='localhost'
+domain='0.0.0.0'
 
 domain_url='http://localhost:8080'
 
