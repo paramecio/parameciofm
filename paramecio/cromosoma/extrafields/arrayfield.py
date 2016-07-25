@@ -1,4 +1,4 @@
-from paramecio.cromosoma.webmodel import PhangoField
+from paramecio.cromosoma.webmodel import PhangoField,WebModel
 import json
 
 class ArrayField(PhangoField):
@@ -33,7 +33,7 @@ class ArrayField(PhangoField):
         
         final_value=json.dumps(value)
         
-        final_value=super().check(final_value)
+        final_value=WebModel.escape_sql(final_value)
         
         return final_value
 

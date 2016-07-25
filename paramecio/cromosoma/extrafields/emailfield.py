@@ -7,6 +7,8 @@ class EmailField(CharField):
     
     def check(self, value):
         
+        value=super().check(value)
+        
         self.error=False
         self.txt_error=''
         

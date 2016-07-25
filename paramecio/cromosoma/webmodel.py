@@ -989,7 +989,7 @@ class PhangoField:
         
         # Property that define if make escape in show_formatted
         
-        self.escape=True
+        self.escape=False
         
         # File related: if the field have a file related, delete the file
         
@@ -1024,7 +1024,13 @@ class PhangoField:
         
         value=str(value)
         
-        value=WebModel.escape_sql(value)
+        value=value.replace('<', '&lt;')
+        
+        value=value.replace('>', '&gt;')
+        
+        value=value.replace('"', '&quot;')
+        
+        #value=WebModel.escape_sql(value)
         
         if value=="":
             self.txt_error="The field is empty"

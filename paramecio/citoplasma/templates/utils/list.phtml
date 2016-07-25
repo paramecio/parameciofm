@@ -42,7 +42,7 @@
             % if simplelist.model.fields[field].escape==True:
                 <td class="${simplelist.model.fields[field].name}_td">${simplelist.model.fields[field].show_formatted(row[field])}</td>
             % else:
-                <td class="${simplelist.model.fields[field].name}_td">${simplelist.model.fields[field].show_formatted(row[field])|n}</td>
+                <td class="${simplelist.model.fields[field].name}_td">${str(simplelist.model.fields[field].show_formatted(row[field]))|n}</td>
             % endif
         % endfor
         

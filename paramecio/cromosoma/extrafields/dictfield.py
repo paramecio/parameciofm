@@ -1,4 +1,4 @@
-from paramecio.cromosoma.webmodel import PhangoField
+from paramecio.cromosoma.webmodel import WebModel, PhangoField
 import json
 
 class DictField(PhangoField):
@@ -18,7 +18,7 @@ class DictField(PhangoField):
                 
                 value={}
                 self.error=True
-                self.txt_error='Sorry, the json array is invalid'
+                self.txt_error='Sorry, the json dict is invalid'
                 
         elif type(value).__name__!='dict':
             
@@ -26,13 +26,13 @@ class DictField(PhangoField):
             self.error=True
             self.txt_error='Sorry, the json array is invalid'
             
-        for k,v in enumerate(value):
+        for k,v in value.items():
             
             value[k]=self.field_type.check(v)
             
         final_value=json.dumps(value)
         
-        final_value=super().check(final_value)
+        #final_value=WebModel.escape_sql(final_value)
         
         return final_value
 

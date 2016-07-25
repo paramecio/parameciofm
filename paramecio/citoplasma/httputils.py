@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
-from bottle import request
+import json, re
+from bottle import request, response
 from paramecio.citoplasma.sessions import get_session
 from paramecio.citoplasma.keyutils import create_key_encrypt
 
@@ -19,7 +20,27 @@ except:
         no_csrf=False
 
 
-
+def filter_ajax(data, filter_tags=True):
+    
+    response.set_header('Content-type', 'application/json')
+    
+    #arr_data=map(
+    
+    json_encoded=json.dumps(data)
+    
+    #if filter_tags:
+    #    json_encoded=json_encoded.replace('<', '&lt;').replace('>', '&gt;')
+        
+        #json_encoded=re.sub(r'\\"', '&quot;', json_encoded)
+           
+        #json_encoded=re.sub('\\"', "", json_encoded)
+        #json_encoded=re.sub('\"', "&quot;", json_encoded)
+        
+        #replace('\\"', '&quot;')
+        #replace('\\\\', '${slashes}').
+        
+    return json_encoded
+    
 class GetPostFiles:
 
     # Need this for obtain utf8 valid values

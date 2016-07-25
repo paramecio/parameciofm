@@ -79,7 +79,7 @@ class TestWebModelMethods(unittest.TestCase):
         
         print('Select and save in an array')
         
-        self.assertEqual(model.select_to_array(['title', 'content']), {1: {'title': 'Example title Updated', 'content': 'New content Updated'}})
+        self.assertEqual(model.select_to_array(['title', 'content']), [{'id': 1, 'title': 'Example title Updated', 'content': 'New content Updated'}])
         
         model.yes_reset_conditions=True
         

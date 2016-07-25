@@ -1,5 +1,6 @@
 from settings import config
 from paramecio.citoplasma import sendmail
+import time
 import unittest
 
 class TestFieldMethods(unittest.TestCase):
@@ -8,10 +9,14 @@ class TestFieldMethods(unittest.TestCase):
         
         s=sendmail.SendMail()
         
-        self.assertTrue( s.send(config.portal_email, config.email_test, 'This is a test', 'A message for test a simple email method', content_type='plain', attachments=[]) )
+        self.assertTrue( s.send(config.portal_email, [config.email_test], 'This is a test', 'A message for test a simple email method', content_type='plain', attachments=[]) )
         
-        self.assertTrue( s.send(config.portal_email, config.email_test, 'This is a test', 'A message for test a simple email method in <b>html</b>', content_type='html', attachments=[]) )
+        time.sleep(70)
         
-        self.assertTrue( s.send(config.portal_email, config.email_test, 'This is a test', 'A message for test a simple email method in <b>html</b> and attachments', content_type='html', attachments=['tests/images/image.jpg']) )
+        self.assertTrue( s.send(config.portal_email, [config.email_test], 'This is a test', 'A message for test a simple email method in <b>html</b>', content_type='html', attachments=[]) )
+        
+        time.sleep(70)
+        
+        self.assertTrue( s.send(config.portal_email, [config.email_test], 'This is a test', 'A message for test a simple email method in <b>html</b> and attachments', content_type='html', attachments=['tests/images/image.jpg']) )
         
         s.quit()
