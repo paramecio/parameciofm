@@ -4,10 +4,26 @@ from paramecio.citoplasma.i18n import I18n
 
 class IntegerField(PhangoField):
     
+    """Class that figure an integer sql type field.
+
+    Args:
+        name (str): The name of new field
+        size (int): The size of the new field in database. By default 11.
+        required (bool): Boolean for define if 
+
+    """
+    
     def __init__(self, name, size=11, required=False):
         super(IntegerField, self).__init__(name, size, required)
     
     def check(self, value):
+        
+        """Method for check if value is integer
+
+        Args:
+            value (int): The value to check
+
+        """
         
         self.error=False
         self.txt_error=''
@@ -28,22 +44,52 @@ class IntegerField(PhangoField):
         return value
     
     def get_type_sql(self):
+        
+        """Method for return the sql code for this type
+
+        """
 
         return 'INT('+str(self.size)+') NOT NULL DEFAULT "0"'
         
 class BigIntegerField(IntegerField):
     
+    """Class that figure an big integer sql type field.
+    
+    Only change the sql type with respect to IntegerField
+
+    """
+    
     def get_type_sql(self):
+        
+        """Method for return the sql code for this type
+
+        """
 
         return 'BIGINT('+str(self.size)+') NOT NULL DEFAULT "0"'
     
 
 class FloatField(PhangoField):
     
+    """Class that figure an float sql type field.
+
+    Args:
+        name (str): The name of new field
+        size (int): The size of the new field in database. By default 11.
+        required (bool): Boolean for define if 
+
+    """
+    
     def __init__(self, name, size=11, required=False):
         super(FloatField, self).__init__(name, size, required)
     
     def check(self, value):
+        
+        """Method for check if value is integer
+
+        Args:
+            value (float): The value to check
+
+        """
         
         self.error=False
         self.txt_error=''
@@ -82,12 +128,11 @@ class TextField(PhangoField):
     def __init__(self, name, required=False):
         super().__init__(name, 11, required)
         
-    #def check(self, value):
-        
-        #value=super().check(value).replace('"', '&quot;').replace('<', '&lt;').replace('
-        
-    
     def get_type_sql(self):
+        
+        """Method for return the sql code for this type
+
+        """
 
         return 'TEXT NOT NULL'
 
@@ -121,6 +166,10 @@ class ForeignKeyField(IntegerField):
         return value
 
     def get_type_sql(self):
+        
+        """Method for return the sql code for this type
+
+        """
 
         return 'INT NULL'
         
@@ -160,6 +209,10 @@ class BooleanField(IntegerField):
         return value
     
     def get_type_sql(self):
+        
+        """Method for return the sql code for this type
+
+        """
 
         return 'BOOLEAN NOT NULL DEFAULT "0"'
     
