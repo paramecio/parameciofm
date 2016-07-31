@@ -93,10 +93,19 @@ session_opts = {
     
 }
 
+cache_opts = {
 
-cache_session_opts = {
+}
+
+"""
+cache_opts = {
+    
+    'cache.type': 'file',
+    'cache.data_dir': '/tmp/cache/data',
+    'cache.lock_dir': '/tmp/cache/lock'
     
 }
+"""
 
 #Can be absolute or relative
 

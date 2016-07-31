@@ -37,6 +37,8 @@ class WebModel:
     
     webmodel=True
     
+    global_cached=False
+    
     #sqlclass=SqlClass()
     
     #make_connection=sqlclass.connect_to_db
@@ -49,6 +51,8 @@ class WebModel:
     # Init the class
     
     def __init__(self, sqlclass, name_field_id="id"):
+        
+        cached=self.global_cached
         
         #The name of the table
         
@@ -987,7 +991,7 @@ class PhangoField:
         
         self.name_form=BaseForm
         
-        # Property that define if make escape in show_formatted
+        # Property that define if make escape in show_formatted.  This property control the html transformation  of <>" characters in html entities.If false, convert.
         
         self.escape=False
         
@@ -1024,11 +1028,12 @@ class PhangoField:
         
         value=str(value)
         
-        value=value.replace('<', '&lt;')
-        
-        value=value.replace('>', '&gt;')
-        
-        value=value.replace('"', '&quot;')
+        if self.escape==False:        
+            value=value.replace('<', '&lt;')
+            
+            value=value.replace('>', '&gt;')
+            
+            value=value.replace('"', '&quot;')
         
         #value=WebModel.escape_sql(value)
         

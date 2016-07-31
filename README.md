@@ -27,7 +27,7 @@ In Debian and Ubuntu you can install MariaDB using the next command: `apt-get in
 In Fedora and other Red Hat derived distros you can use `yum install mariadb-server`. 
 In RedHat/Centos 6 probably you need install adittional repositories for get latest versions of mariadb, but with MySQL 5.5, Pastafari should work fine.
 
-When you will install the mysql server, you should create a new user amd database for Paramecio.
+When you will install the mysql server, you should create a new user and database for Paramecio.
 
 ### Pip
 
@@ -53,4 +53,7 @@ Pastafari need a web framework called Paramecio. You can install this framework 
 
 This command will install in your server paramecio framework with its dependencies.
 
-When Paramecio finish the installing, a command called `paramecio` can be used for install Pastafari.
+When Paramecio finish the installing, you can create your first paramecio site with `paramecio` command.
+
+
+
