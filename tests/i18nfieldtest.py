@@ -36,4 +36,6 @@ class TestFieldMethods(unittest.TestCase):
         
         #self.assertEqual(phrase, 'this---is-a-crap-phrase-o---f-oh-yeah--')
         
-        
+
+if __name__ == '__main__':
+    unittest.main()

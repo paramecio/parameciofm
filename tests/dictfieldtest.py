@@ -54,6 +54,5 @@ class TestFieldMethods(unittest.TestCase):
         
         self.assertEqual(value_two, value_real)
         
-        
-        
-        
+if __name__ == '__main__':
+    unittest.main()

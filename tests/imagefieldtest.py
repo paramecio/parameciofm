@@ -63,3 +63,6 @@ class TestImageFieldMethods(unittest.TestCase):
         self.assertEqual(value, "injection_\\'")"""
         
    
+
+if __name__ == '__main__':
+    unittest.main()

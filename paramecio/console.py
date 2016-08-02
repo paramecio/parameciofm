@@ -22,6 +22,8 @@ def start():
 
     parser.add_argument('--symlink', help='Set if create direct symlink to paramecio in new site', required=False, nargs='?', const='1')
     
+    parser.add_argument('--tests', help='Create a symlink to tests for check into paramecio site', required=False, nargs='?', const='1')
+    
     # Options for deploy
     
     parser.add_argument('--domain', help='The base domain for this site', required=True)
@@ -122,6 +124,13 @@ def start():
     if args.symlink!=None:
         try:
             os.symlink(workdir, args.path+'/paramecio', True)
+            
+        except:
+            print('Error: cannot symlink paramecio in new site')
+            
+    if args.tests!=None:
+        try:
+            os.symlink(workdir, args.path+'/paramecio/', True)
             
         except:
             print('Error: cannot symlink paramecio in new site')

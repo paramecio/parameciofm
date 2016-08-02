@@ -57,3 +57,5 @@ class TestFieldMethods(unittest.TestCase):
         self.assertFalse(emailfield.error)
         
         
+if __name__ == '__main__':
+    unittest.main()

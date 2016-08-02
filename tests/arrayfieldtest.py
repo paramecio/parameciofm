@@ -28,4 +28,5 @@ class TestFieldMethods(unittest.TestCase):
         
         self.assertEqual(json_encoded, '["trick", "mytuquito", "25"]')
         
-        
+if __name__ == '__main__':
+    unittest.main()

@@ -67,3 +67,6 @@ class TestFieldMethods(unittest.TestCase):
         
         print(datetime.local_to_utc('20121221232421', tz))
         """
+
+if __name__ == '__main__':
+    unittest.main()
