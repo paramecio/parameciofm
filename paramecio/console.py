@@ -20,9 +20,9 @@ def start():
     
     parser.add_argument('--modules', help='A list separated by commas with the git repos for download modules for this site', required=False)
 
-    parser.add_argument('--symlink', help='Set if create direct symlink to paramecio in new site', required=False, nargs='?', const='1')
+    parser.add_argument('--symlink', help='Set if create direct symlink to paramecio in new site', action='store_true')
     
-    parser.add_argument('--tests', help='Create a symlink to tests for check into paramecio site', required=False, nargs='?', const='1')
+    parser.add_argument('--tests', help='Create a symlink to tests for check into paramecio site', action='store_true')
     
     # Options for deploy
     
@@ -32,7 +32,7 @@ def start():
     
     parser.add_argument('--port', help='If you deploy for production, set it to 80 value', required=False)
     
-    parser.add_argument('--ssl', help='If the site use ssl, set it', required=False, nargs='?', const='1')
+    parser.add_argument('--ssl', help='If the site use ssl, set it', action='store_true')
 
     args=parser.parse_args()
     
@@ -121,14 +121,14 @@ def start():
         
         print('Error: cannot copy the file modules.py. Check if exists and if you have permissions for this task')
     
-    if args.symlink!=None:
+    if args.symlink==True:
         try:
             os.symlink(workdir, args.path+'/paramecio', True)
             
         except:
             print('Error: cannot symlink paramecio in new site')
             
-    if args.tests!=None:
+    if args.tests==True:
         try:
             os.symlink(workdir, args.path+'/paramecio/', True)
             
@@ -163,7 +163,7 @@ def start():
         
     arg_ssl='http'
     
-    if args.ssl=='1':
+    if args.ssl==True:
         arg_ssl='https'
         
     
