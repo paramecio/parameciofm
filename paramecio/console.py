@@ -14,7 +14,7 @@ from urllib.parse import urlparse
 
 def start():
 
-    parser=argparse.ArgumentParser(description='A tool for create new paramecio sites')
+    parser=argparse.ArgumentParser(prog='paramecio', description='A tool for create new paramecio sites')
 
     parser.add_argument('--path', help='The path where the paramecio site is located', required=True)
     
