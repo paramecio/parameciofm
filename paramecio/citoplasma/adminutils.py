@@ -53,9 +53,11 @@ def check_login():
     
     if 'login' in s:
         
-        if s['privileges']==2:
-            
-            return True
+        if 'privileges' in s:
+        
+            if s['privileges']==2:
+                
+                return True
     
     return False
 
