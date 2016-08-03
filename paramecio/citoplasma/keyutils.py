@@ -2,6 +2,8 @@ from hashlib import sha512, sha256
 from base64 import b64encode
 from os import urandom
 
+# Functions for create random strings usando urandom
+
 def create_key_encrypt(n=10):
     
     return sha512(urandom(n)).hexdigest()
