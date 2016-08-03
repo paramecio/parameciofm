@@ -5,6 +5,7 @@ from settings import config, modules
 from beaker.middleware import SessionMiddleware
 from mimetypes import guess_type
 from paramecio.cromosoma.webmodel import WebModel
+from paramecio.citoplasma.datetime import set_timezone
 from itsdangerous import JSONWebSignatureSerializer
 from paramecio.citoplasma.keyutils import create_key_encrypt, create_key_encrypt_256, create_key
 #from paramecio.citoplasma.sessions import generate_session
@@ -179,6 +180,8 @@ if config.debug==False:
     @error(404)
     def error404(error):
         return 'Error: page not found'
+
+set_timezone()
 
 def run_app(app):
 

@@ -66,16 +66,26 @@ if hasattr(config, 'format_time'):
 if hasattr(config, 'timezone'):
     timezone=config.timezone    
 
-@hook('before_request')
+#@hook('before_request')
+
 def set_timezone():
+    
+    environ['TZ']=environ.get('TZ', timezone)
+    
+    if environ['TZ']!=timezone:
+        environ['TZ']=timezone
+        time.tzset()
+
+def set_timezone_session():
     
     s=get_session()
     
     timezone_local=timezone
     
     if s!=None:
-        
-        timezone_local=s.get('timezone', timezone)
+        if 'timezone' in s:
+            timezone_local=s['timezone']
+        #timezone_local=s.get('timezone', timezone)
     
     environ['TZ']=environ.get('TZ', timezone_local)
     

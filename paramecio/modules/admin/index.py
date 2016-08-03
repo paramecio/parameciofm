@@ -44,6 +44,25 @@ module_admin=path.dirname(__file__)
 
 env=env_theme(__file__)
 
+# Preload modules
+
+#Load menu
+                
+menu=get_menu(config_admin.modules_admin)
+
+#arr_admin_modules={for k, in menu}
+#d = {key: value[1] for (key, value) in menu.items()}
+"""
+d={}
+
+for k, v in menu.items():
+    
+    if k[:1]!='/':
+        d[k]=v[1]
+
+print(d)
+"""
+
 @get('/'+config.admin_folder)
 @get('/'+config.admin_folder+'/<module>')
 @post('/'+config.admin_folder+'/<module>')
@@ -87,10 +106,6 @@ def home(module='', submodule=''):
         if c>0:
         
             if s['privileges']==2:
-                
-                #Load menu
-                
-                menu=get_menu(config_admin.modules_admin)
                             #pass
                         
                 if module in menu:
@@ -117,7 +132,7 @@ def home(module='', submodule=''):
                         print("-"*60)
                         
                         return "No exists admin module"
-
+                    
                     #args={'t': t, 'connection': connection}
 
                     content_index=new_module.admin(t=t, connection=connection)
@@ -163,6 +178,8 @@ def home(module='', submodule=''):
                      s['id']=arr_user['id']
                      s['login']=1
                      s['privileges']=arr_user['privileges']
+                     
+                     s.save()
                      
                      redirect(make_url(config.admin_folder))
             
@@ -220,6 +237,8 @@ def login():
                 
         s['csrf_token']=create_key_encrypt()
         
+        s.save()
+        
         return {'error': 1, 'csrf_token': s['csrf_token']}
     else:
         
@@ -264,7 +283,7 @@ def login():
                         response.set_cookie('remember_login', random_text, path="/", expires=timestamp, secret=key_encrypt)
                     #else:
                         #print(user_admin.query_error)
-                #s.save()
+                s.save()
                 
                 return {'error': 0}
             else:
@@ -283,11 +302,15 @@ def login():
                 
                 s['csrf_token']=create_key_encrypt()
                 
+                s.save()
+                
                 return {'error': 1, 'csrf_token': s['csrf_token']}
         else:
             s=get_session()
                 
             s['csrf_token']=create_key_encrypt()
+            
+            s.save()
             
             return {'error': 1, 'csrf_token': s['csrf_token']}
 
@@ -340,6 +363,8 @@ def register():
             error['repeat_password']=user_admin.forms['repeat_password'].txt_error
             
             #error['password_repeat']=I18n.lang('common', 'password_no_match', 'Passwords doesn\'t match')
+            
+            s.save()
             
             return error
         
@@ -411,6 +436,8 @@ def send_password():
         s=get_session()
                 
         s['csrf_token']=create_key_encrypt()
+        
+        s.save()
         
         return {'email': user_admin.fields['email'].txt_error, 'error': 1, 'csrf_token': s['csrf_token']}
         
@@ -500,5 +527,7 @@ def check_code_token():
     s=get_session()
                 
     s['csrf_token']=create_key_encrypt()
+    
+    s.save()
     
     return {'token': 'Error: token is not valid', 'error': 1,  'csrf_token': s['csrf_token']}
