@@ -52,16 +52,15 @@ menu=get_menu(config_admin.modules_admin)
 
 #arr_admin_modules={for k, in menu}
 #d = {key: value[1] for (key, value) in menu.items()}
-"""
-d={}
+module_imported={}
 
 for k, v in menu.items():
-    
+    #print(k[:1])
     if k[:1]!='/':
-        d[k]=v[1]
+        if type(v).__name__=='list':
+            module_imported[k]=import_module(v[1])
 
-print(d)
-"""
+#print(d)
 
 @get('/'+config.admin_folder)
 @get('/'+config.admin_folder+'/<module>')
@@ -114,15 +113,16 @@ def home(module='', submodule=''):
                     
                     
                     try:
-                        new_module=import_module(menu[module][1])
+                        #new_module=import_module(menu[module][1])
                         
                         #t.inject_folder=path.dirname(new_module.__file__).replace('/admin', '')
                         
                         #t.env=t.env_theme(path.dirname(__file__))
-                        t.env.directories.insert(1, path.dirname(new_module.__file__).replace('/admin', '')+'/templates')
+                        
+                        t.env.directories.insert(1, path.dirname(module_imported[module].__file__).replace('/admin', '')+'/templates')
                         #print(t.env.directories)
-                        if config.reloader:
-                            reload(new_module)
+                        #if config.reloader:
+                            #reload(new_module)
                     
                     except ImportError:
                         
@@ -135,7 +135,7 @@ def home(module='', submodule=''):
                     
                     #args={'t': t, 'connection': connection}
 
-                    content_index=new_module.admin(t=t, connection=connection)
+                    content_index=module_imported[module].admin(t=t, connection=connection)
 
                     if t.show_basic_template==True:   
                     
