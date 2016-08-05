@@ -15,6 +15,17 @@ class ExampleModel(WebModel):
         self.register(corefields.CharField('title'))
         self.register(corefields.CharField('content'))
         
+class ForeignKeyExampleModel(WebModel):
+    
+    def __init__(self, connection):
+
+        super().__init__(connection)
+
+        # I can change other fields here, how the name.
+
+        self.register(corefields.ForeignKeyField('example_id', ExampleModel(connection), size=11, required=False, identifier_field='id', named_field="id", select_fields=[]))
+        
+        
 class ExampleModel2(WebModel):
     
     def __init__(self, connection):
@@ -150,6 +161,28 @@ class TestWebModelMethods(unittest.TestCase):
         self.assertTrue(model.drop())
         
         connection.close()
+        
+    def test_zcheck_1_foreignkeys(self):
+        
+        connection=WebModel.connection()
+        model=ExampleModel(connection)
+        foreignkey=ForeignKeyExampleModel(connection)
+        
+        print('Checking ForeignKeys...')
+        
+        sql=foreignkey.create_table()
+        
+        print('Creating foreignkey table...')
+        
+        self.assertTrue(foreignkey.query(sql))
+        
+        
+        
+        print('Dropping foreignkey table...')
+        
+        self.assertTrue(foreignkey.drop())
+        
+        pass
         
     def test_zcheck_connections(self):
         

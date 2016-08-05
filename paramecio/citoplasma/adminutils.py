@@ -27,6 +27,7 @@ def get_language(s):
         lang_selected=s['lang']
     else:
         s['lang']=I18n.default_lang
+        s.save()
         lang_selected=I18n.default_lang
 
     return lang_selected
