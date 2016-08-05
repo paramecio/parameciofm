@@ -219,65 +219,70 @@ def start():
         
         useradmin=UserAdmin(conn)
         
-        if not useradmin.query(sql):
+        # Check if db exists
+        
+        c=0
+        
+        with useradmin.query('SHOW DATABASES LIKE "%s"' % db) as cur:
+            c=cur.rowcount
+        
+        if c==0:
+            useradmin.query(sql)
+            #print('Error: cannot create database or db doesn\'t exists, check database permissions for this user')
+        
+        #if not useradmin.query(sql):
             #print('Error: cannot create database, check the data of database')
             
-            # Check if db exists
-            
-            cur=useradmin.query('SHOW DATABASES LIKE "%s"' % db)
-            
-            if cur.rowcount()==0:
-                print('Error: cannot create database or db doesn\'t exists, check database permissions for this user')
         
-        else:
+        #else:
             
-            useradmin.query('use '+db)
-            
-            admin=input('Do you want create admin site? y/n: ')
+        useradmin.query('use '+db)
         
-            if admin=='y' or admin=='Y':
+        admin=input('Do you want create admin site? y/n: ')
+    
+        if admin=='y' or admin=='Y':
+            
+            try:
+    
+                shutil.copy(workdir+'/settings/modules.py.admin', path_settings+'/modules.py')
+    
+                shutil.copy(workdir+'/settings/config_admin.py.sample', path_settings+'/config_admin.py')
+            
+                sql=useradmin.create_table()
                 
-                try:
-        
-                    shutil.copy(workdir+'/settings/modules.py.admin', path_settings+'/modules.py')
-        
-                    shutil.copy(workdir+'/settings/config_admin.py.sample', path_settings+'/config_admin.py')
-                
-                    sql=useradmin.create_table()
+                if not useradmin.query(sql):
+                    print('Error: cannot create table admin, you can create this table with padmin.py')
+                else:
                     
-                    if not useradmin.query(sql):
-                        print('Error: cannot create table admin, you can create this table with padmin.py')
-                    else:
+                    # Add admin module to config
+                    with open(path_settings+'/config.py', 'r') as f:
                         
-                        # Add admin module to config
-                        with open(path_settings+'/config.py', 'r') as f:
-                            
-                            config_text=f.read()
-                            
-                            f.close()
+                        config_text=f.read()
                         
-                        config_text=config_text.replace("modules=['paramecio.modules.welcome']", "modules=['paramecio.modules.welcome', 'paramecio.modules.admin', 'paramecio.modules.lang']")
+                        f.close()
+                    
+                    config_text=config_text.replace("modules=['paramecio.modules.welcome']", "modules=['paramecio.modules.welcome', 'paramecio.modules.admin', 'paramecio.modules.lang']")
+                    
+                    with open(path_settings+'/config.py', 'w') as f:
                         
-                        with open(path_settings+'/config.py', 'w') as f:
-                            
-                            f.write(config_text)
-                            
-                            f.close()
+                        f.write(config_text)
+                        
+                        f.close()
 
-                        try:
-        
-                            shutil.copy(workdir+'/settings/modules.py.admin', path_settings+'/modules.py')
-                            
-                        except:
-                            
-                            print('Error: cannot copy the file modules.py. Check if exists and if you have permissions for this task')
+                    try:
+    
+                        shutil.copy(workdir+'/settings/modules.py.admin', path_settings+'/modules.py')
                         
-                        print('Created admin site...')
-                
-                except:
+                    except:
+                        
+                        print('Error: cannot copy the file modules.py. Check if exists and if you have permissions for this task')
                     
-                    print('Error: cannot copy the file padmin.py. Check if exists and if you have permissions for this task')
-                    exit(1)
+                    print('Created admin site...')
+            
+            except:
+                
+                print('Error: cannot create the database. Check if tables exists in it and if you have permissions for this task')
+                exit(1)
                 
         pass
     
