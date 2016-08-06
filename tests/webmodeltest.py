@@ -22,7 +22,8 @@ class ForeignKeyExampleModel(WebModel):
         super().__init__(connection)
 
         # I can change other fields here, how the name.
-
+        
+        self.register(corefields.CharField('name'))
         self.register(corefields.ForeignKeyField('example_id', ExampleModel(connection), size=11, required=False, identifier_field='id', named_field="id", select_fields=[]))
         
         
@@ -168,19 +169,56 @@ class TestWebModelMethods(unittest.TestCase):
         model=ExampleModel(connection)
         foreignkey=ForeignKeyExampleModel(connection)
         
-        print('Checking ForeignKeys...')
+        print('Checking ForeignKeys models...')
         
-        sql=foreignkey.create_table()
+        sql=model.create_table()
+        sqlf=foreignkey.create_table()
         
         print('Creating foreignkey table...')
         
-        self.assertTrue(foreignkey.query(sql))
+        self.assertTrue(model.query(sql))
+        self.assertTrue(foreignkey.query(sqlf))
         
+        for k_field, index in WebModel.arr_sql_index['foreignkeyexamplemodel'].items():
+            print("---Added index to "+k_field)
+            foreignkey.query(index)
+                
+        for k_set, index_set in WebModel.arr_sql_set_index['foreignkeyexamplemodel'].items():
+            
+            if index_set!="":
+                connection.query(index_set)
+                print("---Added constraint to "+k_set)
         
+        model.create_forms()
+        
+        self.assertTrue(model.insert({'title': 'Foreign title', 'content': 'Foreign content'}))
+        
+        my_id=model.insert_id()
+        
+        foreignkey.create_forms()
+        
+        self.assertTrue(foreignkey.insert({'example_id': my_id, 'name': 'Relationship'}))
+        
+        print('Checking insert...')
+        
+        foreignkey.set_conditions('where example_id=%s', [my_id])
+        
+        self.assertEqual(foreignkey.select_count(), 1)
+        
+        model.set_conditions('where id=%s', [my_id])
+        
+        self.assertTrue(model.delete())
+        
+        foreignkey.set_conditions('where example_id=%s', [my_id])
+        
+        print('Checking automatic delete...')
+        
+        self.assertEqual(foreignkey.select_count(), 0)
         
         print('Dropping foreignkey table...')
         
         self.assertTrue(foreignkey.drop())
+        self.assertTrue(model.drop())       
         
         pass
         
