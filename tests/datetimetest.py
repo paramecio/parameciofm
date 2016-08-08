@@ -12,7 +12,7 @@ class TestFieldMethods(unittest.TestCase):
         
         self.assertFalse(datetime.checkdatetime(time_set[0], time_set[1], time_set[2], time_set[3], time_set[4], time_set[5]))
         
-        time='20121026231248'
+        time='20121126231248'
         
         time_set=datetime.format_timedata(time)
         
@@ -26,9 +26,11 @@ class TestFieldMethods(unittest.TestCase):
         
         datetime.set_timezone()
         
+        # Check conversions to gmt time
+        
         gmtstamp=datetime.local_to_gmt(time)
         
-        self.assertEqual(gmtstamp, '20121026221248')
+        self.assertEqual(gmtstamp, '20121126221248')
         
         time_from_utc=datetime.format_time(time)
         
@@ -36,7 +38,13 @@ class TestFieldMethods(unittest.TestCase):
         
         date_from_utc=datetime.format_date(time)
         
-        self.assertEqual(date_from_utc, '2012/10/27')
+        self.assertEqual(date_from_utc, '2012/11/27')
+        
+        time_summer='20120826231248'
+        
+        gmtstamp=datetime.local_to_gmt(time_summer)
+        
+        self.assertEqual(gmtstamp, '20120826211248')
         
         #today=datetime.now()
         

@@ -1,5 +1,6 @@
 import time
-from datetime import date, datetime
+from datetime import date, datetime, tzinfo
+import arrow
 # from babel.dates import format_date, format_datetime, format_time, get_timezone, UTC
 from settings import config
 from bottle import hook
@@ -49,11 +50,11 @@ from os import environ
 #time.gmtime()
 #time.struct_time(tm_year=2015, tm_mon=12, tm_mday=30, tm_hour=2, tm_min=6, tm_sec=56, tm_wday=2, tm_yday=364, tm_isdst=0)
 
-sql_format_time='%Y%m%d%H%M%S'
+sql_format_time='YYYYMMDDHHmmss'
 
-format_date_txt="%Y/%m/%d"
+format_date_txt="YYYY/MM/DD"
 
-format_time_txt="%H:%M:%S"
+format_time_txt="HH:mm:ss"
 
 timezone='Europe/Madrid'
 
@@ -134,7 +135,8 @@ def format_timedata(time):
 def checkdatetime(y, m, d, h, mi, s):
     
     try:
-        test=datetime.strptime(str(y)+'-'+str(m)+'-'+str(d)+' '+str(h)+'-'+str(mi)+'-'+str(s), '%Y-%m-%d %H-%M-%S')
+        #test=datetime.strptime(str(y)+'-'+str(m)+'-'+str(d)+' '+str(h)+'-'+str(mi)+'-'+str(s), '%Y-%m-%d %H-%M-%S')
+        test=arrow.arrow.Arrow(y, m, d, h, mi, s)
         return True
     except:
         return False
@@ -142,7 +144,7 @@ def checkdatetime(y, m, d, h, mi, s):
 # Get the localtime
     
 def now(utc=False):
-    
+    """
     actual=datetime.today()
     
     # Get localtime
@@ -155,6 +157,14 @@ def now(utc=False):
         final_date=local_to_gmt(final_date)
         
     return final_date
+    """
+    
+    if not utc:
+    
+        actual=arrow.now().format(sql_format_time)
+    else:
+        actual=arrow.utcnow().format(sql_format_time)
+    
     
 # Get actual timestamp
 
@@ -164,13 +174,20 @@ def obtain_timestamp(timeform, local=False):
     
     if checkdatetime(y, m, d, h, mi, s):
         
-        timestamp=int(time.mktime((y, m, d, h, mi, s, 0, 0, -1)))
+        #timestamp=int(time.mktime((y, m, d, h, mi, s, 0, 0, -1)))       
         
         if local:
             
-            offset=time.altzone
+            #offset=time.altzone
         
-            return timestamp-offset
+            #return timestamp-offset
+            
+            t=arrow.arrow.Arrow(y, m, d, h, mi, s).to(environ['TZ'])
+            
+            timestamp=t.timestamp
+            
+        else:
+            timestamp=arrow.arrow.Arrow(y, m, d, h, mi, s).timestamp
          
         return timestamp
         
@@ -182,16 +199,22 @@ def obtain_timestamp(timeform, local=False):
 
 def timestamp_to_datetime(timestamp):
     
-    time_set=substract_utc(timestamp)
+    #time_set=substract_utc(timestamp)
         
-    return time.strftime(sql_format_time, time_set)
+    #return time.strftime(sql_format_time, time_set)
+    
+    return arrow.get(timestamp).format(sql_format_time)
 
 
 def timestamp_to_datetime_local(timestamp):
     
-    time_set=time.localtime(timestamp)
+    #time_set=time.localtime(timestamp)
     
-    return time.strftime(sql_format_time, time_set)
+    #return time.strftime(sql_format_time, time_set)
+    
+    t=arrow.get(timestamp)
+    
+    return t.to(environ['TZ']).format(sql_format_time)
 
 
 def format_datetime(format_time, timeform, func_utc_return):
@@ -206,9 +229,13 @@ def format_datetime(format_time, timeform, func_utc_return):
         
         # Return utc
         
-        time_set=func_utc_return(timestamp)
+        #time_set=func_utc_return(timestamp)
         
-        return time.strftime(format_time, time_set)
+        #return time.strftime(format_time, time_set)
+        
+        t=func_utc_return(timestamp)
+        
+        return t.format(format_time)
         
     else:
     
@@ -218,7 +245,7 @@ def format_datetime(format_time, timeform, func_utc_return):
 
 def local_to_gmt(timeform):
     
-    return format_datetime(sql_format_time, timeform, time.gmtime)
+    return format_datetime(sql_format_time, timeform, substract_utc)
 
 # time.localtime is useless, you need sum the time offset to the date
 
@@ -238,17 +265,35 @@ def format_fulldate(timeform):
     
     return format_datetime(format_date_txt+' '+format_time_txt, timeform, sum_utc)
 
+#Input is utc timestamp, return local arrow object
+
 def sum_utc(timestamp):
     
-    offset=time.altzone
+    #offset=time.altzone
 
-    return time.localtime(timestamp-offset)
+    #return time.localtime(timestamp-offset)
+    
+    t=arrow.get(timestamp)
+    
+    return t.to(environ['TZ'])
+
+#Input is local timestamp, return utc arrow object
 
 def substract_utc(timestamp):
     
-    offset=time.altzone
+    #offset=time.altzone
 
-    return time.localtime(timestamp+offset)
+    #return time.localtime(timestamp+offset)
+    
+    #t=arrow.get(timestamp).to('UTC')
+    
+    timeform=timestamp_to_datetime(timestamp)
+    
+    y, m, d, h, mi, s=format_timedata(timeform)
+    
+    t=arrow.get(datetime(y, m, d, h, mi, s), environ['TZ']).to('UTC')
+    
+    return t
 
 
 """
