@@ -165,6 +165,7 @@ def now(utc=False):
     else:
         actual=arrow.utcnow().format(sql_format_time)
     
+    return actual
     
 # Get actual timestamp
 
