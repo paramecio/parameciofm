@@ -3,6 +3,9 @@
 from collections import OrderedDict
 from paramecio.citoplasma.sessions import get_session
 from paramecio.citoplasma.urls import make_url
+from paramecio.cromosoma.webmodel import WebModel
+from paramecio.citoplasma import mtemplates
+from paramecio.citoplasma.i18n import I18n
 
 try:
 
@@ -12,6 +15,14 @@ except:
 
     class config:
         admin_folder='admin'
+try:
+
+    from settings import config_admin
+
+except:
+
+    class config_admin:
+        modules_admin=[]
         
 def make_admin_url(url, query_args={}):
     
@@ -61,4 +72,32 @@ def check_login():
                 return True
     
     return False
+    
+def base_admin(func_view, env, title):
+    
+    env.directories.insert(1, config.paramecio_root+'/modules/admin/templates')
+    
+    content_index=''
+
+    connection=WebModel.connection()
+    #Fix, make local variable
+    
+    t=mtemplates.PTemplate(env)
+    
+    s=get_session()
+    
+    if check_login():
+                
+        #Load menu
+        
+        menu=get_menu(config_admin.modules_admin)
+    
+        lang_selected=get_language(s)
+        
+        content_index=func_view(connection, t, s)
+
+        return t.load_template('admin/content.html', title=title, content_index=content_index, menu=menu, lang_selected=lang_selected, arr_i18n=I18n.dict_i18n)
+        
+    else:
+        redirect(make_url(config.admin_folder))
 
