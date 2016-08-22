@@ -12,6 +12,8 @@ class SimpleList:
     
     def __init__(self, model, url, t):
         
+        self.raw_query=True
+        
         self.getpostfiles=GetPostFiles()
             
         self.getpostfiles.obtain_get()
@@ -114,6 +116,14 @@ class SimpleList:
             self.s['order_field']=field_k
         
         for field in self.fields:
+            
+            #Initialize foreignkeyfield fields too
+            
+            if type(self.model.fields[field]).__name__=='ForeignKeyField':
+                name_related=self.model.fields[field].related_model.name
+                for k in self.model.fields[field].related_model.fields.keys():
+                    self.change_order[name_related+'_'+k]=self.s['order']
+            
             self.change_order[field]=self.s['order']
         
         if self.s['order']==0:
@@ -157,11 +167,11 @@ class SimpleList:
     
     def show(self):
         
+        self.model.yes_reset_conditions=False
+        
         self.obtain_order()
         
         self.obtain_field_search()
-        
-        self.model.yes_reset_conditions=False
         
         self.search()
         
@@ -177,7 +187,9 @@ class SimpleList:
         
         self.model.limit='limit '+str(begin_page)+','+str(self.limit_pages)
         
-        list_items=self.model.select(self.fields, True)
+        list_items=self.model.select(self.fields, self.raw_query)
+        
+        #print(self.model.fields.keys())
         
         pages=Pages.show( begin_page, total_elements, num_elements, link ,initial_num_pages=self.initial_num_pages, variable='begin_page', label='', func_jscript='')
         

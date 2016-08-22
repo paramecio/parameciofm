@@ -146,6 +146,8 @@ class ForeignKeyField(IntegerField):
     
         self.table_name=related_table.name
     
+        self.related_model=related_table
+    
         self.identifier_field=identifier_field
         
         self.named_field=named_field

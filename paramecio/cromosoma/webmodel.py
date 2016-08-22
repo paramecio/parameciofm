@@ -126,6 +126,8 @@ class WebModel:
         self.files_delete={}
         
         self.sqlclass=sqlclass
+        
+        self.fields_to_clean=[]
     
     # A method where create the new fields of this model
     
@@ -183,10 +185,18 @@ class WebModel:
         self.connect_to_db()
         return self.sqlclass.query(str_query, args, connection_id)
     
+    # Method for clean fields
+    
+    def clean_fields(self):
+        for field in self.fields_to_clean:
+            del self.fields[field]
+    
     # Insert method, for insert a row in database.using a dictionary
     # External agent define if the update is in code or from external source, how a form.
     
     def insert(self, dict_values, external_agent=True):
+        
+        self.clean_fields()
         
         # Connect to db
 
@@ -232,6 +242,8 @@ class WebModel:
     # Update method. For update one or many rows.
     
     def update(self, dict_values, external_agent=True):
+        
+        self.clean_fields()
         
         self.post=dict_values
         
@@ -304,7 +316,9 @@ class WebModel:
     # A method for select fields from a table in db. Support for foreignkeys.
     #Type assoc can be assoc for return dictionaries
     
-    def select(self, arr_select=[], raw_query=0):
+    def select(self, arr_select=[], raw_query=False):
+        
+        self.clean_fields()
         
         # Connect to db
         
@@ -332,12 +346,12 @@ class WebModel:
         fields =  list(set(keys) & set(arr_select))
         
         #Creating the fields
-        
+        new_fields=OrderedDict()
         for field in fields:
             
             #Check if foreignkeyfield
             
-            if type(self.fields[field]).__name__=="ForeignKeyField" and raw_query==0:
+            if type(self.fields[field]).__name__=="ForeignKeyField" and raw_query==False:
                 
                 table_name=self.fields[field].table_name
                 
@@ -355,6 +369,9 @@ class WebModel:
                 
                 for extra_field in self.fields[field].select_fields:
                     
+                    self.fields[table_name+'_'+extra_field]=self.fields[field].related_model.fields[extra_field]
+                    self.fields_to_clean.append(table_name+'_'+extra_field)
+                    
                     # Check if extra_field is ForeignKeyField, if yes, call this function recursively.
                 
                     extra_fields.append("`"+table_name+"`.`"+extra_field+"` as `"+table_name+"_"+extra_field+"`")
@@ -362,6 +379,9 @@ class WebModel:
                 # Add normal field to sql query
                 
                 final_fields.append("`"+self.name+"`.`"+field+"`")
+        
+        #if len(new_fields)>0:
+            #self.fields.update(new_fields)
         
         extra_sql_field=""
         
