@@ -54,6 +54,8 @@ class WebModel:
         
         cached=self.global_cached
         
+        cached_runquery=self.global_cached
+        
         #The name of the table
         
         self.name=type(self).__name__.lower()
@@ -346,6 +348,8 @@ class WebModel:
         fields =  list(set(keys) & set(arr_select))
         
         #Creating the fields
+        arr_repeat_field={}
+        
         new_fields=OrderedDict()
         for field in fields:
             
@@ -353,28 +357,38 @@ class WebModel:
             
             if type(self.fields[field]).__name__=="ForeignKeyField" and raw_query==False:
                 
-                table_name=self.fields[field].table_name
+                if self.fields[field].table_name in arr_repeat_field:
+                    arr_repeat_field[self.fields[field].table_name]+=1
+                    
+                else:
+                    arr_repeat_field[self.fields[field].table_name]=0
+                
+                table_name=self.fields[field].table_name+'` as `'+self.fields[field].table_name+str(arr_repeat_field[self.fields[field].table_name])
+                
+                final_table_name=self.fields[field].table_name+str(arr_repeat_field[self.fields[field].table_name])
+                
+                # The name with its alias of this related table model
                 
                 tables_to_select.append('`'+table_name+'`')
                 
                 # Add field from related table
                 # as "+table_name+"_"+self.fields[field].named_field
-                extra_fields.append("`"+table_name+"`.`"+self.fields[field].named_field+"` as "+field)
+                extra_fields.append("`"+final_table_name+"`.`"+self.fields[field].named_field+"` as "+field)
                 
                 # Add a condition to sql query for join the two tables.
                 
-                conditions[0]+=" AND `"+table_name+"`.`"+self.fields[field].identifier_field+"`=`"+self.name+"`.`"+field+"`"
+                conditions[0]+=" AND `"+final_table_name+"`.`"+self.fields[field].identifier_field+"`=`"+self.name+"`.`"+field+"`"
                 
                 # Add extra fields from related table from select_fields ForeignKeyField class member
                 
                 for extra_field in self.fields[field].select_fields:
                     
-                    self.fields[table_name+'_'+extra_field]=self.fields[field].related_model.fields[extra_field]
-                    self.fields_to_clean.append(table_name+'_'+extra_field)
+                    self.fields[field+'_'+extra_field]=self.fields[field].related_model.fields[extra_field]
+                    self.fields_to_clean.append(field+'_'+extra_field)
                     
                     # Check if extra_field is ForeignKeyField, if yes, call this function recursively.
                 
-                    extra_fields.append("`"+table_name+"`.`"+extra_field+"` as `"+table_name+"_"+extra_field+"`")
+                    extra_fields.append("`"+final_table_name+"`.`"+extra_field+"` as `"+field+"_"+extra_field+"`")
             else:
                 # Add normal field to sql query
                 
