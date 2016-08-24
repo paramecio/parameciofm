@@ -288,131 +288,133 @@ def start():
     
         # Install modules
         
-        if args.modules.strip()!='':
+        if args.modules!=None:
         
-            arr_modules=args.modules.split(',')
-            
-            final_modules=[]
-            
-            final_modules_models=[]
-            
-            if len(arr_modules)>0:
-                
-                for k, module in enumerate(arr_modules):
-                    
-                    module=module.strip()
-                    
-                    try:
-                    
-                        u=urlparse(module)
-                    
-                        module_path=os.path.basename(u.path)
-                    
-                    except:
-                        print('Error: not valid url for repository')
-                        exit(1)
-                    
-                
-                    if call("git clone %s %s/modules/%s" % (module, path, module_path), shell=True) > 0:
-                        print('Error, cannot  install the module %s' % module_path)
-                        exit(1)
-                    else:
-                        print('Added module %s' % module_path)
-                        
-                    final_modules.append(("modules/%s" % (module_path)).replace('/', '.'))
-                    final_modules_models.append("modules/%s" % (module_path))
+			if args.modules.strip()!='':
+			
+				arr_modules=args.modules.split(',')
+				
+				final_modules=[]
+				
+				final_modules_models=[]
+				
+				if len(arr_modules)>0:
+					
+					for k, module in enumerate(arr_modules):
+						
+						module=module.strip()
+						
+						try:
+						
+							u=urlparse(module)
+						
+							module_path=os.path.basename(u.path)
+						
+						except:
+							print('Error: not valid url for repository')
+							exit(1)
+						
+					
+						if call("git clone %s %s/modules/%s" % (module, path, module_path), shell=True) > 0:
+							print('Error, cannot  install the module %s' % module_path)
+							exit(1)
+						else:
+							print('Added module %s' % module_path)
+							
+						final_modules.append(("modules/%s" % (module_path)).replace('/', '.'))
+						final_modules_models.append("modules/%s" % (module_path))
 
-                        
-                    
-                # Edit  config.py
-                
-                with open(path_settings+'/config.py') as f:
-                    
-                    modules_final='\''+'\', \''.join(final_modules)+'\''
-                    
-                    p=re.compile(r"^modules=\[(.*)\]$")
-                    
-                    #config_file=p.sub(r"modules=[\1, "+modules_final+"]", "modules=['paramecio.modules.welcome', 'paramecio.modules.admin', 'paramecio.modules.lang', 'modules.pastafari', 'modules.monit', 'modules.example']")
-                    
-                    final_config=''
-                    
-                    for line in f:
-                        if p.match(line):
-                            line=p.sub(r"modules=[\1, "+modules_final+"]", line)
-                        final_config+=line
-                    
-                with open(path_settings+'/config.py', 'w') as f:
-                    
-                    f.write(final_config)
-                    
-                    print('Updated configuration for add new modules...')
-                
-                #Change workdir
-                
-                real_dir=os.getcwd()
-                    
-                os.chdir(args.path)
-                
-                #Regenerating modules.py
-                
-                regenerate='regenerate.py'
-                
-                os.chmod(regenerate, 0o755)
-                
-                if call('./regenerate.py', shell=True) > 0:
-                    print('Error, cannot regenerate the modules.py script')
-                    exit(1)
-                else:
-                    print('Regeneration of modules.py finished')
-                
-                # Installing models
-                    
-                padmin='padmin.py'
-                
-                os.chmod(padmin, 0o755)
-                
-                for mod_path in final_modules_models:
-                    
-                    models_path=mod_path+'/models'
-                    
-                    if os.path.isdir(models_path):
-                        
-                        models_files=os.listdir(models_path)
-                        
-                        m=re.compile(".*\.py$")
-                        
-                        underscore=re.compile("^__.*")
-                        
-                        for f in models_files:
-                            
-                            if m.match(f) and not underscore.match(f):
-                                
-                                if call('./padmin.py --model '+models_path+'/'+f, shell=True) > 0:
-                                    print('Error, cannot create the modules of '+models_path+'/'+f)
-                                else:
-                                    print('Models from '+models_path+'/'+f+' created')
-                    
-                # Execute two times the loop because i can need good installed models for postscript script
-                
-                # Execute postscript
-                
-                print('Executing postscripts')
-                
-                for mod_path in final_modules_models:
-                
-                    postscript=mod_path+"/install/postinstall.py"
-                    
-                    os.chmod(padmin, 0o755)
-                    
-                    if os.path.isfile(postscript):
-                        
-                        os.chmod(postscript, 0o755)
-                        
-                        if call('./'+postscript, shell=True) > 0:
-                            print('Error, cannot execute the postinstall script')
-                            exit(1)
-                        else:
-                            print('Postinstall script finished')
+							
+						
+					# Edit  config.py
+					
+					with open(path_settings+'/config.py') as f:
+						
+						modules_final='\''+'\', \''.join(final_modules)+'\''
+						
+						p=re.compile(r"^modules=\[(.*)\]$")
+						
+						#config_file=p.sub(r"modules=[\1, "+modules_final+"]", "modules=['paramecio.modules.welcome', 'paramecio.modules.admin', 'paramecio.modules.lang', 'modules.pastafari', 'modules.monit', 'modules.example']")
+						
+						final_config=''
+						
+						for line in f:
+							if p.match(line):
+								line=p.sub(r"modules=[\1, "+modules_final+"]", line)
+							final_config+=line
+						
+					with open(path_settings+'/config.py', 'w') as f:
+						
+						f.write(final_config)
+						
+						print('Updated configuration for add new modules...')
+					
+					#Change workdir
+					
+					real_dir=os.getcwd()
+						
+					os.chdir(args.path)
+					
+					#Regenerating modules.py
+					
+					regenerate='regenerate.py'
+					
+					os.chmod(regenerate, 0o755)
+					
+					if call('./regenerate.py', shell=True) > 0:
+						print('Error, cannot regenerate the modules.py script')
+						exit(1)
+					else:
+						print('Regeneration of modules.py finished')
+					
+					# Installing models
+						
+					padmin='padmin.py'
+					
+					os.chmod(padmin, 0o755)
+					
+					for mod_path in final_modules_models:
+						
+						models_path=mod_path+'/models'
+						
+						if os.path.isdir(models_path):
+							
+							models_files=os.listdir(models_path)
+							
+							m=re.compile(".*\.py$")
+							
+							underscore=re.compile("^__.*")
+							
+							for f in models_files:
+								
+								if m.match(f) and not underscore.match(f):
+									
+									if call('./padmin.py --model '+models_path+'/'+f, shell=True) > 0:
+										print('Error, cannot create the modules of '+models_path+'/'+f)
+									else:
+										print('Models from '+models_path+'/'+f+' created')
+						
+					# Execute two times the loop because i can need good installed models for postscript script
+					
+					# Execute postscript
+					
+					print('Executing postscripts')
+					
+					for mod_path in final_modules_models:
+					
+						postscript=mod_path+"/install/postinstall.py"
+						
+						os.chmod(padmin, 0o755)
+						
+						if os.path.isfile(postscript):
+							
+							os.chmod(postscript, 0o755)
+							
+							if call('./'+postscript, shell=True) > 0:
+								print('Error, cannot execute the postinstall script')
+								exit(1)
+							else:
+								print('Postinstall script finished')
                     
 
 if __name__=="__main__":
