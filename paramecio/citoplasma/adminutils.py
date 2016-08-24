@@ -4,7 +4,7 @@ from collections import OrderedDict
 from paramecio.citoplasma.sessions import get_session
 from paramecio.citoplasma.urls import make_url
 from paramecio.cromosoma.webmodel import WebModel
-from paramecio.citoplasma import mtemplates
+from paramecio.citoplasma.mtemplates import PTemplate
 from paramecio.citoplasma.i18n import I18n
 
 try:
@@ -82,7 +82,7 @@ def base_admin(func_view, env, title, **args):
     connection=WebModel.connection()
     #Fix, make local variable
     
-    t=mtemplates.PTemplate(env)
+    t=PTemplate(env)
     
     s=get_session()
     
