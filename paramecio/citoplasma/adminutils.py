@@ -73,7 +73,7 @@ def check_login():
     
     return False
     
-def base_admin(func_view, env, title):
+def base_admin(func_view, env, title, **args):
     
     env.directories.insert(1, config.paramecio_root+'/modules/admin/templates')
     
@@ -94,7 +94,7 @@ def base_admin(func_view, env, title):
     
         lang_selected=get_language(s)
         
-        content_index=func_view(connection, t, s)
+        content_index=func_view(connection, t, s, **args)
 
         return t.load_template('admin/content.html', title=title, content_index=content_index, menu=menu, lang_selected=lang_selected, arr_i18n=I18n.dict_i18n)
         
