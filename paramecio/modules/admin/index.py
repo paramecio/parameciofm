@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 import traceback, sys
 from paramecio.citoplasma.mtemplates import env_theme, PTemplate

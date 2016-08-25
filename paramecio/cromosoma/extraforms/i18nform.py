@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 from paramecio.cromosoma.coreforms import BaseForm
 from paramecio.citoplasma.i18n import I18n

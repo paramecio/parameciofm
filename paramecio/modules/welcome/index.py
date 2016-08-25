@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 from paramecio.citoplasma.mtemplates import PTemplate, env_theme
 from paramecio.citoplasma.urls import make_url

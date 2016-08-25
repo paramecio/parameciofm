@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 import argparse
 import os,traceback
@@ -353,7 +353,7 @@ def create_backup(original_file_path, file_path):
     if not p.is_dir():
         p.mkdir(0o755, True)
         with open(path+'/__init__.py', 'w') as f:
-            f.write("#!/usr/bin/python3\n")
+            f.write("#!/usr/bin/env python3\n")
         
     #Create path
         

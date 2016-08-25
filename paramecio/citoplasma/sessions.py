@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 from itsdangerous import JSONWebSignatureSerializer
 from paramecio.citoplasma.keyutils import create_key_encrypt, create_key_encrypt_256, create_key

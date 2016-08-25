@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 import argparse
 import os
@@ -84,7 +84,7 @@ def start():
             pass
             
         
-        file_lang="#!/usr/bin/python3\n\n"
+        file_lang="#!/usr/bin/env python3\n\n"
         
         file_lang+="from paramecio.citoplasma.i18n import I18n\n\n"
         

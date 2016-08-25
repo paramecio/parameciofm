@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 from paramecio.modules.admin.models.admin import UserAdmin
 from paramecio.citoplasma.urls import make_url

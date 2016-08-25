@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 import traceback
 import argparse
@@ -53,7 +53,7 @@ def regenerate_modules_config():
     
     modules=[]
     
-    modules.append("#!/usr/bin/python3\n\n")
+    modules.append("#!/usr/bin/env python3\n\n")
     modules.append("list_modules=[]\n\n")
     
     for module in config.modules:

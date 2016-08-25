@@ -1,4 +1,4 @@
-#!/usr/bin/python3 
+#!/usr/bin/env python3 
 
 import json
 from paramecio.cromosoma.webmodel import PhangoField

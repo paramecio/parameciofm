@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 from paramecio.cromosoma.webmodel import WebModel
 from paramecio.cromosoma.coreforms import PasswordForm

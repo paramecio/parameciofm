@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 # Code based in http://stackoverflow.com/questions/5194057/better-way-to-convert-file-sizes-in-python
 

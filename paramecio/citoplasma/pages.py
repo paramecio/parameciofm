@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 from math import ceil, floor
 from paramecio.citoplasma.urls import add_get_parameters

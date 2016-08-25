@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 # A simple utility for filter ips. Only use this if you don't use a server with blocking ips system
 
