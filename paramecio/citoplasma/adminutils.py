@@ -3,7 +3,6 @@
 from collections import OrderedDict
 from paramecio.citoplasma.sessions import get_session
 from paramecio.citoplasma.urls import make_url
-from paramecio.cromosoma.webmodel import WebModel
 from paramecio.citoplasma.i18n import I18n
 
 try:

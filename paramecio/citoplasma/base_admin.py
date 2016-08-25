@@ -1,5 +1,27 @@
+#!/usr/bin/env python3
+
 from paramecio.citoplasma.mtemplates import PTemplate
 from paramecio.citoplasma.adminutils import check_login, get_language, get_menu
+from paramecio.cromosoma.webmodel import WebModel
+from paramecio.citoplasma.sessions import get_session
+from paramecio.citoplasma.i18n import I18n
+
+try:
+
+    from settings import config
+
+except:
+
+    class config:
+        admin_folder='admin'
+try:
+
+    from settings import config_admin
+
+except:
+
+    class config_admin:
+        modules_admin=[]
 
 def base_admin(func_view, env, title, **args):
     
