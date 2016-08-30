@@ -122,7 +122,7 @@ class SimpleList:
             if type(self.model.fields[field]).__name__=='ForeignKeyField':
                 name_related=self.model.fields[field].related_model.name
                 for k in self.model.fields[field].related_model.fields.keys():
-                    self.change_order[name_related+'_'+k]=self.s['order']
+                    self.change_order[field+'_'+k]=self.s['order']
             
             self.change_order[field]=self.s['order']
         
