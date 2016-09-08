@@ -40,6 +40,17 @@ class BaseForm:
         
         return ""
 
+class SimpleTextForm(BaseForm):
+    
+    def __init__(self, name, value):
+        super().__init__(name, value)
+        
+        self.after_text=''
+    
+    def form(self):
+        
+        return super().form()+' '+self.after_text
+
 class TextForm(BaseForm):
     
     def __init__(self, name, value):

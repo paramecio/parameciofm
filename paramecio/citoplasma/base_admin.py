@@ -50,3 +50,11 @@ def base_admin(func_view, env, title, **args):
         
     else:
         redirect(make_url(config.admin_folder))
+        
+def base_simple_admin(func_view, env, title, **args):
+    
+    if check_login():
+        
+        return func_view(connection, t, s, **args)
+    
+    

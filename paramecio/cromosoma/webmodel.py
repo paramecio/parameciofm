@@ -596,6 +596,8 @@ class WebModel:
     def set_conditions(self, sql_text, values:list) -> None:
         
         self.conditions=[sql_text, values]
+        
+        return self
     
     def set_order(self, order:list, position:list) -> None:
         
