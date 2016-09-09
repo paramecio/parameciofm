@@ -39,7 +39,7 @@ class ArrayField(PhangoField):
 
     def get_type_sql(self):
 
-        return 'TEXT NOT NULL'
+        return 'TEXT NOT NULL DEFAULT ""'
     
     def show_formatted(self, value):
         
