@@ -11,7 +11,7 @@
 </%def>
 <%def name="set_css_arrow(simplelist, field)">
     % if simplelist.order_field==field:
-        fa fa-arrow-circle-${simplelist.order_class[simplelist.s['order']]}
+        <i class="fa fa-arrow-${simplelist.order_class[simplelist.s['order']]}" aria-hidden="true"></i>
     % endif
 </%def>
 % if simplelist.yes_search:
@@ -30,7 +30,7 @@
 <table class="table_list">
     <tr class="title_list">
         % for field in simplelist.fields_showed:
-            <td class="${simplelist.model.fields[field].name}_td"><a href="${add_get_parameters(simplelist.url, order_field=field, begin_page=simplelist.begin_page, order=simplelist.change_order[field], search_text=simplelist.search_text, search_field=simplelist.search_field)}" class="${set_css_arrow(simplelist, field)}">${simplelist.model.fields[field].label}</a></td>
+            <td class="${simplelist.model.fields[field].name}_td"><a href="${add_get_parameters(simplelist.url, order_field=field, begin_page=simplelist.begin_page, order=simplelist.change_order[field], search_text=simplelist.search_text, search_field=simplelist.search_field)}" class="">${set_css_arrow(simplelist, field)}${simplelist.model.fields[field].label}</a></td>
         % endfor 
         % for extra_field in simplelist.arr_extra_fields:
             <td class="options_td">${ extra_field }</td>

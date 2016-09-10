@@ -36,7 +36,7 @@ class SimpleList:
         
         self.order_defaults=['ASC', 'DESC']
         
-        self.order_class=['up', 'down']
+        self.order_class=['down', 'up']
         
         self.s=get_session()
         
