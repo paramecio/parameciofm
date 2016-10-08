@@ -23,6 +23,10 @@ except:
     class config_admin:
         modules_admin=[]
 
+#Load menu in runtime
+        
+menu=get_menu(config_admin.modules_admin)
+
 def base_admin(func_view, env, title, **args):
     
     env.directories.insert(1, config.paramecio_root+'/modules/admin/templates')
@@ -38,9 +42,6 @@ def base_admin(func_view, env, title, **args):
     
     if check_login():
                 
-        #Load menu
-        
-        menu=get_menu(config_admin.modules_admin)
     
         lang_selected=get_language(s)
         
