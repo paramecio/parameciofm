@@ -96,6 +96,7 @@ def csrf_token():
     
     s=get_session()
     s['csrf_token']=create_key_encrypt()
+    s.save()
     
     return '<input type="hidden" name="csrf_token" id="csrf_token" value="'+s['csrf_token']+'" />'
 

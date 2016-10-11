@@ -1,11 +1,13 @@
 from paramecio.cromosoma.corefields import PhangoField
 from paramecio.cromosoma.coreforms import PasswordForm
+from hmac import compare_digest as compare_hash
 #from passlib.hash import bcrypt
-from passlib.hash import bcrypt_sha256
+#from passlib.hash import bcrypt_sha256
+import crypt
 
 class PasswordField(PhangoField):
     
-    def __init__(self, name, size=255, required=False):
+    def __init__(self, name, size=1024, required=False):
         
         super(PasswordField, self).__init__(name, size, required)    
         self.protected=True
@@ -37,14 +39,23 @@ class PasswordField(PhangoField):
                 self.error=True
             
         else:
-            value = bcrypt_sha256.encrypt(value)
             
+            if crypt.METHOD_SHA512 in crypt.methods:
+            
+                salt=crypt.mksalt(crypt.METHOD_SHA512)
+                value=crypt.crypt(value, salt)
+
+            else:
+                
+                self.txt_error="You need the SHA512 method"
+                self.error=True
+                return ""
         
         return value
     
     @staticmethod
     def verify( password, h):
-        
-        return bcrypt_sha256.verify(password, h)
+        #return bcrypt_sha256.verify(password, h)
+        return compare_hash(h, crypt.crypt(password, h))
     
     
