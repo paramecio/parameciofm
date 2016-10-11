@@ -55,5 +55,10 @@ This command will install in your server paramecio framework with its dependenci
 
 When Paramecio finish the installing, you can create your first paramecio site with `paramecio` command.
 
+### Tipical errors
+
+If you get am error in your installation of any dependencies how MarkupSafe or SqlAlchemy, please install gcc or install manually mako and sqlalchemy with your package manager. For example for debian and ubuntu:
+
+`apt-get install python3-mako python3-sqlalchemy` and try pip3 command again.
 
 
