@@ -131,7 +131,9 @@ yes_static=True
 
 #WebModel.connections={'default': {'name': 'default', 'host': 'localhost', 'user': 'root', 'password': '', 'db': 'example', 'charset': 'utf8mb4', 'set_connection': False} }
 
-for module in config.modules:
+#Please dont change this line if you don't know what you are doing
+
+for module in modules:
     module+='.settings.config'
     module_path=module.replace('.','/')+'.py'
     if os.path.isfile(module_path):
