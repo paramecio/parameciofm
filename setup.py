@@ -9,6 +9,7 @@ if sys.version_info < (3, 3):
     raise NotImplementedError("Sorry, you need at least Python 3.3 to use paramecio.")
 
 #import paramecio
+# Pillow should be installed after if you need ImageField
 
 setup(name='paramecio',
       version='0.1.2',
@@ -19,7 +20,7 @@ setup(name='paramecio',
       url='http://paramecioproject.com/',
       packages=['paramecio'],
       include_package_data=True,
-      install_requires=['bottle', 'mako', 'passlib', 'bcrypt', 'pymysql', 'sqlalchemy', 'Pillow', 'beaker>=1.8.0', 'itsdangerous', 'colorama','cherrypy', 'arrow'],
+      install_requires=['bottle', 'mako', 'passlib', 'bcrypt', 'pymysql', 'sqlalchemy', 'beaker>=1.8.0', 'itsdangerous', 'colorama','cherrypy', 'arrow'],
       entry_points={'console_scripts': [
         'paramecio = paramecio.console:start',
       ]},

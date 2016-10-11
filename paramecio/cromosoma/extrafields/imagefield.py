@@ -1,8 +1,15 @@
 import os
+import sys
 from pathlib import Path
 from paramecio.cromosoma.corefields import CharField
 from paramecio.citoplasma.httputils import GetPostFiles
-from PIL import Image
+try:
+    from PIL import Image
+except:
+    print("Unexpected error:", sys.exc_info()[0])
+    raise
+    
+    
 from uuid import uuid4
 #from paramecio.cromosoma.extraforms.fileform import FileForm
 
