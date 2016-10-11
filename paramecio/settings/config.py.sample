@@ -130,3 +130,9 @@ yes_static=True
 #Database mysql config, if you want anything...
 
 #WebModel.connections={'default': {'name': 'default', 'host': 'localhost', 'user': 'root', 'password': '', 'db': 'example', 'charset': 'utf8mb4', 'set_connection': False} }
+
+for module in config.modules:
+    module+='.settings.config'
+    module_path=module.replace('.','/')+'.py'
+    if os.path.isfile(module_path):
+        mod=import_module(module)
