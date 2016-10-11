@@ -1,7 +1,18 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 
-from paramecio.citoplasma.i18n import I18n
+import os
+from paramecio.citoplasma.i18n import I18n, load_lang
+from settings import config
+from importlib import import_module
+
+load_lang('paramecio.modules', 'admin')
 
 modules_admin=[[I18n.lang('admin', 'users_admin', 'User\'s Admin'), 'paramecio.modules.admin.admin.ausers', 'ausers']]
 
-#modules_admin={'ausers': [I18n.lang('admin', 'users_admin', 'User\'s Admin'), 'paramecio.modules.admin.admin.ausers'], 'module_father': [ I18n.lang('common', 'submodule', 'ModuleFather') , {'submodule': ['This is a module', 'paramecio.modules.admin.admin.ausers'] } ] }
+for module in config.modules:
+    module+='.settings.config_admin'
+    module_path=module.replace('.','/')+'.py'
+    if os.path.isfile(module_path):
+        mod=import_module(module)
+    
+

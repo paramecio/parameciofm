@@ -9,9 +9,7 @@ from paramecio.citoplasma.sessions import get_session, generate_session
 from bottle import get,post,response,request
 from settings import config
 from settings import config_admin
-from paramecio.citoplasma.lists import SimpleList
 from paramecio.citoplasma.adminutils import get_menu, get_language, make_admin_url, check_login
-from paramecio.citoplasma.generate_admin_class import GenerateAdminClass
 from paramecio.citoplasma.httputils import GetPostFiles
 from paramecio.cromosoma.formsutils import show_form, pass_values_to_form, set_extra_forms_user
 from paramecio.cromosoma.coreforms import PasswordForm
