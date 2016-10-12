@@ -55,11 +55,11 @@ This command will install in your server paramecio framework with its dependenci
 
 When Paramecio finish the installing, you can create your first paramecio site with `paramecio` command.
 
-> If you install passlib and bcrypt python modules, your paramecio install will use bcrypt algorithm for crypt system passwords. If not, use default system implementation hash algorithm (normally the more strong algorithm available).
+> If you install passlib and bcrypt python modules, your paramecio install will use bcrypt algorithm for crypt system passwords. If not, default system implementation crypt algorithm (normally the more strong algorithm available) will be used.
 
 ### Tipical errors
 
-If you get am error in your installation of any dependencies how MarkupSafe or SqlAlchemy, please install gcc or install manually mako and sqlalchemy with your package manager. For example for debian and ubuntu:
+If you get an error in your installation of dependencies how MarkupSafe or SqlAlchemy, please install gcc or install manually mako and sqlalchemy with your package manager. For example, for debian and ubuntu:
 
 `apt-get install python3-mako python3-sqlalchemy` and try pip3 command again.
 
