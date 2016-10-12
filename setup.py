@@ -10,6 +10,7 @@ if sys.version_info < (3, 3):
 
 #import paramecio
 # Pillow should be installed after if you need ImageField
+# If you install passlib and bcrypt, the password system will use bcrypt by default, if not, will use native crypt libc 
 
 setup(name='paramecio',
       version='0.1.2',
