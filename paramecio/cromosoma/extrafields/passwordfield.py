@@ -40,16 +40,18 @@ class PasswordField(PhangoField):
             
         else:
             
-            if crypt.METHOD_SHA512 in crypt.methods:
+            #if crypt.METHOD_SHA512 in crypt.methods:
             
-                salt=crypt.mksalt(crypt.METHOD_SHA512)
-                value=crypt.crypt(value, salt)
+            #salt=crypt.mksalt(crypt.METHOD_SHA512)
+            value=crypt.crypt(value)
 
+            """
             else:
                 
                 self.txt_error="You need the SHA512 method"
                 self.error=True
                 return ""
+            """
         
         return value
     
