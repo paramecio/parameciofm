@@ -96,3 +96,7 @@ class GetPostFiles:
     def obtain_files(self):
         
         self.files=request.files
+    
+def request_method():
+    
+    return request.method

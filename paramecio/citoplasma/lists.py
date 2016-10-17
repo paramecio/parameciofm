@@ -42,9 +42,9 @@ class SimpleList:
         
         #clean session
         
-        self.s['order']='0'
+        self.order='0'
         
-        self.s['order_field']=self.model.name_field_id
+        self.order_field=self.model.name_field_id
         
         self.order_by=self.order_defaults[0]
         
@@ -83,9 +83,9 @@ class SimpleList:
     
     def obtain_order(self):
         
-        self.s['order']=self.getpostfiles.get.get('order', self.s['order'])
+        self.order=self.getpostfiles.get.get('order', self.order)
         
-        order_k=int(self.s['order'])
+        order_k=int(self.order)
         
         #Obtain from get
         """
@@ -98,13 +98,13 @@ class SimpleList:
         
         self.order_by=self.order_defaults[ order_k ]
         
-        self.s['order']=order_k
+        self.order=order_k
     
     def obtain_field_search(self):
         
-        self.s['order_field']=self.getpostfiles.get.get('order_field', self.s['order_field'])
+        self.order_field=self.getpostfiles.get.get('order_field', self.order_field)
         
-        field_k=self.s['order_field']
+        field_k=self.order_field
         
         """
         if 'order_field' in request.query.keys():
@@ -113,7 +113,7 @@ class SimpleList:
         
         if field_k in self.model.fields.keys():
             
-            self.s['order_field']=field_k
+            self.order_field=field_k
         
         for field in self.fields:
             
@@ -122,16 +122,16 @@ class SimpleList:
             if type(self.model.fields[field]).__name__=='ForeignKeyField':
                 name_related=self.model.fields[field].related_model.name
                 for k in self.model.fields[field].related_model.fields.keys():
-                    self.change_order[field+'_'+k]=self.s['order']
+                    self.change_order[field+'_'+k]=self.order
             
-            self.change_order[field]=self.s['order']
+            self.change_order[field]=self.order
         
-        if self.s['order']==0:
+        if self.order==0:
             self.change_order[field_k]=1
         else:
             self.change_order[field_k]=0
         
-        self.order_field=self.s['order_field']
+        #self.order_field=self.order_field
         
     def search(self):
         
@@ -179,7 +179,7 @@ class SimpleList:
         
         num_elements=self.limit_pages
         
-        link=add_get_parameters(self.url, search_text=self.search_text, search_field=self.search_field, order=self.s['order'])
+        link=add_get_parameters(self.url, search_text=self.search_text, search_field=self.search_field, order=self.order)
         
         begin_page=self.begin_page
         

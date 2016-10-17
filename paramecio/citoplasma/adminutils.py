@@ -53,6 +53,8 @@ def get_menu(modules_admin):
             menu[mod[2]]=mod[0]
             
             for submod in mod[1]:
+                if submod[2] in menu:
+                    print('WARNING: you would not set the admin url for '+submod[2]+' with same general name of module if is not stand alone admin file')
                 menu[submod[2]]=submod
                 
     return menu

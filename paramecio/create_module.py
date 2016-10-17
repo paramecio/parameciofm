@@ -26,6 +26,8 @@ def start():
     try:
         path.mkdir(0o755, True)
         
+        open('modules/'+args.path+'/__init__.py', 'a').close()
+        
     except:
         
         print('Error: cannot create the directory. Check if exists and if you have permissions')

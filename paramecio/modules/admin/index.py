@@ -51,9 +51,8 @@ menu=get_menu(config_admin.modules_admin)
 module_imported={}
 
 for k, v in menu.items():
-    
-    if k[:1]!='/':
-        if type(v).__name__=='list':
+    if type(v).__name__=='list':
+        if k[:1]!='/':
             module_imported[k]=import_module(v[1])
 
 #print(d)
