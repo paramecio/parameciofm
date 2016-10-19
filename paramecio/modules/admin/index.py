@@ -133,8 +133,14 @@ def home(module='', submodule=''):
                     content_index=module_imported[module].admin(t=t, connection=connection)
 
                     if t.show_basic_template==True:   
+                        
+                        title_module=menu[module][0]
+                        
+                        if type(content_index).__name__=='list':
+                            title_module=content_index[0]
+                            content_index=content_index[1]
                     
-                        return t.load_template('admin/content.html', title=menu[module][0], content_index=content_index, menu=menu, lang_selected=lang_selected, arr_i18n=I18n.dict_i18n)
+                        return t.load_template('admin/content.html', title=title_module, content_index=content_index, menu=menu, lang_selected=lang_selected, arr_i18n=I18n.dict_i18n)
                     else:
                         
                         return content_index
