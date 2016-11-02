@@ -11,7 +11,7 @@
 </%def>
 <%def name="set_css_arrow(simplelist, field)">
     % if simplelist.order_field==field:
-        <i class="fa fa-arrow-${simplelist.order_class[simplelist.s['order']]}" aria-hidden="true"></i>
+        <i class="fa fa-arrow-${simplelist.order_class[simplelist.order]}" aria-hidden="true"></i>
     % endif
 </%def>
 % if simplelist.yes_search:

@@ -3,6 +3,7 @@
 # You need install cromosoma for use this.
 
 from paramecio.cromosoma.webmodel import WebModel
+from importlib import import_module
 
 # No touch it if you don't know what are you doing
 

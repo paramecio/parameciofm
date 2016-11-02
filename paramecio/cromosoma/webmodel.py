@@ -524,7 +524,7 @@ class WebModel:
     
     # A method por count num rows affected for sql conditions
     
-    def select_count(self, field_to_count='id', raw_query=1):
+    def select_count(self, field_to_count='id', raw_query=True):
         
         # Connect to db
         
@@ -544,7 +544,7 @@ class WebModel:
             
             #Check if foreignkeyfield
             
-            if type(self.fields[field]).__name__=="ForeignKeyField"  and raw_query==0:
+            if type(self.fields[field]).__name__=="ForeignKeyField"  and raw_query==False:
                 
                 table_name=self.fields[field].table_name
                 
