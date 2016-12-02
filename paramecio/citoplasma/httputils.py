@@ -47,11 +47,23 @@ class GetPostFiles:
     
     def __init__(self):
     
+        # Deprecated. use self.query
+    
         self.get={}
+        
+        self.query={}
         
         self.post={}
         
         self.files={}
+        
+    def obtain_query(self):
+        
+        self.query={}
+        
+        self.query=request.query.decode()
+
+    # Deprecated, is confuse. 
 
     def obtain_get(self):
         

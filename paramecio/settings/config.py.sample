@@ -89,7 +89,7 @@ session_opts = {
     'session.key': cookie_name,
     'session.type': 'file',
     'session.data_dir': './sessions',
-    'session.auto': True,
+    'session.auto': False,
     'session.secret': key_encrypt,
     
 }
