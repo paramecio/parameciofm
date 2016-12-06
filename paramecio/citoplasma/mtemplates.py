@@ -62,8 +62,20 @@ def env_theme(module, cache_enabled=True, cache_impl='', cache_args={}, module_d
     #Standard templates
     #print(standard_templates)
     return TemplateLookup(directories=search_folders, default_filters=['h'], input_encoding='utf-8', encoding_errors='replace', cache_enabled=cache_enabled, cache_impl=cache_impl, cache_args=cache_args, module_directory=module_directory)
+    
+def preload_templates(template_files, env):
+    
+    templates={}
+    
+    for template_file in template_files:
+            
+            templates[template_file]=env.get_template(template_file)
+            
+    return templates
 
 class PTemplate:
+    
+    templates_loaded={}
     
     def __init__(self, environment):
         
@@ -193,9 +205,12 @@ class PTemplate:
 
     def render_template(self, template_file, **arguments):
         
+        if not str(self.env.directories)+'/'+template_file in PTemplate.templates_loaded:
+            PTemplate.templates_loaded[str(self.env.directories)+'/'+template_file]=self.env.get_template(template_file)
+        
         arguments.update(self.filters)
         
-        return self.templates[template_file].render(**arguments)
+        return PTemplate.templates_loaded[str(self.env.directories)+'/'+template_file].render(**arguments)
 
     def add_filter(self, filter_name):
 

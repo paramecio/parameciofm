@@ -13,14 +13,14 @@ def home():
     
     t=PTemplate(env)
 
-    return t.load_template('welcome.html', title="Welcome to Paramecio!!!", content="The simple web framework writed in Python3!!!")
+    return t.render_template('welcome.html', title="Welcome to Paramecio!!!", content="The simple web framework writed in Python3!!!")
 
 @route('/welcome/<id:int>')
 def page(id):
     
     t=PTemplate(env)
     
-    return t.load_template('index.html', title="A simple example of a page", id=id, value=request.query.value)
+    return t.render_template('index.html', title="A simple example of a page", id=id, value=request.query.value)
 
 @route('/welcome/test/<id:int>')
 def test(id):

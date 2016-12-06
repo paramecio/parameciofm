@@ -98,10 +98,10 @@ def home(module='', submodule=''):
         c=user_admin.select_count()
         
         if c>0:
-        
+            
             if s['privileges']==2:
                             #pass
-                        
+                
                 if module in menu:
                     
                     #Load module
@@ -140,17 +140,22 @@ def home(module='', submodule=''):
                             title_module=content_index[0]
                             content_index=content_index[1]
                     
-                        return t.load_template('admin/content.html', title=title_module, content_index=content_index, menu=menu, lang_selected=lang_selected, arr_i18n=I18n.dict_i18n)
+                        return t.render_template('admin/content.html', title=title_module, content_index=content_index, menu=menu, lang_selected=lang_selected, arr_i18n=I18n.dict_i18n)
                     else:
                         
                         return content_index
                         
                 else:
-                    return t.load_template('admin/index.html', title=I18n.lang('admin', 'welcome_to_paramecio', 'Welcome to Paramecio Admin!!!'), menu=menu, lang_selected=lang_selected, arr_i18n=I18n.dict_i18n)
+                    return t.render_template('admin/index.html', title=I18n.lang('admin', 'welcome_to_paramecio', 'Welcome to Paramecio Admin!!!'), menu=menu, lang_selected=lang_selected, arr_i18n=I18n.dict_i18n)
+                    
+                
+            return ""
                 
         else:
             
             logout()
+        
+        return ""
             
     else:
         
@@ -198,7 +203,7 @@ def home(module='', submodule=''):
                 
                 #connection.close()
                 
-                return t.load_template('admin/login.phtml', forms=forms, yes_recovery_login=yes_recovery_login)
+                return t.render_template('admin/login.phtml', forms=forms, yes_recovery_login=yes_recovery_login)
                 
         else:
         
@@ -208,8 +213,10 @@ def home(module='', submodule=''):
             
             forms=show_form(post, user_admin.forms, t, yes_error=False)
 
-            return t.load_template('admin/register.phtml', forms=forms)
-
+            return t.render_template('admin/register.phtml', forms=forms)
+    
+    return ""
+    
 @post('/'+config.admin_folder+'/login')
 def login():
     
@@ -413,7 +420,7 @@ def recovery_password():
     
     #connection.close()
     
-    return t.load_template('admin/recovery.phtml', forms=forms)
+    return t.render_template('admin/recovery.phtml', forms=forms)
 
 @post('/'+config.admin_folder+'/recovery_password')
 def send_password():
@@ -462,7 +469,7 @@ def send_password():
                 
                 send_mail=SendMail()
                 
-                content_mail=t.load_template('admin/recovery_mail.phtml', token=token)
+                content_mail=t.render_template('admin/recovery_mail.phtml', token=token)
                 
                 if not send_mail.send(email_address, [email], I18n.lang('admin', 'send_email', 'Email for recovery your password'), content_mail):
                     return {'email': 'Error: i cannot send mail', 'error': 1}
@@ -475,7 +482,7 @@ def send_password():
 def check_token():
     t=PTemplate(env)
     
-    return t.load_template('admin/check_token.phtml')
+    return t.render_template('admin/check_token.phtml')
     
 @post('/'+config.admin_folder+'/check_token')
 def check_code_token():
@@ -518,7 +525,7 @@ def check_code_token():
                     
                     send_mail=SendMail()
                     
-                    content_mail=t.load_template('admin/recovery_password.phtml', password=new_password)
+                    content_mail=t.render_template('admin/recovery_password.phtml', password=new_password)
                     
                     if not send_mail.send(email_address, [arr_user['email']], I18n.lang('admin', 'send_password_email', 'Your new password'), content_mail):
                         return {'token': 'Error: i cannot send mail', 'error': 1}

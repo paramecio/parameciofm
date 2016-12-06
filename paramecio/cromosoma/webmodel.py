@@ -5,9 +5,193 @@ import re
 import uuid
 from importlib import import_module, reload
 from collections import OrderedDict
-from paramecio.cromosoma.databases.pymysql import SqlClass
+from paramecio.cromosoma.databases.mysqldb import SqlClass
 from paramecio.cromosoma.coreforms import BaseForm, HiddenForm
 import traceback
+
+class PhangoField:
+    
+    def __init__(self, name, size=255, required=False):
+        
+        # The name of the field in database table
+        
+        self.name=name
+        
+        # The label for the Field
+        
+        self.label=name.replace('_', ' ').title()
+        
+        # If field is required, self.required is True
+        
+        self.required=required
+        
+        # The size of field in database
+        
+        self.size=size
+        
+        # Protected, if this value != False, cannot use it in insert or update.
+    
+        self.protected=False
+        
+        # $quote_open is used if you need a more flexible sql sentence, 
+        # @warning USE THIS FUNCTION IF YOU KNOW WHAT YOU ARE DOING
+        
+        self.quot_open='\''
+        
+        # $quote_close is used if you need a more flexible sql sentence, 
+        # @warning USE THIS PROPERTY IF YOU KNOW WHAT YOU ARE DOING
+        
+        self.quot_close='\''
+        
+        # Variable where the basic text error is saved
+    
+        self.error=None
+        
+        self.txt_error=""
+        
+        # Themodel where this component or field live
+    
+        self.model=None
+        
+        # Property used for set this field how indexed in the database table.
+
+        self.indexed=False
+        
+        # Property used for set this field how unique value in the database table.
+
+        self.unique=False
+        
+        # Simple property for make more easy identify foreignkeyfields.
+        
+        self.foreignkey=False
+        
+        # Property that define the default value for this field
+        
+        self.default_value=""
+     
+        # Property that define if this field is in an update operation or insert operation
+        
+        self.update=False
+        
+        # Property used for check if this value cannot change if is in blank and is filled
+        
+        self.check_blank=False
+        
+        # Define the form, when is created forms with create_forms you can change the properties of this class
+        
+        self.name_form=BaseForm
+        
+        # Property that define if make escape in show_formatted.  This property control the html transformation  of <>" characters in html entities.If false, convert.
+        
+        self.escape=False
+        
+        # File related: if the field have a file related, delete the file
+        
+        self.file_related=False
+        
+        # Extra parameters for the form
+        
+        self.extra_parameters=[]
+        
+        # Template manager for the form if needed
+        
+        self.t=None
+     
+    # This method is used for describe the new field in a sql language format.
+    
+
+    def get_type_sql(self):
+
+        return 'VARCHAR('+str(self.size)+') NOT NULL DEFAULT "'+self.default_value+'"'
+    
+    def show_formatted(self, value):
+        
+        return value
+    
+    # This method for check the value
+    
+
+    def check(self, value):
+        
+        self.error=False
+        self.txt_error=''
+        
+        value=str(value)
+        
+        if self.escape==False:        
+            value=value.replace('<', '&lt;')
+            
+            value=value.replace('>', '&gt;')
+            
+            value=value.replace('"', '&quot;')
+        
+        #value=WebModel.escape_sql(value)
+        
+        if value=="":
+            self.txt_error="The field is empty"
+            self.error=True
+            
+        
+        return value
+    
+    def set_relationships(self):
+        pass
+    
+    def create_form(self):
+        #self.name, self.default_value, 
+        
+        self.extra_parameters.insert(0, self.name)
+        self.extra_parameters.insert(1, self.default_value)
+        form=self.name_form(*self.extra_parameters)
+        form.default_value=self.default_value
+        form.required=self.required
+        form.label=self.label
+        form.field=self
+        return form
+    
+    def change_form(self, new_form, parameters):
+        
+        self.name_form=new_form
+        
+        self.extra_parameters=parameters
+        
+    def post_register(self):
+        pass
+
+class PrimaryKeyField(PhangoField):
+    
+    def __init__(self, name, size=11, required=False):
+        super(PrimaryKeyField, self).__init__(name, size, required)
+        self.protected=True
+        self.name_form=HiddenForm
+        self.required=True
+    
+    def check(self, value):
+        
+        self.error=None
+        self.txt_error=''
+        
+        if value=='':
+            value='0'
+        
+        try:
+        
+            value=str(int(value))
+        
+        except:
+            
+            value=0
+        
+        if value==0:
+            self.txt_error="The value is zero"
+            self.error=True
+            
+        
+        return value
+    
+    def get_type_sql(self):
+
+        return 'INT NOT NULL PRIMARY KEY AUTO_INCREMENT'
 
 # The most important class for the framework
 #
@@ -26,6 +210,7 @@ class WebModel:
     arr_sql_set_unique={}
     last_query=""
     connection_pool=[]
+    first_primary_key=PrimaryKeyField('id')
     
     #A dictionary for add models here
     
@@ -103,13 +288,20 @@ class WebModel:
         self.required_save={}
         
         #Create id field
+        
+        primary_key=WebModel.first_primary_key
+        
+        primary_key.name=self.name_field_id
+        
+        self.register(primary_key)
+        
         self.register(PrimaryKeyField(self.name_field_id))
         
         #self.model[name]=self
         
         self.yes_reset_conditions=True
         
-        self.create_fields()
+        #self.create_fields()
         
         self.updated=False
         
@@ -954,191 +1146,4 @@ class WebModel:
         
         self.close()
     """
-    
-class PhangoField:
-    
-    def __init__(self, name, size=255, required=False):
-        
-        # The name of the field in database table
-        
-        self.name=name
-        
-        # The label for the Field
-        
-        self.label=name.replace('_', ' ').title()
-        
-        # If field is required, self.required is True
-        
-        self.required=required
-        
-        # The size of field in database
-        
-        self.size=size
-        
-        # Protected, if this value != False, cannot use it in insert or update.
-    
-        self.protected=False
-        
-        # $quote_open is used if you need a more flexible sql sentence, 
-        # @warning USE THIS FUNCTION IF YOU KNOW WHAT YOU ARE DOING
-        
-        self.quot_open='\''
-        
-        # $quote_close is used if you need a more flexible sql sentence, 
-        # @warning USE THIS PROPERTY IF YOU KNOW WHAT YOU ARE DOING
-        
-        self.quot_close='\''
-        
-        # Variable where the basic text error is saved
-    
-        self.error=None
-        
-        self.txt_error=""
-        
-        # Themodel where this component or field live
-    
-        self.model=None
-        
-        # Property used for set this field how indexed in the database table.
-
-        self.indexed=False
-        
-        # Property used for set this field how unique value in the database table.
-
-        self.unique=False
-        
-        # Simple property for make more easy identify foreignkeyfields.
-        
-        self.foreignkey=False
-        
-        # Property that define the default value for this field
-        
-        self.default_value=""
-     
-        # Property that define if this field is in an update operation or insert operation
-        
-        self.update=False
-        
-        # Property used for check if this value cannot change if is in blank and is filled
-        
-        self.check_blank=False
-        
-        # Define the form, when is created forms with create_forms you can change the properties of this class
-        
-        self.name_form=BaseForm
-        
-        # Property that define if make escape in show_formatted.  This property control the html transformation  of <>" characters in html entities.If false, convert.
-        
-        self.escape=False
-        
-        # File related: if the field have a file related, delete the file
-        
-        self.file_related=False
-        
-        # Extra parameters for the form
-        
-        self.extra_parameters=[]
-        
-        # Template manager for the form if needed
-        
-        self.t=None
-     
-    # This method is used for describe the new field in a sql language format.
-    
-
-    def get_type_sql(self):
-
-        return 'VARCHAR('+str(self.size)+') NOT NULL DEFAULT "'+self.default_value+'"'
-    
-    def show_formatted(self, value):
-        
-        return value
-    
-    # This method for check the value
-    
-
-    def check(self, value):
-        
-        self.error=False
-        self.txt_error=''
-        
-        value=str(value)
-        
-        if self.escape==False:        
-            value=value.replace('<', '&lt;')
-            
-            value=value.replace('>', '&gt;')
-            
-            value=value.replace('"', '&quot;')
-        
-        #value=WebModel.escape_sql(value)
-        
-        if value=="":
-            self.txt_error="The field is empty"
-            self.error=True
-            
-        
-        return value
-    
-    def set_relationships(self):
-        pass
-    
-    def create_form(self):
-        #self.name, self.default_value, 
-        
-        self.extra_parameters.insert(0, self.name)
-        self.extra_parameters.insert(1, self.default_value)
-        form=self.name_form(*self.extra_parameters)
-        form.default_value=self.default_value
-        form.required=self.required
-        form.label=self.label
-        form.field=self
-        return form
-    
-    def change_form(self, new_form, parameters):
-        
-        self.name_form=new_form
-        
-        self.extra_parameters=parameters
-        
-    def post_register(self):
-        pass
-
-class PrimaryKeyField(PhangoField):
-    
-    def __init__(self, name, size=11, required=False):
-        super(PrimaryKeyField, self).__init__(name, size, required)
-        self.protected=True
-        self.name_form=HiddenForm
-        self.required=True
-    
-    def check(self, value):
-        
-        self.error=None
-        self.txt_error=''
-        
-        if value=='':
-            value='0'
-        
-        try:
-        
-            value=str(int(value))
-        
-        except:
-            
-            value=0
-        
-        if value==0:
-            self.txt_error="The value is zero"
-            self.error=True
-            
-        
-        return value
-    
-    def get_type_sql(self):
-
-        return 'INT NOT NULL PRIMARY KEY AUTO_INCREMENT'
-    
-
-            
     

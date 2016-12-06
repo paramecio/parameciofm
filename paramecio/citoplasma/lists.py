@@ -197,7 +197,7 @@ class SimpleList:
         
         self.model.yes_reset_conditions=True
         
-        listing=self.t.load_template('utils/list.phtml', simplelist=self, list=list_items, pages=pages)
+        listing=self.t.render_template('utils/list.phtml', simplelist=self, list=list_items, pages=pages)
         
         list_items.close()
         

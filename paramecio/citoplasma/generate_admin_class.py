@@ -85,7 +85,7 @@ class GenerateAdminClass:
             
             form=show_form(post, edit_forms, self.t, False)
                 
-            return self.t.load_template(self.template_insert, admin=self, title_edit=title_edit, form=form, model=self.model, id=getpostfiles.get['id'])
+            return self.t.render_template(self.template_insert, admin=self, title_edit=title_edit, form=form, model=self.model, id=getpostfiles.get['id'])
         
         elif getpostfiles.get['op_admin']=='2':
             
@@ -118,7 +118,7 @@ class GenerateAdminClass:
                 redirect(self.url)
             else:
                 form=show_form(getpostfiles.post, edit_forms, self.t, True)
-                return self.t.load_template(self.template_insert, admin=self, title_edit=title_edit, form=form, model=self.model, id=getpostfiles.get['id'])
+                return self.t.render_template(self.template_insert, admin=self, title_edit=title_edit, form=form, model=self.model, id=getpostfiles.get['id'])
 
             
             pass
@@ -137,8 +137,8 @@ class GenerateAdminClass:
     
             else:
                 
-                return self.t.load_template(self.template_verify_delete, url=self.url, item_id=getpostfiles.get['id'], op_admin=3, verified=1)
+                return self.t.render_template(self.template_verify_delete, url=self.url, item_id=getpostfiles.get['id'], op_admin=3, verified=1)
     
         else:
-            return self.t.load_template(self.template_admin, admin=self)
+            return self.t.render_template(self.template_admin, admin=self)
 

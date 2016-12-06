@@ -29,23 +29,23 @@ class UserAdmin(UserModel):
         super().__init__(connection)
 
         # I can change other fields here, how the name.
-
+        
         self.register(corefields.CharField('username'))
-
+        
         self.fields['username'].required=True
-
+        
         self.register(PasswordField('password'))
 
         self.fields['password'].required=True
-
+        
         self.register(EmailField('email'))
 
         self.fields['email'].required=True
-
+        
         self.register(corefields.CharField('token_recovery'))
 
         self.register(corefields.CharField('token_login'))
-
+        
         self.register(PrivilegesField('privileges'))
         
         self.register(LangField('lang', 20))
@@ -53,7 +53,7 @@ class UserAdmin(UserModel):
         self.register(corefields.BooleanField('disabled'))
         
         self.register(corefields.IntegerField('num_tries', 1))
-
+        
 """
 
 user_admin=WebModel('user_admin')

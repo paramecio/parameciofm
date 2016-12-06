@@ -59,21 +59,17 @@ routes={}
 
 module_loaded=None
 
-#Import modules to load
+#Getting paths for loaded modules for use in media load files
 
 for module in config.modules:
     
-    controller_path=load(module)
-        
-    controller_base=os.path.dirname(controller_path.__file__)
+    #controller_path=sys.modules[module]
+    
+    controller_base=sys.modules[module].__path__[0]
     
     base_module=module.split('.')[-1]
     
     arr_module_path[base_module]=controller_base
-    
-    dir_controllers=os.listdir(controller_base)
-    
-    #add_func_static_module(controller_base)
 
 #Prepare ssl
 
@@ -166,7 +162,7 @@ if config.session_enabled==True:
     app.add_hook('after_request', save_session)
     #def 
     """
-    app = SessionMiddleware(app, config.session_opts, environ_key=config.cookie_name)
+    #app = SessionMiddleware(app, config.session_opts, environ_key=config.cookie_name)
 
 # Clean last slash
 
@@ -185,7 +181,7 @@ set_timezone()
 
 def run_app(app):
 
-    run(app=app, host=config.host, server=config.server_used, port=config.port, debug=config.debug, reloader=config.reloader)
+    run(app=app, host=config.host, server=config.server_used, port=config.port, debug=config.debug, reloader=config.reloader, interval=0.5)
 """
 if __name__ == "__main__":
     run(app=app, host=config.host, server=config.server_used, port=config.port, debug=config.debug, reloader=config.reloader)

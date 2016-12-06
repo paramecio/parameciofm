@@ -11,8 +11,8 @@ class SqlClass:
     
     def __init__(self):
     
-        self.max_overflow=45
-        self.pool_size=30
+        self.max_overflow=65
+        self.pool_size=45
         self.error_connection=""
         self.connection={}
         self.connected=False

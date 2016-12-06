@@ -33,18 +33,19 @@ class I18n:
     
     l={}
     
+    #@staticmethod 
+    #def set_lang(code_lang):
+    #    if default_lang
+        
+    
     @staticmethod
     def get_default_lang():
         
         lang=I18n.default_lang
         
-        s=get_session()
-        
-        if s==None:
-        
-            s={'lang': lang}
-            
-        lang=s.get('lang', lang)
+        #s=get_session()
+
+        #lang=s.get('lang', lang)
             
         return lang
     

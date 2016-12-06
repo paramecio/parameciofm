@@ -70,7 +70,7 @@ def show_form(post, arr_form, t, yes_error=True, pass_values=True, modelform_tpl
         if pass_values==True:
             pass_values_to_form(post, arr_form, yes_error)
         
-        return t.load_template(modelform_tpl, forms=arr_form)
+        return t.render_template(modelform_tpl, forms=arr_form)
 
 #Simple Function for add repeat_password form to user model
 
