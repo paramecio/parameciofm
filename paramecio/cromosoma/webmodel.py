@@ -5,8 +5,9 @@ import re
 import uuid
 from importlib import import_module, reload
 from collections import OrderedDict
-from paramecio.cromosoma.databases.mysqldb import SqlClass
+from paramecio.cromosoma.databases.pymysql import SqlClass
 from paramecio.cromosoma.coreforms import BaseForm, HiddenForm
+import copy
 import traceback
 
 class PhangoField:
@@ -202,6 +203,8 @@ class PrimaryKeyField(PhangoField):
 
 class WebModel:
     
+    __slots__=('sqlclass', 'fields', 'forms')
+    
     #Globals class variables for internal tasks
     
     arr_sql_index={}
@@ -231,7 +234,7 @@ class WebModel:
     @staticmethod
     def connection():
         
-        return SqlClass()
+        return SqlClass(WebModel.connections['default'])
     
     # Init the class
     
@@ -295,7 +298,7 @@ class WebModel:
         
         self.register(primary_key)
         
-        self.register(PrimaryKeyField(self.name_field_id))
+        #self.register(PrimaryKeyField(self.name_field_id))
         
         #self.model[name]=self
         
@@ -322,10 +325,15 @@ class WebModel:
         self.sqlclass=sqlclass
         
         self.fields_to_clean=[]
-    
+        
+        self.create_fields()
+
     # A method where create the new fields of this model
     
     def create_fields(self):
+        
+        #print([i for i in dir(self.__class__) if i[:1] != '_'])
+        #print(dir(self))
         
         pass
     
@@ -358,16 +366,13 @@ class WebModel:
             #raise NameError(sqlclass.error_connection)
         
         #self.connection_pool.append(True)
-        """
-        if not sqlclass.connected:
-            if WebModel.make_connection(self.connections[self.connection_id])==False:
-                raise NameError(sqlclass.error_connection)
-        """
         
-        if self.sqlclass.connect_to_db(self.connections[self.connection_id])==False:
-            raise NameError(sqlclass.error_connection)
+        
+        #if self.sqlclass.connect_to_db(self.connections[self.connection_id])==False:
+        #    raise NameError(sqlclass.error_connection)
         
         #WebModel.make_connection=sqlclass.dummy_connect
+        pass
     
     def dummy_connect(self, connection):
         return True
@@ -648,16 +653,13 @@ class WebModel:
         
         self.limit="limit 1"
         
-        cursor=self.select(fields_selected, raw_query)
-        
-        self.reset_conditions()
-        
-        row=cursor.fetchone()
-        
-        if row==None:
-            row=False
-
-        cursor.close()
+        with self.select(fields_selected, raw_query) as cursor:        
+            self.reset_conditions()
+            
+            row=cursor.fetchone()
+            
+            if row==None:
+                row=False
 
         return row
     
@@ -665,14 +667,12 @@ class WebModel:
         
         self.limit="limit "+str(begin)+", 1"
         
-        cursor=self.select(fields_selected, raw_query)
+        with self.select(fields_selected, raw_query) as cursor:
         
-        row=cursor.fetchone()
-        
-        if row==None:
-            row=False
-
-        cursor.close()
+            row=cursor.fetchone()
+            
+            if row==None:
+                row=False
         
         return row
     
@@ -699,17 +699,14 @@ class WebModel:
             def del_row_id(row):
                 pass
         
-        cursor=self.select(fields_selected, raw_query)
-        
         results=[] #OrderedDict()
         
-        for row in cursor:
+        with self.select(fields_selected, raw_query) as cursor:        
+            for row in cursor:
+                
+                results.append(row)
             
-            results.append(row)
-        
-        del_row_id(results)
-        
-        cursor.close()
+            del_row_id(results)
         
         return results
         
@@ -748,14 +745,13 @@ class WebModel:
                 
         sql= "select count(`"+field_to_count+"`) from "+", ".join(tables_to_select)+' '+conditions[0]
         
-        cursor=self.sqlclass.query(sql, conditions[1], self.connection_id)
+        count=0
         
-        count=list(cursor.fetchone().values())[0]
-        
-        if self.yes_reset_conditions:
-            self.reset_conditions()
-        
-        cursor.close()
+        with self.sqlclass.query(sql, conditions[1], self.connection_id) as cursor:
+            count=list(cursor.fetchone().values())[0]
+            
+            if self.yes_reset_conditions:
+                self.reset_conditions()
         
         return count
         

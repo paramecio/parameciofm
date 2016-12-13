@@ -9,25 +9,18 @@ class SqlClass:
     
     mypool=None
     
-    def __init__(self):
+    def __init__(self, connection):
     
-        self.max_overflow=65
-        self.pool_size=45
+        self.max_overflow=-1
+        self.pool_size=0
         self.error_connection=""
-        self.connection={}
+        # Data of connection
+        self.connection=connection
+        # Sql connection
+        self.conn=None
         self.connected=False
-        self.connection_method=self.connect_to_db_sql
-    
-    def dummy_connect(self, connection, name_connection="default"):
-        pass
-    
-    def connect_to_db(self, connection, name_connection="default"):
-        
-        self.connection_method(connection, name_connection)
-        
-        self.connection_method=self.dummy_connect
-    
-    def connect_to_db_sql(self, connection, name_connection="default"):
+        #self.connection_method=self.connect_to_db_sql
+        self.caching=False
         
         try:
             def getconn():
@@ -41,9 +34,9 @@ class SqlClass:
             if SqlClass.mypool==None:
                 SqlClass.mypool=pool.QueuePool(getconn, max_overflow=self.max_overflow, pool_size=self.pool_size)
             
-            self.connection[name_connection]=SqlClass.mypool.connect()
+            self.conn=SqlClass.mypool.connect()
             
-            self.connection[name_connection].ping(True)
+            self.conn.ping(True)
             
             self.connected=True
             
@@ -63,13 +56,13 @@ class SqlClass:
         #if fetch_type=="ASSOC":
             #fetch_type=MySQLdb.cursors.DictCursor
         
-        #with self.connection[name_connection].cursor(MySQLdb.cursors.DictCursor) as cursor:
-        cursor=self.connection[name_connection].cursor(MySQLdb.cursors.DictCursor)
+        #with self.conn.cursor(MySQLdb.cursors.DictCursor) as cursor:
+        cursor=self.conn.cursor(MySQLdb.cursors.DictCursor)
         
         try:
             
             cursor.execute(sql_query, arguments)
-            self.connection[name_connection].commit()
+            self.conn.commit()
             
             return cursor
         
@@ -95,13 +88,12 @@ class SqlClass:
         
         self.close()
     """
-    
     def close(self, name_connection="default"):
         
-        if self.connection[name_connection]:
+        if self.conn:
         
-            self.connection[name_connection].close()
-            #self.connection[name_connection]=False
+            self.conn.close()
+            #self.conn=False
         
         pass
     

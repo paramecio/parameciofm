@@ -18,7 +18,7 @@ def start():
     
     connection=WebModel.connection()
     
-    connection.connect_to_db(WebModel.connections['default'])
+    #connection.connect_to_db(WebModel.connections['default'])
     
     parser = argparse.ArgumentParser(description='A tool for create tables in databases using models from Cromosoma')
 

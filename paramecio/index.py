@@ -2,7 +2,7 @@ import os, sys, traceback, inspect, resource
 from importlib import import_module
 from bottle import route, get, post, run, default_app, abort, request, response, static_file, load, hook, error
 from settings import config, modules
-from beaker.middleware import SessionMiddleware
+#from beaker.middleware import SessionMiddleware
 from mimetypes import guess_type
 from paramecio.cromosoma.webmodel import WebModel
 from paramecio.citoplasma.datetime import set_timezone

@@ -21,6 +21,16 @@ class PrivilegesField(corefields.IntegerField):
         elif value==2:
             return I18n.lang('admin', 'administrator', 'Administrator')
 
+_username=corefields.CharField('username')
+_password=PasswordField('password')
+_email=EmailField('email')
+_token_recovery=corefields.CharField('token_recovery')
+_token_login=corefields.CharField('token_login')
+_privileges=PrivilegesField('privileges')
+_lang=LangField('lang', 20)
+_disabled=corefields.BooleanField('disabled')
+_num_tries=corefields.IntegerField('num_tries', 1)
+
 class UserAdmin(UserModel):
     
     #def create_fields(self):
@@ -29,6 +39,31 @@ class UserAdmin(UserModel):
         super().__init__(connection)
 
         # I can change other fields here, how the name.
+        """
+        self.register(_username)
+        
+        self.fields['username'].required=True
+        
+        self.register(_password)
+
+        self.fields['password'].required=True
+        
+        self.register(_email)
+
+        self.fields['email'].required=True
+        
+        self.register(_token_recovery)
+
+        self.register(_token_login)
+        
+        self.register(_privileges)
+        
+        self.register(_lang)
+        
+        self.register(_disabled)
+        
+        self.register(_num_tries)
+        """
         
         self.register(corefields.CharField('username'))
         
