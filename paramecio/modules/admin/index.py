@@ -216,6 +216,8 @@ def home(module='', submodule=''):
 
             return t.render_template('admin/register.phtml', forms=forms)
     
+    connection.close()
+    
     return ""
     
 @post('/'+config.admin_folder+'/login')
@@ -247,7 +249,7 @@ def login():
         s['csrf_token']=create_key_encrypt()
         
         s.save()
-        
+        connection.close()
         return {'error': 1, 'csrf_token': s['csrf_token']}
     else:
         
@@ -293,7 +295,7 @@ def login():
                     #else:
                         #print(user_admin.query_error)
                 s.save()
-                
+                connection.close()
                 return {'error': 0}
             else:
                 
@@ -312,7 +314,7 @@ def login():
                 s['csrf_token']=create_key_encrypt()
                 
                 s.save()
-                
+                connection.close()
                 return {'error': 1, 'csrf_token': s['csrf_token']}
         else:
             s=get_session()
@@ -320,7 +322,7 @@ def login():
             s['csrf_token']=create_key_encrypt()
             
             s.save()
-            
+            connection.close()
             return {'error': 1, 'csrf_token': s['csrf_token']}
 
 
@@ -350,7 +352,7 @@ def register():
         if user_admin.insert(getpostfiles.post, False):
         
             error= {'error': 0}
-            
+            connection.close()
             return error
         
         else:
@@ -374,11 +376,11 @@ def register():
             #error['password_repeat']=I18n.lang('common', 'password_no_match', 'Passwords doesn\'t match')
             
             s.save()
-            
+            connection.close()
             return error
         
     else:
-    
+        connection.close()
         return {'error': 1}
         
 @get('/'+config.admin_folder+'/logout')
@@ -420,7 +422,7 @@ def recovery_password():
     forms=show_form(post, user_admin.forms, t, yes_error=False)
     
     #connection.close()
-    
+    connection.close()
     return t.render_template('admin/recovery.phtml', forms=forms)
 
 @post('/'+config.admin_folder+'/recovery_password')
@@ -447,7 +449,7 @@ def send_password():
         s['csrf_token']=create_key_encrypt()
         
         s.save()
-        
+        connection.close()
         return {'email': user_admin.fields['email'].txt_error, 'error': 1, 'csrf_token': s['csrf_token']}
         
     else:
@@ -475,7 +477,8 @@ def send_password():
                 if not send_mail.send(email_address, [email], I18n.lang('admin', 'send_email', 'Email for recovery your password'), content_mail):
                     return {'email': 'Error: i cannot send mail', 'error': 1}
                 
-            
+        connection.close()
+        
         return {'email': '', 'error': 0}
         
         
