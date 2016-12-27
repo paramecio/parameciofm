@@ -65,7 +65,10 @@ for k, v in menu.items():
 def home(module='', submodule=''):
     
     # A simple boolean used for show or not the code of admin module in standard template
+    
     connection=WebModel.connection()
+    user_admin=UserAdmin(connection)
+    
     #Fix, make local variable
     
     t=PTemplate(env)
@@ -80,8 +83,6 @@ def home(module='', submodule=''):
     #t.clean_header_cache()
     
     #check if login
-    
-    user_admin=UserAdmin(connection)
     
     s=get_session()
     

@@ -115,7 +115,13 @@ def get_session():
                 if os.path.isfile(path_cookie):
                     
                     with open(path_cookie) as f:
-                        s=json.loads(f.read())
+                        
+                        json_txt=f.read()
+                        
+                        if(json_txt).strip()!='':
+                            s=json.loads(json_txt)
+                        else:
+                            s={'token': cookie}
                 else:
                     s={'token': cookie}
                     

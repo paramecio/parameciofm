@@ -20,39 +20,42 @@ class SqlClass:
         # Sql connection
         self.conn=None
         self.connected=False
-        #self.connection_method=self.connect_to_db_sql
-        self.caching=False
         
-        try:
-            def getconn():
-                return pymysql.connect(connection['host'],
-                    user=connection['user'],
-                    passwd=connection['password'],
-                    db=connection['db'],
-                    charset='utf8mb4',
-                    cursorclass=pymysql.cursors.DictCursor)
-            
-            if SqlClass.mypool==None:
-                SqlClass.mypool=pool.QueuePool(getconn, max_overflow=self.max_overflow, pool_size=self.pool_size)
-            
-            self.conn=SqlClass.mypool.connect()
-            
-            self.conn.ping(True)
-            
-            self.connected=True
-            
-        except:
-            e = sys.exc_info()[0]
-            v = sys.exc_info()[1]
-            
-            self.error_connection="Error in connection: %s %s" % (e, v)
-            
-            #return False
-            raise NameError(self.error_connection)
+    def connect(self):
+      
+        if self.conn==None:
+            try:
+                def getconn():
+                    return pymysql.connect(self.connection['host'],
+                        user=self.connection['user'],
+                        passwd=self.connection['password'],
+                        db=self.connection['db'],
+                        charset='utf8mb4',
+                        cursorclass=pymysql.cursors.DictCursor)
+				
+                if SqlClass.mypool==None:
+                    SqlClass.mypool=pool.QueuePool(getconn, max_overflow=self.max_overflow, pool_size=self.pool_size)
+
+                self.conn=SqlClass.mypool.connect()
+
+                self.conn.ping(True)
+	
+                self.connected=True
+
+            except:
+                e = sys.exc_info()[0]
+                v = sys.exc_info()[1]
+
+                self.error_connection="Error in connection: %s %s" % (e, v)
+
+                raise NameError(self.error_connection)
+  
     
     #Make def query more simple if not debugging.
     
     def query(self, sql_query, arguments=[], name_connection="default"):
+        
+        self.connect()
         
         #if fetch_type=="ASSOC":
             #fetch_type=pymysql.cursors.DictCursor

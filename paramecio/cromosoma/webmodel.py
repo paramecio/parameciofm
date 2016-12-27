@@ -5,7 +5,7 @@ import re
 import uuid
 from importlib import import_module, reload
 from collections import OrderedDict
-from paramecio.cromosoma.databases.pymysql import SqlClass
+from paramecio.cromosoma.databases.mysqldb import SqlClass
 from paramecio.cromosoma.coreforms import BaseForm, HiddenForm
 import copy
 import traceback
@@ -141,9 +141,11 @@ class PhangoField:
     def create_form(self):
         #self.name, self.default_value, 
         
-        self.extra_parameters.insert(0, self.name)
-        self.extra_parameters.insert(1, self.default_value)
-        form=self.name_form(*self.extra_parameters)
+        final_parameters=copy.copy(self.extra_parameters)
+        
+        final_parameters.insert(0, self.name)
+        final_parameters.insert(1, self.default_value)
+        form=self.name_form(*final_parameters)
         form.default_value=self.default_value
         form.required=self.required
         form.label=self.label
@@ -240,9 +242,11 @@ class WebModel:
     
     def __init__(self, sqlclass, name_field_id="id"):
         
-        cached=self.global_cached
+        self.cached=self.global_cached
         
-        cached_runquery=self.global_cached
+        self.cached_runquery=self.global_cached
+        
+        self.type_cache='file'
         
         #The name of the table
         
@@ -347,7 +351,7 @@ class WebModel:
         
         self.fields[field_model.name].model=self
         
-        self.fields[field_model.name].required=required
+        #self.fields[field_model.name].required=required
         
         self.fields[field_model.name].post_register()
         
@@ -1070,6 +1074,8 @@ class WebModel:
     #Create a form based in table.
     
     def create_forms(self, arr_fields=[]):
+        
+        self.forms={}
         
         if len(arr_fields)==0:
             arr_fields=list(self.fields.keys())
