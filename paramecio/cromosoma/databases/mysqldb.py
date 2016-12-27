@@ -68,6 +68,7 @@ class SqlClass:
             self.conn.commit()
             
             return cursor
+            
         
         except:
             e = sys.exc_info()[0]

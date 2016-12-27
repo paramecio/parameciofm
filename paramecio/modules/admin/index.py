@@ -140,21 +140,27 @@ def home(module='', submodule=''):
                         if type(content_index).__name__=='list':
                             title_module=content_index[0]
                             content_index=content_index[1]
-                    
+                        connection.close()
                         return t.render_template('admin/content.html', title=title_module, content_index=content_index, menu=menu, lang_selected=lang_selected, arr_i18n=I18n.dict_i18n)
                     else:
+                        
+                        connection.close()
                         
                         return content_index
                         
                 else:
+                    connection.close()
+                    
                     return t.render_template('admin/index.html', title=I18n.lang('admin', 'welcome_to_paramecio', 'Welcome to Paramecio Admin!!!'), menu=menu, lang_selected=lang_selected, arr_i18n=I18n.dict_i18n)
                     
-                
+            connection.close()    
             return ""
                 
         else:
             
             logout()
+        
+        connection.close()
         
         return ""
             
@@ -178,6 +184,7 @@ def home(module='', submodule=''):
                  
                  if arr_user==False:
                      # delete cookioe
+                     connection.close()
                      response.delete_cookie("remember_login")
                  else:
                      s=get_session()
@@ -187,6 +194,8 @@ def home(module='', submodule=''):
                      s['privileges']=arr_user['privileges']
                      
                      s.save()
+                     
+                     connection.close()
                      
                      redirect(make_url(config.admin_folder))
             
@@ -202,7 +211,7 @@ def home(module='', submodule=''):
                 
                 forms=show_form(post, user_admin.forms, t, yes_error=False)
                 
-                #connection.close()
+                connection.close()
                 
                 return t.render_template('admin/login.phtml', forms=forms, yes_recovery_login=yes_recovery_login)
                 
@@ -213,6 +222,8 @@ def home(module='', submodule=''):
             set_extra_forms_user(user_admin)
             
             forms=show_form(post, user_admin.forms, t, yes_error=False)
+            
+            connection.close()
 
             return t.render_template('admin/register.phtml', forms=forms)
     
@@ -295,7 +306,9 @@ def login():
                     #else:
                         #print(user_admin.query_error)
                 s.save()
+                
                 connection.close()
+                
                 return {'error': 0}
             else:
                 
@@ -314,7 +327,9 @@ def login():
                 s['csrf_token']=create_key_encrypt()
                 
                 s.save()
+                
                 connection.close()
+                
                 return {'error': 1, 'csrf_token': s['csrf_token']}
         else:
             s=get_session()
@@ -322,7 +337,9 @@ def login():
             s['csrf_token']=create_key_encrypt()
             
             s.save()
+            
             connection.close()
+            
             return {'error': 1, 'csrf_token': s['csrf_token']}
 
 
@@ -376,11 +393,15 @@ def register():
             #error['password_repeat']=I18n.lang('common', 'password_no_match', 'Passwords doesn\'t match')
             
             s.save()
+            
             connection.close()
+            
             return error
         
     else:
+        
         connection.close()
+        
         return {'error': 1}
         
 @get('/'+config.admin_folder+'/logout')

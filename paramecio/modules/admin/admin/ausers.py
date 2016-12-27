@@ -37,4 +37,6 @@ def admin(**args):
     
     form_admin=admin.show()
     
+    connection.close()
+    
     return form_admin
