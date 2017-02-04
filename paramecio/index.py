@@ -177,10 +177,12 @@ if config.debug==False:
     @app.error(404)
     def error404(error):
         return 'Error: page not found'
+"""
 else:
     @app.error(500)
     def error500(error):
         return error
+"""
 
 set_timezone()
 
