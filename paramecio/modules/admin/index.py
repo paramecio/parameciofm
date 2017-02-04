@@ -20,6 +20,7 @@ from time import time
 from paramecio.citoplasma.keyutils import create_key_encrypt, create_key_encrypt_256, create_key
 from paramecio.citoplasma.sendmail import SendMail
 from os import path
+from paramecio.wsgiapp import app
 import copy
 
 #from citoplasma.login import LoginClass
@@ -57,11 +58,11 @@ for k, v in menu.items():
 
 #print(d)
 
-@get('/'+config.admin_folder)
-@get('/'+config.admin_folder+'/<module>')
-@post('/'+config.admin_folder+'/<module>')
-@get('/'+config.admin_folder+'/<module>/<submodule>')
-@post('/'+config.admin_folder+'/<module>/<submodule>')
+@app.get('/'+config.admin_folder)
+@app.get('/'+config.admin_folder+'/<module>')
+@app.post('/'+config.admin_folder+'/<module>')
+@app.get('/'+config.admin_folder+'/<module>/<submodule>')
+@app.post('/'+config.admin_folder+'/<module>/<submodule>')
 def home(module='', submodule=''):
     
     # A simple boolean used for show or not the code of admin module in standard template
@@ -231,7 +232,7 @@ def home(module='', submodule=''):
     
     return ""
     
-@post('/'+config.admin_folder+'/login')
+@app.post('/'+config.admin_folder+'/login')
 def login():
     
     connection=WebModel.connection()
@@ -343,7 +344,7 @@ def login():
             return {'error': 1, 'csrf_token': s['csrf_token']}
 
 
-@post('/'+config.admin_folder+'/register')
+@app.post('/'+config.admin_folder+'/register')
 def register():
     
     getpostfiles=GetPostFiles()
@@ -404,7 +405,7 @@ def register():
         
         return {'error': 1}
         
-@get('/'+config.admin_folder+'/logout')
+@app.get('/'+config.admin_folder+'/logout')
 def logout():
     
     s=get_session()
@@ -427,7 +428,7 @@ def logout():
     
     redirect(make_url(config.admin_folder))
 
-@get('/'+config.admin_folder+'/recovery_password')
+@app.get('/'+config.admin_folder+'/recovery_password')
 def recovery_password():
     
     t=PTemplate(env)
@@ -446,7 +447,7 @@ def recovery_password():
     connection.close()
     return t.render_template('admin/recovery.phtml', forms=forms)
 
-@post('/'+config.admin_folder+'/recovery_password')
+@app.post('/'+config.admin_folder+'/recovery_password')
 def send_password():
     
     connection=WebModel.connection()
@@ -503,13 +504,13 @@ def send_password():
         return {'email': '', 'error': 0}
         
         
-@get('/'+config.admin_folder+'/check_token')
+@app.get('/'+config.admin_folder+'/check_token')
 def check_token():
     t=PTemplate(env)
     
     return t.render_template('admin/check_token.phtml')
     
-@post('/'+config.admin_folder+'/check_token')
+@app.post('/'+config.admin_folder+'/check_token')
 def check_code_token():
     
     t=PTemplate(env)

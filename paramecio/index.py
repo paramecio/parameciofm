@@ -8,6 +8,7 @@ from paramecio.cromosoma.webmodel import WebModel
 from paramecio.citoplasma.datetime import set_timezone
 from itsdangerous import JSONWebSignatureSerializer
 from paramecio.citoplasma.keyutils import create_key_encrypt, create_key_encrypt_256, create_key
+from paramecio.wsgiapp import app
 #from paramecio.citoplasma.sessions import generate_session
 
 #Prepare links for static.
@@ -18,7 +19,7 @@ workdir=os.getcwd()
 arr_module_path={}
 if config.yes_static==True:
     
-    @route('/media/<filename:path>')
+    @app.route('/media/<filename:path>')
     def send_static(filename):
         mimetype=guess_type(workdir+'/themes/'+config.theme+'/media/'+filename)
         
@@ -26,7 +27,7 @@ if config.yes_static==True:
     
     #def add_func_static_module(module):
         
-    @route('/mediafrom/<module>/<filename:path>')
+    @app.route('/mediafrom/<module>/<filename:path>')
     def send_static_module(module, filename):
         
         path_module=arr_module_path[module]+'/media/'
@@ -84,7 +85,7 @@ if config.ssl==True:
 
 #Prepare app
 
-app = application  = default_app()
+application=app
 
 #app.add_hook('before_request', print_memory)
 
@@ -166,16 +167,20 @@ if config.session_enabled==True:
 
 # Clean last slash
 
-@hook('before_request')
+@app.hook('before_request')
 def strip_path():
     request.environ['PATH_INFO'] = request.environ['PATH_INFO'].rstrip('/')
     
 # Set error screen if not debug setted
 
 if config.debug==False:
-    @error(404)
+    @app.error(404)
     def error404(error):
         return 'Error: page not found'
+else:
+    @app.error(500)
+    def error500(error):
+        return error
 
 set_timezone()
 
