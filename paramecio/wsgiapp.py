@@ -1,5 +1,5 @@
-from bottle import Bottle
+import bottle
 
-app=Bottle()
+app=bottle.app()
 
 
