@@ -15,6 +15,7 @@ except:
     class config:
         cookie_name='paramecio.session'
         key_encrypt=create_key_encrypt_256(30)
+        session_opts={'session.data_dir': 'sessions', 'session.type': 'file'}
 
 # Cookie session
 # This save the session in a cookie for maximum performance. In next version i can use memcached or something for session
@@ -69,11 +70,15 @@ class ParamecioSession:
         
     def save(self):
         
+        # Here get the function for load session
+        """
         path_cookie=config.session_opts['session.data_dir']+'/session_'+self.session['token']
         
         with open(path_cookie, 'w') as f:
             f.write(json.dumps(self.session))
+        """
         
+        save_session(self.session['token'], self.session)
 
 def generate_session(session={}):
     
@@ -109,7 +114,10 @@ def get_session():
                 s=generate_session()
                 
             else:
-                    
+                
+                # Here get the function for load session
+                
+                """
                 path_cookie=config.session_opts['session.data_dir']+'/session_'+cookie
                 
                 if os.path.isfile(path_cookie):
@@ -124,7 +132,10 @@ def get_session():
                             s={'token': cookie}
                 else:
                     s={'token': cookie}
-                    
+                """
+                
+                s=load_session(cookie)
+                
                 request.environ['session']=s
 
                     
@@ -133,8 +144,63 @@ def get_session():
             s=request.environ['session']
     
     return ParamecioSession(s)
+
+if config.session_opts['session.type']=='redis':
     
-    
+    import redis
+
+    def load_session(token):
+        
+        s={}
+        
+        r=redis.StrictRedis(host=config.session_opts['session.host'], port=config.session_opts['session.port'], db=config.session_opts['session.db'])
+        
+        value=r.get(token)
+        
+        if not value:
+            s={'token': token}
+        else:
+            try:
+                s=json.loads(value.decode('utf-8'))
+            except:
+                s={'token': token}
+        return s
+
+    def save_session(token, session):
+
+        r=redis.StrictRedis(host=config.session_opts['session.host'], port=config.session_opts['session.port'], db=config.session_opts['session.db'])
+        
+        r.set(token, json.dumps(session))
+
+else:
+
+    def load_session(token):
+        
+        # Here get the function for load session
+        
+        path_cookie=config.session_opts['session.data_dir']+'/session_'+token
+        
+        if os.path.isfile(path_cookie):
+            
+            with open(path_cookie) as f:
+                
+                json_txt=f.read()
+                
+                if(json_txt).strip()!='':
+                    s=json.loads(json_txt)
+                else:
+                    s={'token': token}
+        else:
+            s={'token': token}
+        
+        return s
+
+    def save_session(token, session):
+
+        path_cookie=config.session_opts['session.data_dir']+'/session_'+token
+            
+        with open(path_cookie, 'w') as f:
+            f.write(json.dumps(session))
 
 """
 def generate_session():
