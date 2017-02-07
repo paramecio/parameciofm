@@ -71,17 +71,21 @@ domain_url='http://localhost:8080'
 
 key_encrypt="im smoking fool"
 
+# Options for use redis for sessions, more scalable.
+
 """
 session_opts = {
-    #'session.domain': 'domain.com',
-    'session.cookie_expires': True,
-    'session.type': 'cookie',
-    'session.path': '/',
-    'session.auto': True,
+
+    'session.path': base_url,
     'session.key': cookie_name,
-    'session.validate_key': key_encrypt    
+    'session.type': 'redis',
+    'session.host': 'localhost',
+    'session.port': 6379,
+    'session.db': 0
 }
 """
+
+# Options for use files for sessions
 
 session_opts = {
 
