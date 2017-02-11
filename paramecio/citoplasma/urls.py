@@ -23,11 +23,8 @@ def make_url(path, query_args={}):
     """
         This is a method for create urls for the system
         
-       
         Keyword arguments:
-        module -- The module where search code to execute
-        controller -- The controller where search code to execute
-        method -- The method to execute
+        path -- The path to the module
         query_args -- a ser of get variables for add to url
         
     """
