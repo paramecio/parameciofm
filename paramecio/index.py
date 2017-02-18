@@ -135,6 +135,9 @@ except:
 
         
 def run_app(app):
-
-    run(app=app, host=config.host, server=config.server_used, port=config.port, debug=config.debug, reloader=config.reloader)
+    if config.server_used!='cherrypy':
+        run(app=app, host=config.host, server=config.server_used, port=config.port, debug=config.debug, reloader=config.reloader)
+    else:
+        from paramecio.cherry import run_cherrypy_server
+        run_cherrypy_server()
 
