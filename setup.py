@@ -15,7 +15,7 @@ if sys.version_info < (3, 3):
 setup(name='paramecio',
       version='0.1.2',
       description='Fast and simple Framework based in bottle and Mako.',
-      long_description='This framework is simple framework used for create web apps. Paramecio is modular and fast. By default have a module called admin that can be used for create ',
+      long_description='This framework is simple framework used for create web apps. Paramecio is modular and fast. By default have a module called admin that can be used for create admin sites',
       author='Antonio de la Rosa Caballero',
       author_email='webmaster@web-t-sys.com',
       url='http://paramecioproject.com/',

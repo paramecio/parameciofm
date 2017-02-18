@@ -39,15 +39,15 @@ In Fedora and other Red Hat derived distros you can use `yum install python3-pip
 
 ### Git
 
-[Git](https://git-scm.com/) is a tool used for manage source code repositories. Also is a tool that can be used for distribute software. For install the next tools you need git install in your server.
+[Git](https://git-scm.com/) is a tool used for manage source code repositories. Also is a tool that can be used for distribute software. For install the next tools you need git installed in your server.
 
 In Debian and Ubuntu you can install git using the next command: `apt-get install git`.
 
-In Fedora and other Red Hat derived distros you can use `yum install git`.
+In Fedora and other Red Hat derived distros you can use `yum install git` or `dnf install git` in last fedora versions.
 
 ## Install Paramecio Framework
 
-Pastafari need a web framework called Paramecio. You can install this framework using the next command in your server:
+You can install the framework using the next command in your server:
 
 `pip3 install git+https://github.com/paramecio/parameciofm`
 
