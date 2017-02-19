@@ -30,6 +30,8 @@ def start():
     
     parser.add_argument('--folder', help='If you deploy in a subdirectory, set it, without beggining and ending slashes', required=False)
     
+    parser.add_argument('--host', help='The host ip or domain where the app is binded', required=False)
+    
     parser.add_argument('--port', help='If you deploy for production, set it to 80 value', required=False)
     
     parser.add_argument('--ssl', help='If the site use ssl, set it', action='store_true')
@@ -146,6 +148,9 @@ def start():
     #domain='localhost'
     
     conf=conf.replace("domain='localhost'", "domain='"+args.domain+"'")
+
+    if args.host==None:
+        args.host='localhost'
 
     if args.port==None:
         args.port=':8080'

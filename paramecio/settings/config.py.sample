@@ -61,11 +61,9 @@ session_enabled=True
 
 cookie_name = 'paramecio.session'
 
-domain='0.0.0.0'
+domain='localhost'
 
 domain_url='http://localhost:8080'
-
-#Go back to beaker sessions
 
 #Keep this variable and don't show to anybody
 
