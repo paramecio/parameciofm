@@ -163,7 +163,7 @@ def start():
     else:
         port_deploy=':'+args.port
         
-    conf=conf.replace("port=8080", "base_url="+args.port)
+    conf=conf.replace("port=8080", "port="+args.port)
     
     base_url='/'
     
