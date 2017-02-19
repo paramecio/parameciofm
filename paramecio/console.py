@@ -152,19 +152,28 @@ def start():
     if args.host==None:
         args.host='localhost'
 
+
     if args.port==None:
-        args.port=':8080'
+        args.port='8080'
+        port_deploy=':8080'
         
     elif args.port=='80':
-        args.port=''
+        port_deploy=''
         
     else:
-        args.port=':'+args.port
+        port_deploy=':'+args.port
         
+    conf=conf.replace("port=8080", "base_url="+args.port)
+    
+    base_url='/'
+    
     if args.folder==None:
         args.folder=''
     else:
         args.folder='/'+args.folder
+        base_url='/'+args.folder+'/'
+    
+    conf=conf.replace("base_url='/'", "base_url='"+base_url+"'")
         
     arg_ssl='http'
     
@@ -172,7 +181,7 @@ def start():
         arg_ssl='https'
         
     
-    domain_url=arg_ssl+'://'+args.domain+args.port+args.folder
+    domain_url=arg_ssl+'://'+args.domain+port_deploy+args.folder
     
     conf=conf.replace("domain_url='http://localhost:8080'", "domain_url='"+domain_url+"'")
 
