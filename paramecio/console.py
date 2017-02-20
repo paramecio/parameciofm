@@ -32,7 +32,7 @@ def start():
     
     parser.add_argument('--host', help='The host ip or domain where the app is binded', required=False)
     
-    parser.add_argument('--port', help='If you deploy for production, set it to 80 value', required=False)
+    parser.add_argument('--port', help='Change the default port 8080 to other number. Use 80 is not recommended, use 80 for the principal server how nginx or apache', required=False)
     
     parser.add_argument('--ssl', help='If the site use ssl, set it', action='store_true')
 
