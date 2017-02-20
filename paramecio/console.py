@@ -151,7 +151,8 @@ def start():
 
     if args.host==None:
         args.host='localhost'
-
+    
+    conf=conf.replace("host='localhost'", "host='"+args.host+"'")
 
     if args.port==None:
         args.port='8080'
