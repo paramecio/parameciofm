@@ -101,11 +101,11 @@ if config.yes_static==True:
         
         if os.path.isfile(file_path):
             mimetype=guess_type(path+'/'+filename)
-            return static_file(filename, root=path)
+            return static_file(filename, root=path, mimetype=mimetype[0])
             
         else:
             mimetype=guess_type(path_module+'/'+filename)
-            return static_file(filename, root=path_module)
+            return static_file(filename, root=path_module, mimetype=mimetype[0])
 
 # Load modules
 
