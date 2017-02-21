@@ -99,6 +99,8 @@ class GetPostFiles:
                     
                     del s['csrf_token']
                     
+                    s.save()
+                    
 
             else:
                 raise NameError('Error: you don\'t send any valid csrf_token')

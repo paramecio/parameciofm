@@ -351,7 +351,7 @@ class WebModel:
         
         self.fields[field_model.name].model=self
         
-        #self.fields[field_model.name].required=required
+        self.fields[field_model.name].required=required
         
         self.fields[field_model.name].post_register()
         
@@ -1120,6 +1120,23 @@ class WebModel:
         error_txt="\n".join(arr_error)
 
         return error_txt
+        
+    def collect_errors(self):
+        
+        arr_error= {}
+        error_txt=''
+        
+        for field_error, k_error in self.fields_errors.items():
+            
+            for error in k_error:
+                arr_error[field_error]=error
+        """
+        for type_error in self.errors.values():
+            for error in type_error:
+                arr_error[field_error]=error
+        """
+        
+        return arr_error
     
     def close(self):
         

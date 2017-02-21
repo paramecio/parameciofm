@@ -61,16 +61,16 @@ class CheckForm():
 
 def show_form(post, arr_form, t, yes_error=True, pass_values=True, modelform_tpl='forms/modelform.phtml'):
         
-        # Create csrf_token in session
-        
-        s=get_session()
-        
-        s['csrf_token']=create_key_encrypt()
-        
-        if pass_values==True:
-            pass_values_to_form(post, arr_form, yes_error)
-        
-        return t.render_template(modelform_tpl, forms=arr_form)
+    # Create csrf_token in session
+    
+    s=get_session()
+    
+    s['csrf_token']=create_key_encrypt()
+    
+    if pass_values==True:
+        pass_values_to_form(post, arr_form, yes_error)
+    
+    return t.load_template(modelform_tpl, forms=arr_form)
 
 #Simple Function for add repeat_password form to user model
 
@@ -92,13 +92,23 @@ def set_extra_forms_user(user_admin):
 def ini_fields(fields):
     pass
 
-def csrf_token():
+def csrf_token(token_id='csrf_token'):
+    
+    s=get_session()
+    
+    if not 'csrf_token' in s:    
+        s['csrf_token']=create_key_encrypt()
+        s.save()
+    
+    return '<input type="hidden" name="csrf_token" class="csrf_token" id="'+token_id+'" value="'+s['csrf_token']+'" />'
+    
+def generate_csrf():
     
     s=get_session()
     s['csrf_token']=create_key_encrypt()
     s.save()
-    
-    return '<input type="hidden" name="csrf_token" id="csrf_token" value="'+s['csrf_token']+'" />'
+
+    return s['csrf_token']
 
 def request_type():
     
