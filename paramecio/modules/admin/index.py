@@ -142,7 +142,7 @@ def home(module='', submodule=''):
                             title_module=content_index[0]
                             content_index=content_index[1]
                         connection.close()
-                        return t.render_template('admin/content.html', title=title_module, content_index=content_index, menu=menu, lang_selected=lang_selected, arr_i18n=I18n.dict_i18n)
+                        return t.load_template('admin/content.html', title=title_module, content_index=content_index, menu=menu, lang_selected=lang_selected, arr_i18n=I18n.dict_i18n)
                     else:
                         
                         connection.close()
@@ -152,7 +152,7 @@ def home(module='', submodule=''):
                 else:
                     connection.close()
                     
-                    return t.render_template('admin/index.html', title=I18n.lang('admin', 'welcome_to_paramecio', 'Welcome to Paramecio Admin!!!'), menu=menu, lang_selected=lang_selected, arr_i18n=I18n.dict_i18n)
+                    return t.load_template('admin/index.html', title=I18n.lang('admin', 'welcome_to_paramecio', 'Welcome to Paramecio Admin!!!'), menu=menu, lang_selected=lang_selected, arr_i18n=I18n.dict_i18n)
                     
             connection.close()    
             return ""
@@ -214,7 +214,7 @@ def home(module='', submodule=''):
                 
                 connection.close()
                 
-                return t.render_template('admin/login.phtml', forms=forms, yes_recovery_login=yes_recovery_login)
+                return t.load_template('admin/login.phtml', forms=forms, yes_recovery_login=yes_recovery_login)
                 
         else:
         
@@ -226,7 +226,7 @@ def home(module='', submodule=''):
             
             connection.close()
 
-            return t.render_template('admin/register.phtml', forms=forms)
+            return t.load_template('admin/register.phtml', forms=forms)
     
     connection.close()
     
@@ -445,7 +445,7 @@ def recovery_password():
     
     #connection.close()
     connection.close()
-    return t.render_template('admin/recovery.phtml', forms=forms)
+    return t.load_template('admin/recovery.phtml', forms=forms)
 
 @app.post('/'+config.admin_folder+'/recovery_password')
 def send_password():
@@ -494,7 +494,7 @@ def send_password():
                 
                 send_mail=SendMail()
                 
-                content_mail=t.render_template('admin/recovery_mail.phtml', token=token)
+                content_mail=t.load_template('admin/recovery_mail.phtml', token=token)
                 
                 if not send_mail.send(email_address, [email], I18n.lang('admin', 'send_email', 'Email for recovery your password'), content_mail):
                     return {'email': 'Error: i cannot send mail', 'error': 1}
@@ -508,7 +508,7 @@ def send_password():
 def check_token():
     t=PTemplate(env)
     
-    return t.render_template('admin/check_token.phtml')
+    return t.load_template('admin/check_token.phtml')
     
 @app.post('/'+config.admin_folder+'/check_token')
 def check_code_token():
@@ -551,7 +551,7 @@ def check_code_token():
                     
                     send_mail=SendMail()
                     
-                    content_mail=t.render_template('admin/recovery_password.phtml', password=new_password)
+                    content_mail=t.load_template('admin/recovery_password.phtml', password=new_password)
                     
                     if not send_mail.send(email_address, [arr_user['email']], I18n.lang('admin', 'send_password_email', 'Your new password'), content_mail):
                         return {'token': 'Error: i cannot send mail', 'error': 1}

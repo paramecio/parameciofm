@@ -63,9 +63,7 @@ def show_form(post, arr_form, t, yes_error=True, pass_values=True, modelform_tpl
         
     # Create csrf_token in session
     
-    s=get_session()
-    
-    s['csrf_token']=create_key_encrypt()
+    generate_csrf()
     
     if pass_values==True:
         pass_values_to_form(post, arr_form, yes_error)

@@ -17,9 +17,7 @@
             
                 $('#loading').show();
                 
-                //alert($("input[id=csrf_token]").val());
-                
-                data_form={'username': $('#username_form').val(), 'password': $('#password_form').val(), 'csrf_token': $("input[id=csrf_token]").val()};
+                data_form={'username': $('#username_form').val(), 'password': $('#password_form').val(), 'csrf_token': $("#csrf_token").val()};
             
                 if($('#remember_login:checked').val())
                 {
