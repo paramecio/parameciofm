@@ -415,7 +415,7 @@ def logout():
         del s['login']
         del s['privileges']
         
-        #s.save()
+        s.save()
     
     s.delete()
     
