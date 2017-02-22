@@ -16,4 +16,4 @@ def create_key(n=10):
     
     rand_bytes=urandom(n)
     
-    return b64encode(rand_bytes).decode('utf-8')
+    return b64encode(rand_bytes).decode('utf-8')[0:-2]

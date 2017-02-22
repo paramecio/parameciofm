@@ -9,6 +9,8 @@ from email.mime.base import MIMEBase
 from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+import ssl as ssl_module
+import sys
 
 class SendMail:
     
@@ -21,6 +23,12 @@ class SendMail:
     password=''
 
     ssl=True
+    
+    if sys.version_info < (3, 6):
+    
+        context = ssl_module.SSLContext(ssl_module.PROTOCOL_TLSv1_2)
+    else:
+        context = ssl_module.SSLContext(ssl_module.PROTOCOL_TLS)
 
     def __init__(self):
 
@@ -32,8 +40,8 @@ class SendMail:
         if self.ssl==True:
             
             try:
-            
-                self.smtp.starttls()
+                
+                self.smtp.starttls(context=self.context)
                 
             except smtplib.SMTPHeloError:
                 
@@ -79,9 +87,9 @@ class SendMail:
                 
                 return False
             
-            except smtplib.SMTPException:
-                
-                self.txt_error='Error: any method for login is avaliable'
+            except smtplib.SMTPException as e:
+                #                self.txt_error=e.__str__()
+                self.txt_error='Error: any method for login is avaliable - '+e.__str__()
                 
                 return False
             

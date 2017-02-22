@@ -44,7 +44,8 @@ try:
                 
                 #if crypt.METHOD_SHA512 in crypt.methods:
                 
-                value = bcrypt_sha256.encrypt(value)
+                #value = bcrypt_sha256.encrypt(value)
+                value = bcrypt_sha256.hash(value)
 
                 """
                 else:
