@@ -1075,7 +1075,7 @@ class WebModel:
     
     def create_forms(self, arr_fields=[]):
         
-        self.forms={}
+        self.forms=OrderedDict()
         
         if len(arr_fields)==0:
             arr_fields=list(self.fields.keys())
