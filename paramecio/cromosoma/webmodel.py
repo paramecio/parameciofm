@@ -800,6 +800,8 @@ class WebModel:
             order.append('order by '+order[o]+' '+position[o])
     
         self.order=", ".join(order)
+        
+        return self
     
     def set_limit(self, limit: tuple) -> None:
         
@@ -1154,7 +1156,7 @@ class WebModel:
             
         #for key in connection_to_delete:
             #del sqlclass.connection[key]
-    
+    @staticmethod
     def escape_sql(value):
         
         value=str(value)
@@ -1166,3 +1168,13 @@ class WebModel:
         self.close()
     """
     
+    # Set post values from a post array
+    
+    def set_post_values(self, post):
+        
+        for k in self.fields.keys():
+            
+            post[k]=post.get(k, '')
+        
+        return post
+
