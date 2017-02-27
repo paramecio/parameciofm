@@ -785,25 +785,33 @@ class WebModel:
             result.close()
             return False
     
-    def set_conditions(self, sql_text, values:list) -> None:
+    def set_conditions(self, sql_text, values:list) -> object:
         
         self.conditions=[sql_text, values]
         
         return self
     
-    def set_order(self, order:list, position:list) -> None:
+    def set_order(self, order:dict) -> object:
         
-        order=[]
+        arr_order=[]
+        arr_order.append('ASC')
+        arr_order.append('DESC')
         
-        for o in enumerate(order):
-        
-            order.append('order by '+order[o]+' '+position[o])
+        final_order=[]
+
+        for o,v in order.items():
+
+            if o in self.fields:
+                
+                final_order.append('order by '+o+' '+arr_order[v])
     
-        self.order=", ".join(order)
+        self.order_by=", ".join(final_order)
         
         return self
     
     def set_limit(self, limit: tuple) -> None:
+        
+        limit[0]=int(limit[0])
         
         sql_limit=str(limit[0])
         
