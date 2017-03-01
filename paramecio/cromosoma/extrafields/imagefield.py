@@ -18,7 +18,7 @@ from uuid import uuid4
 
 class ImageField(CharField):
     
-    def __init__(self, name, save_folder='media/upload/images', module=None, size=255, required=False):
+    def __init__(self, name, save_folder='media/upload/images', maximum_size=None, module=None, size=255, required=False):
         
         super().__init__(name, size, required)
         
@@ -76,6 +76,8 @@ class ImageField(CharField):
                 return ''
 
             else:
+
+                value=os.path.basename(value)
             
                 return self.save_folder+'/'+value
             
