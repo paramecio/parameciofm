@@ -2,7 +2,10 @@ import os
 import sys
 from pathlib import Path
 from paramecio.cromosoma.corefields import CharField
-from paramecio.citoplasma.httputils import GetPostFiles
+from paramecio.citoplasma import httputils
+import traceback
+
+from bottle import request
 try:
     from PIL import Image
 except:
@@ -42,21 +45,46 @@ class ImageField(CharField):
         pass
         
     def check(self, value):
-        
-        #GetPostFiles.obtain_files()
+
+        files_uploaded=request.files
         
         field_file=self.name+'_file'
         
-        if not field_file in GetPostFiles.files:
+        #if not change
+
+        if not field_file in files_uploaded:
+
+            if value=='':
+                
+                old_reset=self.model.yes_reset_conditions
+                
+                self.model.yes_reset_conditions=False
+                
+                with self.model.select([self.name]) as cur:
+                
+                    for arr_image in cur:
+                        
+                        if arr_image[self.name]!='':
+                            os.remove(arr_image[self.name])
+                        
+                        #if arr_image[self.name]!=save_file and arr_image[self.name]!='':
+                        
+                        #value=arr_image[self.name]
+                
+                self.model.yes_reset_conditions=old_reset
+
+                return ''
+
+            else:
             
-            self.error=True
-            self.txt_error='Error, no exists image file'
-            return ""
+                return self.save_folder+'/'+value
+            
+        
         # Load image file
         
-        file_bytecode=GetPostFiles.files[field_file].file
+        file_bytecode=files_uploaded[field_file].file
         
-        filename=GetPostFiles.files[field_file].filename
+        filename=files_uploaded[field_file].filename
         
         try:
             
@@ -75,6 +103,7 @@ class ImageField(CharField):
             
             self.error=True
             self.txt_error='Format is wrong. Requires JPEG, GIF or PNG formats'
+            im.close()
             return ""
         
         # Create thumbnails and move file 
@@ -128,12 +157,13 @@ class ImageField(CharField):
                     p.mkdir(mode=0o755, parents=True)
                 
                 except:
-                    
+                    im.close()
                     self.error=True
+                    
                     self.txt_error='Error: cannot create the directory where save the image.Check permissions,'
                     return ""
             
-            #GetPostFiles.files[field_file].save(self.save_folder, overwrite=True)
+            #files_uploaded[field_file].save(self.save_folder, overwrite=True)
             
             if os.path.isfile(save_file):
                 
@@ -145,26 +175,34 @@ class ImageField(CharField):
             
             if self.model!=None:
                 
+                #old_conditions=self.model.conditions
+                
                 old_reset=self.model.yes_reset_conditions
                 
                 self.model.yes_reset_conditions=False
                 
-                cur=self.model.select([self.name])
-                
-                for arr_image in cur:
+                with self.model.select([self.name]) as cur:
                     
-                    if arr_image[self.name]!=save_file:
-                    
-                        os.remove(arr_image[self.name])
+                    for arr_image in cur:
+                        
+                        if arr_image[self.name]!=save_file and arr_image[self.name]!='':
+                        
+                            os.remove(arr_image[self.name])
                 
                 self.model.yes_reset_conditions=old_reset
+                
+                #self.model.conditions=old_conditions
+
+            im.close()
             
             return save_file
 
         except:
             
+            im.close()
             self.error=True
-            self.txt_error='Error: cannot save the image file, Exists directory for save the file?'
+            self.txt_error='Error: cannot save the image file, Exists directory for save the file? '+traceback.format_exc()
+            print(traceback.format_exc())
             return ""
 
     def show_formatted(value):

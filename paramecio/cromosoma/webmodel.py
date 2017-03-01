@@ -470,8 +470,8 @@ class WebModel:
             
         except: 
             
-            #self.query_error+="\n"+traceback.format_exc()
-            
+            self.query_error+="\n"+traceback.format_exc()
+            #print(traceback.format_exc())
             return False
         
         sql="update `"+self.name+"` SET "+", ".join(update_values)+" "+self.conditions[0]
