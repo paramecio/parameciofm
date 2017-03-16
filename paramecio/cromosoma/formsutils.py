@@ -103,8 +103,10 @@ def csrf_token(token_id='csrf_token'):
 def generate_csrf():
     
     s=get_session()
-    s['csrf_token']=create_key_encrypt()
-    s.save()
+    
+    if not 'csrf_token' in s:    
+        s['csrf_token']=create_key_encrypt()
+        s.save()
 
     return s['csrf_token']
 

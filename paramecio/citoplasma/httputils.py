@@ -5,19 +5,24 @@ from bottle import request, response
 from paramecio.citoplasma.sessions import get_session
 from paramecio.citoplasma.keyutils import create_key_encrypt
 
+no_csrf=False
+change_csrf=False
+
 try:
 
     from settings import config
     
-    no_csrf=False
-    
     if hasattr(config, 'no_csrf'):
         no_csrf=config.no_csrf
+
+    if hasattr(config, 'change_csrf'):
+        change_csrf=config.change_csrf
 
 except:
 
     class config:
         no_csrf=False
+        change_csrf=True
 
 
 def filter_ajax(data, filter_tags=True):
@@ -90,16 +95,18 @@ class GetPostFiles:
             if 'csrf_token' in s:
                 
                 self.post['csrf_token']=self.post.get('csrf_token', '')
-                
-                if self.post['csrf_token']!=s['csrf_token'] and self.post['csrf_token'].strip()!="":
+
+                if self.post['csrf_token']!=s['csrf_token'] or self.post['csrf_token'].strip()=="":
                     
                     raise NameError('Error: you need a valid csrf_token')
                 else:
                     #Clean csrf_token
                     
-                    del s['csrf_token']
+                    if change_csrf:
                     
-                    s.save()
+                        del s['csrf_token']
+                        
+                        s.save()
                     
 
             else:
