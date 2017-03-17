@@ -126,7 +126,7 @@ class UserModel(WebModel):
                     self.conditions[0]='WHERE (email=%s)'
                     self.conditions[1]=[]
             
-                self.conditions[1].append([dict_values[self.email_field]])
+                self.conditions[1].append(dict_values[self.email_field])
             
             if get_id>0:
                 
