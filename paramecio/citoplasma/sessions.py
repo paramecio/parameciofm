@@ -191,7 +191,9 @@ else:
                 else:
                     s={'token': token}
         else:
-            s={'token': token}
+            # Need regenerate session
+            
+            s=generate_session()
         
         return s
 

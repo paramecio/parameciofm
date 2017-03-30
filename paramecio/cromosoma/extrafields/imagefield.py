@@ -18,7 +18,7 @@ from uuid import uuid4
 
 class ImageField(CharField):
     
-    def __init__(self, name, save_folder='media/upload/images', maximum_size=None, module=None, size=255, required=False):
+    def __init__(self, name, save_folder='media/upload/images', sizes=None, module=None, size=255, required=False):
         
         super().__init__(name, size, required)
         
@@ -40,6 +40,8 @@ class ImageField(CharField):
         
         self.file_related=True
         
+        self.sizes=sizes
+        
     def change_folder(self, folder):
         
         pass
@@ -56,23 +58,27 @@ class ImageField(CharField):
 
             if value=='':
                 
-                old_reset=self.model.yes_reset_conditions
-                
-                self.model.yes_reset_conditions=False
-                
-                with self.model.select([self.name]) as cur:
-                
-                    for arr_image in cur:
+                if self.model:
+                    
+                    if self.model.updated:
                         
-                        if arr_image[self.name]!='':
-                            os.remove(arr_image[self.name])
+                        old_reset=self.model.yes_reset_conditions
                         
-                        #if arr_image[self.name]!=save_file and arr_image[self.name]!='':
+                        self.model.yes_reset_conditions=False
                         
-                        #value=arr_image[self.name]
+                        with self.model.select([self.name]) as cur:
+                        
+                            for arr_image in cur:
+                                
+                                if arr_image[self.name]!='':
+                                    os.remove(arr_image[self.name])
+                                
+                                #if arr_image[self.name]!=save_file and arr_image[self.name]!='':
+                                
+                                #value=arr_image[self.name]
+                        
+                        self.model.yes_reset_conditions=old_reset
                 
-                self.model.yes_reset_conditions=old_reset
-
                 return ''
 
             else:
@@ -98,7 +104,26 @@ class ImageField(CharField):
             
             self.txt_error='Error, file not exists'
             return ""
+            
+        real_width=im.size[0]
+        real_height=im.size[1]
+
+        if self.sizes:
+            if 'maximum' in self.sizes:
+                if self.sizes.size['maximum'][0]<real_width or self.sizes.size['maximum'][1]<real_height:
+                    self.error=True
+                    self.txt_error='Size is wrong. Maximum size is '+str(self.sizes.size['maximum'][0])+'x'+str(self.sizes.size['maximum'][1])
+                    im.close()
+                    return ""
+                    
+            if 'minimum' in self.sizes:
+                if self.sizes.size['minimum'][0]<real_width or self.sizes.size['minimum'][1]<real_height:
+                    self.error=True
+                    self.txt_error='Size is wrong. Minimum size is '+str(real_width)+'x'+str(real_height)
+                    im.close()
+                    return ""
         
+
         format_image=im.format
         
         if format_image!='JPEG' and format_image!='GIF' and format_image!='PNG':
@@ -122,9 +147,6 @@ class ImageField(CharField):
         save_file=self.save_folder+'/'+filename
         
         if self.yes_thumbnail:
-        
-            real_width=im.size[0]
-            real_height=im.size[1]
             
             for name, width_t in self.thumbnail.items():
                 
@@ -176,22 +198,24 @@ class ImageField(CharField):
             # Delete old files
             
             if self.model!=None:
-                
-                #old_conditions=self.model.conditions
-                
-                old_reset=self.model.yes_reset_conditions
-                
-                self.model.yes_reset_conditions=False
-                
-                with self.model.select([self.name]) as cur:
                     
-                    for arr_image in cur:
-                        
-                        if arr_image[self.name]!=save_file and arr_image[self.name]!='':
-                        
-                            os.remove(arr_image[self.name])
+                if self.model.updated:
                 
-                self.model.yes_reset_conditions=old_reset
+                    #old_conditions=self.model.conditions
+                    
+                    old_reset=self.model.yes_reset_conditions
+                    
+                    self.model.yes_reset_conditions=False
+                    
+                    with self.model.select([self.name]) as cur:
+                        
+                        for arr_image in cur:
+                            
+                            if arr_image[self.name]!=save_file and arr_image[self.name]!='':
+                            
+                                os.remove(arr_image[self.name])
+                    
+                    self.model.yes_reset_conditions=old_reset
                 
                 #self.model.conditions=old_conditions
 

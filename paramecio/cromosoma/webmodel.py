@@ -790,6 +790,16 @@ class WebModel:
         self.conditions=[sql_text, values]
         
         return self
+        
+    @staticmethod
+    def check_in_list(in_list):
+        
+        for x in range(0, len(in_list)):
+            try:
+                in_list[x]=str(int(in_list[x]))
+            except:
+                in_list[x]=str(0)
+        return '('+', '.join(in_list)+')'
     
     def set_order(self, order:dict) -> object:
         
