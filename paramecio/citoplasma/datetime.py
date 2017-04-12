@@ -7,48 +7,6 @@ from bottle import hook
 from paramecio.citoplasma.sessions import get_session
 from os import environ
 
-#t=datetime.utcnow()
-
-#format_date(t, locale='es_ES')
-
-#format_time(t, locale='es_ES')
-
-#  eastern = get_timezone('Europe/Madrid')
-
-# format_time(t, locale='es_ES', tzdata=eastern)
-# 20141112030455
-
-# format_datetime(t, "yyyyLLddhhmmss")
-
-# format_datetime(t, "yyyyLLddhhmmss", tzinfo=eastern
-
-#  class datetime(year, month, day, hour=0, minute=0, second=0, microsecond=0, tzinfo=None)
-
-# Is saved in format_datetime utc with utcnow if the field is clear.
-
-# format_datetime(t, locale="es_ES", tzinfo=eastern)
-
-# Next convert to 
-
-# Change 
-
-#os.environ['TZ'] = 'America/New_York'
-
-#time.tzset()
-
-#>>> time.timezone
-#-3600
-
-#>>> int(time.time())
-#1451356872
-
-#>>> time.mktime((2015, 12, 29, 12, 25, 36, 0, 1, 0))
-#1451384736.0
-
-# strftime
-
-#time.gmtime()
-#time.struct_time(tm_year=2015, tm_mon=12, tm_mday=30, tm_hour=2, tm_min=6, tm_sec=56, tm_wday=2, tm_yday=364, tm_isdst=0)
 
 sql_format_time='YYYYMMDDHHmmss'
 
@@ -224,16 +182,6 @@ def format_datetime(format_time, timeform, func_utc_return):
     
     if timestamp:
     
-        #offset=time.timezone
-        
-        #timestamp=func_utc_return(timestamp, offset)
-        
-        # Return utc
-        
-        #time_set=func_utc_return(timestamp)
-        
-        #return time.strftime(format_time, time_set)
-        
         t=func_utc_return(timestamp)
         
         return t.format(format_time)
@@ -266,6 +214,19 @@ def format_fulldate(timeform):
     
     return format_datetime(format_date_txt+' '+format_time_txt, timeform, sum_utc)
 
+def format_local_time(timeform):
+    
+    return format_datetime(format_time_txt, timeform, no_utc)
+
+def format_local_date(timeform):
+    
+    return format_datetime(format_date_txt, timeform, no_utc)
+
+def format_local_fulldate(timeform):
+    
+    return format_datetime(format_date_txt+' '+format_time_txt, timeform, no_utc)
+
+
 #Input is utc timestamp, return local arrow object
 
 def sum_utc(timestamp):
@@ -296,111 +257,7 @@ def substract_utc(timestamp):
     
     return t
 
+def no_utc(timestamp):
+    
+    return arrow.get(timestamp)
 
-"""
-if hasattr(config, 'timezone'):
-    timezone=config.timezone
-    
-tzutc=get_timezone('UTC')
-
-tz=get_timezone(timezone)
-
-# In utc
-
-def timenow():
-    
-    t=datetime.utcnow()
-    
-    return format_datetime(t, "yyyyLLddHHmmss", tzutc)
-
-def timegmt(time, tzc=None):
-    
-    if tzc==None:
-        tzc=tz
-    
-    year, month, day, hour, minute, second=obtain_fields_time(time)
-    
-    t=datetime(year, month, day, hour, minute, second)
-    
-    return format_datetime(t, "yyyyLLddHHmmss", tzutc)
-
-#In utc
-
-def normalize_time(year, month, day, hour, minute, second, tz=None):
-    
-    try:
-    
-        t=datetime(year, month, day, hour, minute, second)
-        
-        return format_datetime(t, "yyyyLLddHHmmss", tzutc)
-
-    except ValueError:
-        
-        return timenow()
-
-def obtain_fields_time(time):
-    
-    #year, month, day, hour, minute, second=time
-    
-    year=int(time[:4])
-    
-    month=int(time[4:6])
-    
-    day=int(time[6:8])
-    
-    hour=int(time[8:10])
-    
-    minute=int(time[10:12])
-    
-    second=int(time[12:14])
-    
-    return year, month, day, hour, minute, second        
-    
-# In the format of tzinfo
-
-def format_tztime(time, tzc=None):
-    
-    if tzc==None:
-        tzc=tz
-    
-    year, month, day, hour, minute, second=obtain_fields_time(time)
-    
-    t=datetime(year, month, day, hour, minute, second)
-    
-    return format_datetime(t, format_time, tzinfo=tzc)
-
-def format_tzdate(time, tzc=None):
-    
-    if tzc==None:
-        tzc=tz
-    
-    year, month, day, hour, minute, second=obtain_fields_time(time)
-    
-    t=datetime(year, month, day, hour, minute, second)
-    
-    return format_datetime(t, format_date, tzinfo=tzc)
-
-def local_to_utc(date, tzc=None):
-    
-    if tzc==None:
-        tzc=tz
-    
-    year, month, day, hour, minute, second=obtain_fields_time(date)
-    
-    t=datetime(year, month, day, hour, minute, second, tzinfo=get_timezone('Europe/Madrid'))
-    print(t)
-    #timestamp=int(time.mktime((year, month, day, hour, minute, second, 0, 1, 0)))
-    
-    #timezone_sum=time.timezone
-    
-    #timestamp-=timezone_sum
-    
-    print(format_datetime(t, "yyyyLLddHHmmss", tzinfo=tzutc))
-
-    #    return timenow()
-def obtain_timezone(timezone):
-    
-    return get_timezone(timezone)
-
-
-"""

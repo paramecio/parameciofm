@@ -3,9 +3,21 @@ from paramecio.citoplasma import datetime
 
 class DateField(PhangoField):
     
+    def __init__(self, name, size=255, required=False):
+        
+        super().__init__(name, size, required)
+        
+        self.utc=True
+    
     def check(self, value):
         
-        value=datetime.local_to_gmt(value)
+        if self.utc:
+        
+            value=datetime.local_to_gmt(value)
+        
+        elif not datetime.obtain_timestamp(value, True):
+        
+            return False
         
         if value==False:
             

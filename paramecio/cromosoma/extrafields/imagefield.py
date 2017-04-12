@@ -53,7 +53,7 @@ class ImageField(CharField):
         field_file=self.name+'_file'
         
         #if not change
-
+        
         if not field_file in files_uploaded:
 
             if value=='':
@@ -71,7 +71,10 @@ class ImageField(CharField):
                             for arr_image in cur:
                                 
                                 if arr_image[self.name]!='':
-                                    os.remove(arr_image[self.name])
+                                    try:
+                                        os.remove(arr_image[self.name])
+                                    except:
+                                        pass
                                 
                                 #if arr_image[self.name]!=save_file and arr_image[self.name]!='':
                                 
@@ -82,7 +85,7 @@ class ImageField(CharField):
                 return ''
 
             else:
-
+                
                 value=os.path.basename(value)
             
                 return self.save_folder+'/'+value
@@ -102,24 +105,26 @@ class ImageField(CharField):
             
             self.error=True
             
-            self.txt_error='Error, file not exists'
+            self.txt_error='Error, file not have a valid format'
             return ""
-            
+
         real_width=im.size[0]
         real_height=im.size[1]
-
+        
         if self.sizes:
+            
             if 'maximum' in self.sizes:
-                if self.sizes.size['maximum'][0]<real_width or self.sizes.size['maximum'][1]<real_height:
+                if self.sizes['maximum'][0]<real_width or self.sizes['maximum'][1]<real_height:
                     self.error=True
-                    self.txt_error='Size is wrong. Maximum size is '+str(self.sizes.size['maximum'][0])+'x'+str(self.sizes.size['maximum'][1])
+                    self.txt_error='Size is wrong. Maximum size is '+str(self.sizes['maximum'][0])+'x'+str(self.sizes['maximum'][1])
                     im.close()
                     return ""
                     
             if 'minimum' in self.sizes:
-                if self.sizes.size['minimum'][0]<real_width or self.sizes.size['minimum'][1]<real_height:
+                if self.sizes['minimum'][0]<real_width or self.sizes['minimum'][1]<real_height:
+
                     self.error=True
-                    self.txt_error='Size is wrong. Minimum size is '+str(real_width)+'x'+str(real_height)
+                    self.txt_error='Size is wrong. Minimum size is '+str(self.sizes['minimum'][0])+'x'+str(self.sizes['minimum'][1])
                     im.close()
                     return ""
         
@@ -129,7 +134,7 @@ class ImageField(CharField):
         if format_image!='JPEG' and format_image!='GIF' and format_image!='PNG':
             
             self.error=True
-            self.txt_error='Format is wrong. Requires JPEG, GIF or PNG formats'
+            self.txt_error='Format is wrong. Requires JPEG or PNG formats'
             im.close()
             return ""
         
@@ -216,6 +221,7 @@ class ImageField(CharField):
                                 os.remove(arr_image[self.name])
                     
                     self.model.yes_reset_conditions=old_reset
+                
                 
                 #self.model.conditions=old_conditions
 
