@@ -142,3 +142,26 @@ class GenerateAdminClass:
         else:
             return self.t.render_template(self.template_admin, admin=self)
 
+    """
+    def show_config(self):
+        
+        
+        getpostfiles=GetPostFiles()
+        
+        getpostfiles.obtain_query()        
+        
+        op=getpostfiles.query.get('op', '')
+        
+        object_id=getpostfiles.query.get('id', '0')
+        
+        c=self.model.select_count
+        
+        if op=='':
+            
+            # Show the form
+            
+
+            
+            return self.t.render_template(self.template_insert, admin=self, title_edit=title_edit, form=form, model=self.model, id=object_id)            
+            
+    """

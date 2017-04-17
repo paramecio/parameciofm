@@ -714,6 +714,41 @@ class WebModel:
         
         return results
         
+
+    def select_to_dict(self, fields_selected=[], raw_query=0):
+        
+        
+        
+        if len(fields_selected)==0:
+            fields_selected=self.fields.keys()
+        
+        if (self.name_field_id not in fields_selected):
+            fields_selected.append(self.name_field_id)
+            def del_row_id(row):
+                
+                try:
+                
+                    index_id=row.index(self.name_field_id)
+                    
+                    del row[index_id]
+                    
+                except:
+                    
+                    pass
+        else:
+            def del_row_id(row):
+                pass
+        
+        results=OrderedDict()
+        
+        with self.select(fields_selected, raw_query) as cursor:        
+            for row in cursor:
+                
+                results[row[self.name_field_id]]=row
+            
+            del_row_id(results)
+        
+        return results
     
     # A method por count num rows affected for sql conditions
     
