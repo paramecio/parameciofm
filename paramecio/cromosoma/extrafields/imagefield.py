@@ -116,7 +116,7 @@ class ImageField(CharField):
             if 'maximum' in self.sizes:
                 if self.sizes['maximum'][0]<real_width or self.sizes['maximum'][1]<real_height:
                     self.error=True
-                    self.txt_error='Size is wrong. Maximum size is '+str(self.sizes['maximum'][0])+'x'+str(self.sizes['maximum'][1])
+                    self.txt_error='Wrong size. Maximum size is '+str(self.sizes['maximum'][0])+'x'+str(self.sizes['maximum'][1])
                     im.close()
                     return ""
                     
@@ -124,7 +124,7 @@ class ImageField(CharField):
                 if self.sizes['minimum'][0]>real_width or self.sizes['minimum'][1]>real_height:
                     
                     self.error=True
-                    self.txt_error='Size is wrong. Minimum size is '+str(self.sizes['minimum'][0])+'x'+str(self.sizes['minimum'][1])
+                    self.txt_error='Wrong size. Minimum size is '+str(self.sizes['minimum'][0])+'x'+str(self.sizes['minimum'][1])
                     im.close()
                     return ""
         
