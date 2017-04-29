@@ -83,9 +83,11 @@ class GenerateAdminClass:
                 else:
                     return ""
             
+            url_action=add_get_parameters(self.url, op_admin=2, id=getpostfiles.get['id'])
+            
             form=show_form(post, edit_forms, self.t, False)
                 
-            return self.t.render_template(self.template_insert, admin=self, title_edit=title_edit, form=form, model=self.model, id=getpostfiles.get['id'])
+            return self.t.render_template(self.template_insert, admin=self, title_edit=title_edit, form=form, model=self.model, id=getpostfiles.get['id'], url_action=url_action)
         
         elif getpostfiles.get['op_admin']=='2':
             
@@ -118,7 +120,7 @@ class GenerateAdminClass:
                 redirect(self.url)
             else:
                 form=show_form(getpostfiles.post, edit_forms, self.t, True)
-                return self.t.render_template(self.template_insert, admin=self, title_edit=title_edit, form=form, model=self.model, id=getpostfiles.get['id'])
+                return self.t.render_template(self.template_insert, admin=self, title_edit=title_edit, form=form, model=self.model, id=getpostfiles.get['id'], url_action=url_action)
 
             
             pass
@@ -165,3 +167,77 @@ class GenerateAdminClass:
             return self.t.render_template(self.template_insert, admin=self, title_edit=title_edit, form=form, model=self.model, id=object_id)            
             
     """
+
+class GenerateConfigClass:
+    
+    def __init__(self, model, url, t):
+
+        self.model_name=''
+        
+        self.model=model
+        
+        self.title_name=model.label
+        
+        self.t=t
+        
+        self.url=url
+        
+        self.arr_fields_edit=list(model.fields.keys())
+
+        del self.arr_fields_edit[self.arr_fields_edit.index(model.name_field_id)]
+        
+        self.template_insert='utils/insertform.phtml'
+
+    def show(self):
+        
+        getpostfiles=GetPostFiles()
+        
+        getpostfiles.obtain_query()
+        
+        getpostfiles.query['op_config']=getpostfiles.query.get('op_config', '0')
+        
+        if len(self.model.forms)==0:
+
+            self.model.create_forms()
+
+        title_edit=I18n.lang('common', 'edit', 'Edit')+' '+self.title_name
+
+        edit_forms=OrderedDict()
+
+        form_values={}
+            
+        for key_form in self.arr_fields_edit:
+            edit_forms[key_form]=self.model.forms[key_form]
+
+        url_action=add_get_parameters(self.url, op_config=1)
+    
+        if getpostfiles.query['op_config']=='1':
+            
+            getpostfiles.obtain_post()
+            
+            c=self.model.select_count()
+
+            insert_model=self.model.insert
+            
+            if c:
+                insert_model=self.model.update
+
+            if insert_model(getpostfiles.post):
+                set_flash_message(I18n.lang('common', 'task_successful', 'Task successful'))
+                redirect(self.url)
+            else:
+
+                form=show_form(getpostfiles.post, edit_forms, self.t, True)
+
+                return self.t.render_template(self.template_insert, admin=self, title_edit=title_edit, form=form, model=self.model, id='0', url_action=url_action)                
+            
+        else:
+            form_values=self.model.select_a_row_where()
+            
+            if not form_values:
+                form_values={}
+            
+            form=show_form(form_values, edit_forms, self.t, True)            
+            
+            return self.t.render_template(self.template_insert, admin=self, title_edit=title_edit, form=form, model=self.model, id=0, url_action=url_action)
+        

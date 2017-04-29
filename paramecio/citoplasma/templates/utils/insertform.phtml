@@ -5,7 +5,7 @@
     ${title_edit} \
 %endif 
 </p>
-<form method="post" action="${add_get_parameters(admin.url, op_admin=2, id=id)}">
+<form method="post" action="${url_action}">
     <h2>${title_edit}</h2>
     <span class="error">${model.query_error}</span>
     ${ form|n }

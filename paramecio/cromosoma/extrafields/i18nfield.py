@@ -6,6 +6,7 @@ from paramecio.cromosoma.coreforms import BaseForm
 from paramecio.cromosoma.extraforms.i18nform import I18nForm
 from paramecio.citoplasma.i18n import I18n
 from paramecio.citoplasma.httputils import GetPostFiles
+import json
 
 class I18nField(PhangoField):
     
@@ -21,25 +22,30 @@ class I18nField(PhangoField):
         self.error=False
         self.txt_error=''
         
-        final_value={}
-        
-        func_get=self.obtain_lang_from_post
-        
-        if type(value).__name__=='dict':
-            func_get=self.obtain_lang_value
-            
-        for lang in I18n.dict_i18n:
-            final_value[lang]=func_get(lang, value)
+        arr_values={}
 
-        final_value[I18n.default_lang]=final_value.get(I18n.default_lang, '')
-        
-        if final_value[I18n.default_lang]=='':
+        try:
+            arr_values=json.loads(value)
             
+            if not arr_values:
+                arr_values={}
+            
+        except:
+            arr_values={}
+        
+        arr_real_values={}
+
+        for lang in I18n.dict_i18n:
+            arr_real_values[lang]=arr_values.get(lang, value)
+        
+        arr_values=arr_real_values
+        
+        if arr_values[I18n.default_lang]=='':
             self.error=True
             self.txt_error='Sorry, You need default language '+I18n.default_lang
-            return json.dumps(final_value)
+            return json.dumps(arr_values)
         
-        return json.dumps(final_value)
+        return json.dumps(arr_values)
 
     def get_type_sql(self):
 
@@ -51,6 +57,10 @@ class I18nField(PhangoField):
     
     def obtain_lang_from_post(self, lang, value):
         
-        return GetPostFiles.post.get(self.name+'_'+lang, '')
+        #getpost=GetPostFiles()
+        
+        #getpost.obtain_post()
+        
+        return "" #GetPostFiles.post.get(self.name+'_'+lang, '')
     
     

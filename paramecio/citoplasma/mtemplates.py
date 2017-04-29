@@ -90,7 +90,7 @@ class PTemplate:
             module=path.dirname(module)
         """
         
-        self.autoescape_ext=('html', 'htm', 'xml', 'phtml')
+        self.autoescape_ext=('html', 'htm', 'xml', 'phtml', 'pjs')
         
         """
         self.cache_enabled=cache_enabled

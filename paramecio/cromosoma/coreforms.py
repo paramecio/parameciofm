@@ -37,7 +37,9 @@ class BaseForm:
     def change_name(self, new_name):
         
         self.name=new_name
-        
+
+        self.name_field_id=self.name+'_form'
+
         return ""
 
 class SimpleTextForm(BaseForm):
