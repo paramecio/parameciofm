@@ -7,21 +7,29 @@ from paramecio.cromosoma.extraforms.i18nform import I18nForm
 from paramecio.citoplasma.i18n import I18n
 from paramecio.citoplasma.httputils import GetPostFiles
 import json
+import re
 
 class I18nField(PhangoField):
     
-    def __init__(self, name):
+    def __init__(self, name, form=None):
         
         super().__init__(name)
         
+        if form==None:
+            form=BaseForm(name, '')
+        
         self.name_form=I18nForm
-        self.extra_parameters=[BaseForm(name, '')]
+        self.extra_parameters=[form]
+        
+    def check_value(self, value):
+        
+        return super().check(value)
     
     def check(self, value):
         
         self.error=False
         self.txt_error=''
-        
+
         arr_values={}
 
         try:
@@ -36,7 +44,8 @@ class I18nField(PhangoField):
         arr_real_values={}
 
         for lang in I18n.dict_i18n:
-            arr_real_values[lang]=arr_values.get(lang, value)
+            arr_real_values[lang]=arr_values.get(lang, '')
+            arr_real_values[lang]=self.check_value(arr_real_values[lang])
         
         arr_values=arr_real_values
         
@@ -64,3 +73,8 @@ class I18nField(PhangoField):
         return "" #GetPostFiles.post.get(self.name+'_'+lang, '')
     
     
+class I18nHTMLField(I18nField):
+    
+    def check_value(self, value):
+        
+        return re.sub('<.*?script?>', '', value)

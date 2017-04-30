@@ -463,22 +463,21 @@ margin-right:auto;
 a.no_choose_flag
 {
 
-        filter: Alpha(opacity=50);
-        -moz-opacity: .5;
-        opacity: .5;
-	float:left;
-	margin: 2px;
-
+    filter: Alpha(opacity=50);
+    -moz-opacity: .5;
+    opacity: .5;
+    display:inline-block;
+	margin: 0px;
 }
 
 a.choose_flag
 {
 
-        filter: Alpha(opacity=100);
-        -moz-opacity: 100;
-        opacity: 100;
-	float:left;
-	margin: 2px;
+    filter: Alpha(opacity=100);
+    -moz-opacity: 100;
+    opacity: 1;
+    display:inline-block;
+    margin: 0px;
 
 }
 
@@ -487,9 +486,7 @@ a:hover.no_choose_flag
 
         filter: Alpha(opacity=100);
         -moz-opacity: 100;
-        opacity: 100;
-	float:left;
-	margin: 2px;
+        opacity: 1;
 
 }
 
