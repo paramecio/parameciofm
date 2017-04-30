@@ -72,7 +72,23 @@ class I18nField(PhangoField):
         
         return "" #GetPostFiles.post.get(self.name+'_'+lang, '')
     
+    def show_formatted(self, value):
+        
+        value=json.loads(value)
+
+        lang=I18n.get_default_lang()
+        
+        return value[lang]
     
+    @staticmethod
+    def get_value(value):
+
+        value=json.loads(value)
+
+        lang=I18n.get_default_lang()
+        
+        return value[lang]
+
 class I18nHTMLField(I18nField):
     
     def check_value(self, value):

@@ -47,6 +47,8 @@ class SqlClass:
 
                 self.error_connection="Error in connection: %s %s" % (e, v)
 
+                self.conn.close()
+
                 raise NameError(self.error_connection)
   
     

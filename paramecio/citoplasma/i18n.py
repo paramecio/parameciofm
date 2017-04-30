@@ -43,9 +43,9 @@ class I18n:
         
         lang=I18n.default_lang
         
-        #s=get_session()
+        s=get_session()
 
-        #lang=s.get('lang', lang)
+        lang=s.get('lang', lang)
             
         return lang
     
