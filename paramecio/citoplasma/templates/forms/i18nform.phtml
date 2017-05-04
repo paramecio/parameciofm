@@ -36,6 +36,7 @@ choose=''
     % endfor
 % endif
 </div>
+
 <script>
 
 $(".${name_form}_i18n_flag").click(function () {
@@ -64,14 +65,13 @@ $(".${name_form}_i18n_flag").closest('form').submit( function () {
 
     $(".${name_form}_i18n_form").each(function () {
     
-        var lang=$(this).attr('id').replace('text_','').replace('_switch', '');
+        var lang=$(this).attr('id').replace('${name_form}_','').replace('_switch', '');
         
         var child_input=$('#${name_form}_'+lang+'_form');
-    
+
         arr_i18n[lang]=child_input.val();
 
     });
-    
     //$("#${name_form}_i18n_value").val(JSON.stringify(arr_i18n));
     //$("#${name_form}_i18n_value").attr('value', JSON.stringify(arr_i18n));
 

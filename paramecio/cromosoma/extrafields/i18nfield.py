@@ -29,7 +29,7 @@ class I18nField(PhangoField):
         
         self.error=False
         self.txt_error=''
-
+        
         arr_values={}
 
         try:
@@ -42,10 +42,12 @@ class I18nField(PhangoField):
             arr_values={}
         
         arr_real_values={}
-
+        
         for lang in I18n.dict_i18n:
             arr_real_values[lang]=arr_values.get(lang, '')
             arr_real_values[lang]=self.check_value(arr_real_values[lang])
+        
+        self.error=False
         
         arr_values=arr_real_values
         

@@ -62,7 +62,9 @@ class GenerateAdminClass:
             self.model.create_forms()
         
         edit_forms=OrderedDict()
-            
+        
+        url_action=self.url
+        
         for key_form in self.arr_fields_edit:
             edit_forms[key_form]=self.model.forms[key_form]
         
@@ -119,6 +121,8 @@ class GenerateAdminClass:
                 set_flash_message(I18n.lang('common', 'task_successful', 'Task successful'))
                 redirect(self.url)
             else:
+                url_action=add_get_parameters(self.url, op_admin=2, id=getpostfiles.get['id'])
+                
                 form=show_form(getpostfiles.post, edit_forms, self.t, True)
                 return self.t.render_template(self.template_insert, admin=self, title_edit=title_edit, form=form, model=self.model, id=getpostfiles.get['id'], url_action=url_action)
 

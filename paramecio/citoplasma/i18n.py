@@ -2,6 +2,7 @@
 
 from importlib import import_module
 from paramecio.citoplasma.sessions import get_session
+import json
 
 yes_session=False
 
@@ -62,4 +63,12 @@ class I18n:
         
         return I18n.l[lang][module][symbol]
 
+    @staticmethod
+    def extract_value(value):
+
+        value=json.loads(value)
+
+        lang=I18n.get_default_lang()
+        
+        return value[lang]
 

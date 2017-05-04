@@ -332,6 +332,10 @@ class WebModel:
         
         self.create_fields()
 
+        # property for use show_formatted property if needed
+        
+        self.show_formatted=False
+
     # A method where create the new fields of this model
     
     def create_fields(self):
@@ -664,6 +668,11 @@ class WebModel:
             
             if row==None:
                 row=False
+            else:
+                if self.show_formatted:
+                    for k, col in row.items():
+                        row[k]=self.fields[k].show_formatted(col)
+                        
 
         return row
     
@@ -677,6 +686,10 @@ class WebModel:
             
             if row==None:
                 row=False
+            else:
+                if self.show_formatted:
+                    for k, col in row.items():
+                        row[k]=self.fields[k].show_formatted(col)
         
         return row
     
@@ -707,6 +720,10 @@ class WebModel:
         
         with self.select(fields_selected, raw_query) as cursor:        
             for row in cursor:
+                
+                if self.show_formatted and row:
+                    for k, col in row.items():
+                        row[k]=self.fields[k].show_formatted(col)
                 
                 results.append(row)
             
