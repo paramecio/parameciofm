@@ -15,7 +15,7 @@ except:
     class config:
         cookie_name='paramecio.session'
         key_encrypt=create_key_encrypt_256(30)
-        session_opts={'session.data_dir': 'sessions', 'session.type': 'file'}
+        session_opts={'session.data_dir': 'sessions', 'session.type': 'file', 'session.path': 'paramecio'}
 
 # Cookie session
 # This save the session in a cookie for maximum performance. In next version i can use memcached or something for session
@@ -87,10 +87,10 @@ def generate_session(session={}):
     #session=secret.dumps(session)
     
     token=create_key(30).replace('/', '#')
-    
-    response.set_cookie(config.cookie_name, token, path=config.session_opts['session.path'])
-    
+
     s={'token': token}
+
+    response.set_cookie(config.cookie_name, token, path=config.session_opts['session.path'])
     
     request.environ['session']=s
     
