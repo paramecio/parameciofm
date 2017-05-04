@@ -60,7 +60,7 @@ class I18nField(PhangoField):
 
     def get_type_sql(self):
 
-        return 'TEXT NOT NULL DEFAULT ""'
+        return 'TEXT NOT NULL'
 
     def obtain_lang_value(self, lang, value):
         
