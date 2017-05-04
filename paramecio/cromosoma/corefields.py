@@ -134,7 +134,7 @@ class TextField(PhangoField):
 
         """
 
-        return 'TEXT NOT NULL DEFAULT ""'
+        return 'TEXT NOT NULL'
 
 class ForeignKeyField(IntegerField):
     
