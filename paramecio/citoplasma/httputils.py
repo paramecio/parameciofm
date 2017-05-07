@@ -80,7 +80,14 @@ class GetPostFiles:
         
         self.post={}
         
-        self.post=request.forms.decode()
+        try:
+        
+            self.post=request.forms.decode('utf-8')
+            
+        except:
+            
+            request.forms.recode_unicode=False
+            self.post=request.forms.decode('utf-8')
         
         if len(required_post)==0:
             required_post=self.post.keys()
