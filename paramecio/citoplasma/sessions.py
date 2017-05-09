@@ -5,6 +5,7 @@ from paramecio.citoplasma.keyutils import create_key_encrypt, create_key_encrypt
 from bottle import request, response
 import os
 import json
+import fcntl
 
 try:
 
@@ -202,7 +203,23 @@ else:
         path_cookie=config.session_opts['session.data_dir']+'/session_'+token
             
         with open(path_cookie, 'w') as f:
+            
+            #Lock file, if cannot lock wait
+            
+            while True:
+                try:
+                    fcntl.flock(f, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                    break
+                except IOError as e:
+                    # raise on unrelated IOErrors
+                    if e.errno != errno.EAGAIN:
+                        raise
+                    else:
+                        time.sleep(0.1)
+            
             f.write(json.dumps(session))
+            
+            fcntl.flock(f, fcntl.LOCK_UN)
 
 """
 def generate_session():
