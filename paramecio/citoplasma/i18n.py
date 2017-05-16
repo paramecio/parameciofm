@@ -3,6 +3,7 @@
 from importlib import import_module
 from paramecio.citoplasma.sessions import get_session
 import json
+from bottle import request
 
 yes_session=False
 
@@ -72,3 +73,7 @@ class I18n:
         
         return value[lang]
 
+    @staticmethod
+    def get_browser_lang():
+        
+        return request.headers.get('Accept-Language')

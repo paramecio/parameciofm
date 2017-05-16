@@ -8,7 +8,7 @@ from importlib import import_module
 from paramecio.citoplasma.i18n import I18n
 from settings import config
 
-pattern=re.compile('^\w+\.(py|html|phtml)$')
+pattern=re.compile('^\w+\.(py|html|phtml|pjs)$')
 
 ignored=re.compile('^[__|\.].*$')
 
@@ -79,18 +79,27 @@ def start():
             
             #for real_key, real_text in I18n.l[lang][module].items():
                 #tmp_lang[module][real_key]=real_text
-                
+
         except:
             pass
             
-        
+
+
+        i=Path(real_path+'/__init__py')
+            
+        i.touch(0o644)        
+            
         file_lang="#!/usr/bin/env python3\n\n"
         
         file_lang+="from paramecio.citoplasma.i18n import I18n\n\n"
         
         for lang in I18n.dict_i18n:
             
-            file_lang+="I18n.l['"+lang+"']={'"+module+"': {}}\n\n"
+            #I18n.l['en-US']['admin']=I18n.l['en-US'].get('admin', {})
+            
+            file_lang+="I18n.l['%s']=I18n.l.get('%s', {})\n\n" % (lang, lang)
+            
+            file_lang+="I18n.l['"+lang+"']['"+module+"']=I18n.l['"+lang+"'].get('"+module+"', {})\n\n"
             
             I18n.l[lang]=I18n.l.get(lang, {})
             
@@ -102,7 +111,7 @@ def start():
                     
                      I18n.l[lang][module][key]=text
 
-                file_lang+="I18n.l['"+lang+"']['"+module+"']['"+key+"']='"+I18n.l[lang][module][key]+"'\n\n"
+                file_lang+="I18n.l['"+lang+"']['"+module+"']['"+key+"']='"+I18n.l[lang][module][key].replace("'", "\\'")+"'\n\n"
             
             final_file=real_path+'/'+module+'.py'
             

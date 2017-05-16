@@ -22,6 +22,7 @@ from paramecio.citoplasma.sendmail import SendMail
 from os import path
 from paramecio.wsgiapp import app
 import copy
+from paramecio.i18n import admin
 
 #from citoplasma.login import LoginClass
 # Check login
@@ -35,7 +36,8 @@ if hasattr(config, 'yes_recovery_login'):
 if hasattr(config, 'email_address'):
     email_address=config.email_address
 
-load_lang(['paramecio', 'admin'], ['paramecio', 'common'])
+#load_lang(['paramecio', 'admin'], ['paramecio', 'common'])
+
 
 key_encrypt=config.key_encrypt #create_key_encrypt()
 

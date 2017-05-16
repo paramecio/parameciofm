@@ -385,7 +385,7 @@ class WebModel:
     def dummy_connect(self, connection):
         return True
     
-    # Static method for make queries
+    # Method for make queries
     
     def query(self, str_query, args=[], connection_id='default'):
         
@@ -409,7 +409,7 @@ class WebModel:
 
         self.post=dict_values
 
-        self.connect_to_db()
+        #self.connect_to_db()
         
         self.query_error=''
         
@@ -430,13 +430,15 @@ class WebModel:
         
         sql="insert into `"+self.name+"` (`"+"`, `".join(fields)+"`) VALUES ("+", ".join(arr_str)+")"
         
-        cursor=self.sqlclass.query(sql, values, self.connection_id)
+        cursor=self.query(sql, values, self.connection_id)
         
         if cursor.rowcount>0:
             
             self.last_id=cursor.lastrowid
             
             cursor.close()
+            
+            # Delete cache for this table.
             
             return True
         else:
@@ -461,7 +463,7 @@ class WebModel:
         if self.name_field_id in dict_values:
             del dict_values[self.name_field_id]
 
-        self.connect_to_db()
+        #self.connect_to_db()
         
         self.query_error=''
         
@@ -480,7 +482,7 @@ class WebModel:
         
         sql="update `"+self.name+"` SET "+", ".join(update_values)+" "+self.conditions[0]
         
-        cursor=self.sqlclass.query(sql, values+self.conditions[1], self.connection_id)
+        cursor=self.query(sql, values+self.conditions[1], self.connection_id)
         
         if self.yes_reset_conditions:
             self.reset_conditions()
@@ -529,7 +531,7 @@ class WebModel:
         
         # Connect to db
         
-        self.connect_to_db()
+        #self.connect_to_db()
         
         conditions=self.conditions
         
@@ -619,7 +621,7 @@ class WebModel:
         if self.yes_reset_conditions:
             self.reset_conditions()
         
-        cursor=self.sqlclass.query(sql, conditions[1], self.connection_id)
+        cursor=self.query(sql, conditions[1], self.connection_id)
         
         if cursor==False:
             self.query_error=self.sqlclass.error_connection
@@ -803,7 +805,7 @@ class WebModel:
         
         count=0
         
-        with self.sqlclass.query(sql, conditions[1], self.connection_id) as cursor:
+        with self.query(sql, conditions[1], self.connection_id) as cursor:
             count=list(cursor.fetchone().values())[0]
             
             if self.yes_reset_conditions:
@@ -817,13 +819,13 @@ class WebModel:
     
     def delete(self):
         
-        self.connect_to_db()
+        #self.connect_to_db()
         
         #Need delete rows from other related tables save in self.related_models_deleted
         
         sql="delete from `"+self.name+"` "+self.conditions[0]
         
-        result=self.sqlclass.query(sql, self.conditions[1], self.connection_id)
+        result=self.query(sql, self.conditions[1], self.connection_id)
         
         if self.yes_reset_conditions:
             self.reset_conditions()
