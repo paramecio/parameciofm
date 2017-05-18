@@ -80,7 +80,12 @@ class I18nField(PhangoField):
 
         lang=I18n.get_default_lang()
         
-        return value[lang]
+        if value[lang]!='':
+        
+            return value[lang]
+
+        return value[I18n.default_lang]
+            
     
     @staticmethod
     def get_value(value):
@@ -89,7 +94,11 @@ class I18nField(PhangoField):
 
         lang=I18n.get_default_lang()
         
-        return value[lang]
+        if value[lang]!='':
+        
+            return value[lang]
+
+        return value[I18n.default_lang]
 
 class I18nHTMLField(I18nField):
     

@@ -71,7 +71,11 @@ class I18n:
 
         lang=I18n.get_default_lang()
         
-        return value[lang]
+        if value[lang]!='':
+        
+            return value[lang]
+
+        return value[I18n.default_lang]
 
     @staticmethod
     def get_browser_lang():

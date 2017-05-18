@@ -140,22 +140,24 @@ def scandir(path, module_search=''):
             
             for line in f:
                 
-                match_p=lang_p.search(line)
-                match_t=lang_t.search(line)
+                #[('pokermind', 'performance_questions_default', 'Performance questions default'), ('pokermind', 'performance_questions_defasult', 'Performance questions defaufflt')]
+                
+                match_p=lang_p.findall(line)
+                match_t=lang_t.findall(line)
                 
                 if match_p!=None:
-                     #print(match_p.group(1))
-                     
-                    module=match_p.group(1)
-                    symbol=match_p.group(2)
-                    text_default=match_p.group(3)
-                    
-                    tmp_lang[module]=tmp_lang.get(module, {})
 
-                    tmp_lang[module][symbol]=tmp_lang[module].get(symbol, text_default)
+                    for m in match_p:                     
+                        module=m[0]
+                        symbol=m[1]
+                        text_default=m[2]
+                        
+                        tmp_lang[module]=tmp_lang.get(module, {})
+
+                        tmp_lang[module][symbol]=tmp_lang[module].get(symbol, text_default)
                     
                 if match_t!=None:
-                    
+                    """
                     module=match_t.group(1)
                     symbol=match_t.group(2)
                     text_default=match_t.group(3)
@@ -163,7 +165,18 @@ def scandir(path, module_search=''):
                     tmp_lang[module]=tmp_lang.get(module, {})
 
                     tmp_lang[module][symbol]=tmp_lang[module].get(symbol, text_default)
-            
+                    """
+                    
+                    for m in match_t:                    
+                        module=m[0]
+                        symbol=m[1]
+                        text_default=m[2]
+                        
+                        tmp_lang[module]=tmp_lang.get(module, {})
+
+                        tmp_lang[module][symbol]=tmp_lang[module].get(symbol, text_default)
+                    
+                    
             f.close()
                 
             #print('archivo->'+path+'/'+name)

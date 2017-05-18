@@ -21,7 +21,7 @@ choose=''
         style="display:none;"
     % endif
 </%def>
-<input type="hidden" name="${name_form}" id="${name_form}_i18n_value" value="" />
+<input type="hidden" name="${real_name_form}" id="${name_form}_i18n_value" value="" />
 % if lang_selected!=None:
     % for i18n in arr_i18n:
         
@@ -47,8 +47,8 @@ $(".${name_form}_i18n_flag").click(function () {
     
     name_id=$(this).attr('id').replace('_element', '');
 
-    name_form=name_id.split('_')[0];
-
+    name_form="${name_form}";
+    
     $('.'+name_form+'_i18n_form').hide();
     
     $('#'+name_id+'_switch').show();
@@ -72,8 +72,6 @@ $(".${name_form}_i18n_flag").closest('form').submit( function () {
         arr_i18n[lang]=child_input.val();
 
     });
-    //$("#${name_form}_i18n_value").val(JSON.stringify(arr_i18n));
-    //$("#${name_form}_i18n_value").attr('value', JSON.stringify(arr_i18n));
 
     document.getElementById("${name_form}_i18n_value").value=JSON.stringify(arr_i18n);
 
