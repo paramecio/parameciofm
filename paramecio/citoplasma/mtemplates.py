@@ -8,6 +8,7 @@ from paramecio.citoplasma.i18n import I18n
 from paramecio.citoplasma.sessions import get_session
 from paramecio.citoplasma.adminutils import make_admin_url
 from paramecio.cromosoma.formsutils import csrf_token
+from paramecio.citoplasma.js import make_js_url
 from settings import config
 from os import path
 from collections import OrderedDict
@@ -90,7 +91,7 @@ class PTemplate:
             module=path.dirname(module)
         """
         
-        self.autoescape_ext=('html', 'htm', 'xml', 'phtml', 'pjs')
+        self.autoescape_ext=('html', 'htm', 'xml', 'phtml', 'js')
         
         """
         self.cache_enabled=cache_enabled
@@ -122,7 +123,9 @@ class PTemplate:
         self.add_filter(csrf_token)
         
         self.add_filter(make_admin_url)
-        
+    
+        self.add_filter(make_js_url)
+
         I18n_lang=I18n.lang
         
         self.add_filter(I18n.lang)

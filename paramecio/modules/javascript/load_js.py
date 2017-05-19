@@ -3,6 +3,9 @@
 from paramecio.wsgiapp import app
 from paramecio.citoplasma.mtemplates import env_theme, PTemplate
 from settings import config
+from paramecio.citoplasma.sessions import get_session
+from paramecio.citoplasma.i18n import I18n
+from bottle import response
 import os
 
 #t=PTemplate(env)
@@ -16,9 +19,14 @@ arr_t={}
 @app.route('/mediajs/<module>/<lang>/<filename:path>')
 def send_javascript(module, lang, filename):    
 
-    path_module=workdir+'/modules/'+module+'/js/'
+    s=get_session()
     
-    path=workdir+'/themes/'+config.theme+'/js/'+module
+    if lang in I18n.dict_i18n:
+        s['lang']=lang
+
+    path_module='modules/'+module+'/js'
+    
+    path='themes/'+config.theme+'/js/'+module
 
     file_path_module=path_module+'/'+filename
     file_path_theme=path+'/'+filename
@@ -34,5 +42,7 @@ def send_javascript(module, lang, filename):
     if not load_path in arr_t:
         env=env_theme(load_path)
         arr_t[load_path]=PTemplate(env)
-    
-    return arr_t[module].load_template(file_path)
+
+    response.set_header('Content-type', 'application/javascript')
+
+    return arr_t[load_path].load_template(filename)
