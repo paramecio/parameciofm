@@ -19,7 +19,7 @@ setup(name='paramecio',
       author='Antonio de la Rosa Caballero',
       author_email='webmaster@web-t-sys.com',
       url='http://paramecioproject.com/',
-      packages=['paramecio'],
+      packages=['paramecio', 'paramecio.i18n'],
       include_package_data=True,
       install_requires=['bottle', 'mako', 'mysqlclient', 'sqlalchemy', 'beaker>=1.8.0', 'itsdangerous', 'colorama','cherrypy', 'arrow'],
       entry_points={'console_scripts': [
