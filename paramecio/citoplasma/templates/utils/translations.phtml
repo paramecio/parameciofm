@@ -1,0 +1,61 @@
+<p>
+<form method="get" action="">
+    ${lang('admin', 'modules', 'Modules')}
+    ${form_module.form()|n}
+    <input type="submit" value="${lang('admin', 'change_module_to_translate', 'Change module to translate')}" />
+</form>
+<div id="saving" style="display:none;"><i class="fa fa-circle-o-notch fa-2x fa-spin fa-fw"></i> ${lang('admin', 'saving_translation', 'Saving translation')}</div>
+<form method="post" action="#" id="send_text">
+% if len(arr_i18n_form):
+
+    <p><input type="submit" value="${lang('admin', 'send', 'Send')}" /></p>
+
+    % for i18n_form in arr_i18n_form:
+    
+        <p>${i18n_form.form()|n}</p>
+    
+    % endfor
+    
+    <p><input type="submit" value="${lang('admin', 'send', 'Send')}" /></p>
+    
+% endif
+${csrf_token("csrf_token")|n}
+</form>
+</p>
+
+<script>
+    
+    $('#send_text').submit( function () {
+
+        $('#send_text').hide();
+        
+        url="${make_admin_url('lang/translations',{'module_admin': selected_module, 'op': '1'})}";
+        
+        data=$(this).serializeArray().reduce(function(obj, item) {
+            obj[item.name] = item.value;
+            return obj;
+        }, {});
+        
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: data,
+            success: function (data) {
+                
+                $('#send_text').show();
+                $('#saving').hide();
+                
+            },
+            error: function (data) {
+            
+                alert(JSON.stringify(data));
+                $('#send_text').show();
+            
+            },
+            dataType: 'json'
+        });
+        
+        return false;
+    
+    });
+</script>
