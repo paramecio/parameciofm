@@ -552,6 +552,13 @@ a:hover.no_choose_flag
 	
 }
 
+#center_body input[type="text"]
+{
+
+    width:500px;
+
+}
+
 #center_body textarea {
 
 	border: solid #bcbcbc;
