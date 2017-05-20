@@ -341,7 +341,7 @@ class HeaderHTML:
         s['flash']=s.get('flash', "")
         
         if s['flash']!="":
-            message='<div class="flash">'+s['flash']+'</div>'
+            message='<div class="flash">'+s['flash']+'</div><script>setTimeout(function () { $(".flash").fadeOut();  }, 3000);</script>'
         
         s['flash']=''
         
