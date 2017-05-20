@@ -29,16 +29,13 @@ choose=''
         <%
         form.default_value=default_value[i18n]
         %>
-        <span ${hide_lang(i18n, lang_selected)} id="${name_form}_${i18n}_switch" class="${name_form}_i18n_form">${form.form()|n}</span>
+        <span id="${name_form}_${i18n}_switch" class="${name_form}_i18n_form">${form.form()|n}</span>        <a class="choose_flag ${name_form}_i18n_flag lang_form" id="${name_form}_${i18n}_element" href="#"><img src="${make_media_url_module('images/languages/'+i18n+'.png', 'admin')}" alt="${name_form}_${i18n}"/></a> 
     % endfor 
-    % for i18n in arr_i18n:
-        <a class="${select_lang(i18n, lang_selected)} ${name_form}_i18n_flag lang_form" id="${name_form}_${i18n}_element" href="#"><img src="${make_media_url_module('images/languages/'+i18n+'.png', 'admin')}" alt="${name_form}_${i18n}"/></a> 
-    % endfor
 % endif
 </div>
 
 <script>
-
+/*
 $(".${name_form}_i18n_flag").click(function () {
 
     $('.${name_form}_i18n_flag').removeClass('choose_flag').addClass('no_choose_flag');
@@ -55,7 +52,7 @@ $(".${name_form}_i18n_flag").click(function () {
     
     return false;
 
-});
+});*/
 
 //In submit convert in json
 

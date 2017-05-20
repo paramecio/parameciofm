@@ -345,6 +345,8 @@ class HeaderHTML:
         
         s['flash']=''
         
+        s.save()
+        
         return message
 
 def set_flash_message(message):
@@ -352,5 +354,7 @@ def set_flash_message(message):
     s=get_session()
     
     s['flash']=message
+    
+    s.save()
 
 #standard_t=ptemplate(__file__)
