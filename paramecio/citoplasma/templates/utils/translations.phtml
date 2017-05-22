@@ -1,4 +1,6 @@
-<p>
+<div id="container_translation">
+<div class="flash" style="display:none;">${lang('admin', 'translation_saved_sucessfully', 'Translation saved sucessfully')}</div>
+<br />
 <form method="get" action="">
     ${lang('admin', 'modules', 'Modules')}
     ${form_module.form()|n}
@@ -21,13 +23,14 @@
 % endif
 ${csrf_token("csrf_token")|n}
 </form>
-</p>
+</div>
 
 <script>
     
     $('#send_text').submit( function () {
 
         $('#send_text').hide();
+        $('#saving').show();
         
         url="${make_admin_url('lang/translations',{'module_admin': selected_module, 'op': '1'})}";
         
@@ -44,6 +47,14 @@ ${csrf_token("csrf_token")|n}
                 
                 $('#send_text').show();
                 $('#saving').hide();
+                $('.flash').show();
+                //$('#container_translation').prepend("<div class=\"flash\" >${lang('admin', 'translation_saved_sucessfully', 'Translation saved sucessfully')}</div><script>setTimeout(function () { $(\".flash\").fadeOut(1000, function () { $('.flash').remove(); });   }, 3000);<\/script>");
+                
+                setTimeout(function () { 
+                    
+                    $(".flash").fadeOut(1000)
+                    
+                }, 3000);
                 
             },
             error: function (data) {
