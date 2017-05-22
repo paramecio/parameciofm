@@ -91,6 +91,8 @@ def admin(**args):
         
             file_lang+="from paramecio.citoplasma.i18n import I18n\n\n"
             
+            z=0
+            
             for lang in I18n.dict_i18n:
             
                 file_lang+="I18n.l['%s']=I18n.l.get('%s', {})\n\n" % (lang, lang)
@@ -105,6 +107,7 @@ def admin(**args):
                     
                     file_lang+="I18n.l['"+lang+"']['"+selected_module+"']['"+key+"']='"+arr_l[lang].replace("'", "\\'")+"'\n\n"
                     
+                    z+=1
                 
                 """
                 for key, text in tmp_lang[selected_module].items():
@@ -116,13 +119,15 @@ def admin(**args):
                     file_lang+="I18n.l['"+lang+"']['"+selected_module+"']['"+key+"']='"+I18n.l[lang][selected_module][key].replace("'", "\\'")+"'\n\n"
                 """
             
-            final_file='modules/'+selected_module+'/i18n/'+selected_module+'.py'
+            if z>0:
+            
+                final_file='modules/'+selected_module+'/i18n/'+selected_module+'.py'
+                    
+                f=open(final_file, 'w')
                 
-            f=open(final_file, 'w')
-            
-            f.write(file_lang)
-            
-            f.close()
+                f.write(file_lang)
+                
+                f.close()
 
             return {'error': 0}
 
