@@ -43,6 +43,7 @@ ${csrf_token("csrf_token")|n}
             type: "POST",
             url: url,
             data: data,
+            contentType: "application/x-www-form-urlencoded;charset=UTF-8",
             success: function (data) {
                 
                 $('#send_text').show();
