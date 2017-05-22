@@ -34,10 +34,12 @@ ${csrf_token("csrf_token")|n}
         
         url="${make_admin_url('lang/translations',{'module_admin': selected_module, 'op': '1'})}";
         
-        data=$(this).serializeArray().reduce(function(obj, item) {
+        /*data=$(this).serializeArray().reduce(function(obj, item) {
             obj[item.name] = item.value;
             return obj;
-        }, {});
+        }, {});*/
+        
+        data=$(this).serialize()
         
         $.ajax({
             type: "POST",
