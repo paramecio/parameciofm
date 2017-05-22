@@ -119,17 +119,32 @@ def admin(**args):
                     file_lang+="I18n.l['"+lang+"']['"+selected_module+"']['"+key+"']='"+I18n.l[lang][selected_module][key].replace("'", "\\'")+"'\n\n"
                 """
             
+            error=0
+            
             if z>0:
             
                 final_file='modules/'+selected_module+'/i18n/'+selected_module+'.py'
+                
+                old_file=''
+                
+                with open(final_file, 'r') as f:
+                    old_file=f.read()
                     
+                
                 f=open(final_file, 'w')
                 
-                f.write(file_lang)
+                try:
+                
+                    f.write(file_lang)
+                    
+                except:
+
+                    f.write(old_file)                    
+                    error=1 
                 
                 f.close()
 
-            return {'error': 0}
+            return {'error': error}
 
     
     return t.load_template('utils/translations.phtml', modules=module_final, selected_module=selected_module, form_module=form_module, arr_i18n_form=arr_i18n_form)

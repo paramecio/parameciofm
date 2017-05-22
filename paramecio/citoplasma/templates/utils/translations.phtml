@@ -46,16 +46,26 @@ ${csrf_token("csrf_token")|n}
             contentType: "application/x-www-form-urlencoded;charset=UTF-8",
             success: function (data) {
                 
-                $('#send_text').show();
                 $('#saving').hide();
-                $('.flash').show();
-                //$('#container_translation').prepend("<div class=\"flash\" >${lang('admin', 'translation_saved_sucessfully', 'Translation saved sucessfully')}</div><script>setTimeout(function () { $(\".flash\").fadeOut(1000, function () { $('.flash').remove(); });   }, 3000);<\/script>");
                 
-                setTimeout(function () { 
+                if(!data.error) {
+                
+                    $('#send_text').show();
+                    $('.flash').show();
                     
-                    $(".flash").fadeOut(1000)
+                    setTimeout(function () { 
+                        
+                        $(".flash").fadeOut(1000)
+                        
+                    }, 3000);
                     
-                }, 3000);
+                }
+                else
+                {
+                    
+                    alert('Error: cannot update the translations');
+                    
+                }
                 
             },
             error: function (data) {
