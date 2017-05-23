@@ -19,6 +19,7 @@ class SqlClass:
         # Sql connection
         self.conn=None
         self.connected=False
+        self.pool_recycle=3600
         
     def connect(self):
       
@@ -33,7 +34,7 @@ class SqlClass:
                         cursorclass=MySQLdb.cursors.DictCursor)
 				
                 if SqlClass.mypool==None:
-                    SqlClass.mypool=pool.QueuePool(getconn, max_overflow=self.max_overflow, pool_size=self.pool_size)
+                    SqlClass.mypool=pool.QueuePool(getconn, max_overflow=self.max_overflow, pool_size=self.pool_size, recycle=self.pool_recycle)
 
                 self.conn=SqlClass.mypool.connect()
 
