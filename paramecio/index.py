@@ -9,6 +9,7 @@ from paramecio.citoplasma.datetime import set_timezone
 from itsdangerous import JSONWebSignatureSerializer
 from paramecio.citoplasma.keyutils import create_key_encrypt, create_key_encrypt_256, create_key
 from paramecio.wsgiapp import app
+#from paramecio.citoplasma.sessions import after_session
 
 modules_pass=False
 
@@ -22,6 +23,19 @@ modules_pass=False
 #def create_app():
 workdir=os.getcwd()
 arr_module_path={}
+
+if config.session_enabled==True:
+    #Create dir for sessions
+    
+    if 'session.data_dir' in config.session_opts:
+        
+        if not os.path.isdir(config.session_opts['session.data_dir']):
+            os.makedirs(config.session_opts['session.data_dir'], 0o700, True)
+    """
+    @app.hook('after_request')
+    def clean_session():
+        after_session()
+    """
 
 def prepare_app():
 
@@ -46,14 +60,6 @@ def prepare_app():
 
     #app.add_hook('before_request', print_memory)
 
-    if config.session_enabled==True:
-        #Create dir for sessions
-        
-        if 'session.data_dir' in config.session_opts:
-            
-            if not os.path.isdir(config.session_opts['session.data_dir']):
-                os.makedirs(config.session_opts['session.data_dir'], 0o700, True)
-        
     set_timezone()
 
 

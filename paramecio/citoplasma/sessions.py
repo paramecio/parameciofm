@@ -6,6 +6,11 @@ from bottle import request, response
 import os
 import json
 import fcntl
+import errno
+import time
+import shutil
+import uuid
+from diskcache import Cache
 
 try:
 
@@ -72,12 +77,6 @@ class ParamecioSession:
     def save(self):
         
         # Here get the function for load session
-        """
-        path_cookie=config.session_opts['session.data_dir']+'/session_'+self.session['token']
-        
-        with open(path_cookie, 'w') as f:
-            f.write(json.dumps(self.session))
-        """
         
         save_session(self.session['token'], self.session)
 
@@ -118,23 +117,6 @@ def get_session():
                 
                 # Here get the function for load session
                 
-                """
-                path_cookie=config.session_opts['session.data_dir']+'/session_'+cookie
-                
-                if os.path.isfile(path_cookie):
-                    
-                    with open(path_cookie) as f:
-                        
-                        json_txt=f.read()
-                        
-                        if(json_txt).strip()!='':
-                            s=json.loads(json_txt)
-                        else:
-                            s={'token': cookie}
-                else:
-                    s={'token': cookie}
-                """
-                
                 s=load_session(cookie)
                 
                 request.environ['session']=s
@@ -146,7 +128,11 @@ def get_session():
     
     return ParamecioSession(s)
 
-if config.session_opts['session.type']=='redis':
+if config.session_opts['session.type']=='mysql':
+    
+    pass
+    
+elif config.session_opts['session.type']=='redis':
     
     import redis
 
@@ -173,53 +159,31 @@ if config.session_opts['session.type']=='redis':
         
         r.set(token, json.dumps(session))
 
+    def after_session():
+        pass
+
 else:
+    
+    cache=Cache(config.session_opts['session.data_dir'])
 
     def load_session(token):
         
         # Here get the function for load session
-        
-        path_cookie=config.session_opts['session.data_dir']+'/session_'+token
-        
-        if os.path.isfile(path_cookie):
-            
-            with open(path_cookie) as f:
-                
-                json_txt=f.read()
-                
-                if(json_txt).strip()!='':
-                    s=json.loads(json_txt)
-                else:
-                    s={'token': token}
+
+        if token in cache:
+            s=json.loads(cache[token])
         else:
-            # Need regenerate session
+            s={'token': token}
+            cache.add(token, json.dumps(s))
             
-            s=generate_session()
-        
         return s
 
     def save_session(token, session):
-
-        path_cookie=config.session_opts['session.data_dir']+'/session_'+token
             
-        with open(path_cookie, 'w') as f:
-            
+        cache[token]=json.dumps(session)
+            #pass
+        pass
             #Lock file, if cannot lock wait
-            
-            while True:
-                try:
-                    fcntl.flock(f, fcntl.LOCK_EX | fcntl.LOCK_NB)
-                    break
-                except IOError as e:
-                    # raise on unrelated IOErrors
-                    if e.errno != errno.EAGAIN:
-                        raise
-                    else:
-                        time.sleep(0.1)
-            
-            f.write(json.dumps(session))
-            
-            fcntl.flock(f, fcntl.LOCK_UN)
 
 """
 def generate_session():
@@ -235,11 +199,11 @@ def get_session():
             return request.environ.get(config.cookie_name)
             #ParamecioSession()
         else:
-            return None
+            return ParamecioSession({})
     
     except:
         
-        return None
+        return ParamecioSession({})
 """
 """
     try: 
