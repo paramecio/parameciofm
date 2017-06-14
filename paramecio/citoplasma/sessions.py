@@ -95,6 +95,16 @@ def generate_session(session={}):
     request.environ['session']=s
     
     return s
+    
+def regenerate_session():
+    
+    token=create_key(30).replace('/', '#')
+
+    s={'token': token}
+
+    response.set_cookie(config.cookie_name, token, path=config.session_opts['session.path'])
+    
+    return ParamecioSession(s)
 
 def get_session():
     

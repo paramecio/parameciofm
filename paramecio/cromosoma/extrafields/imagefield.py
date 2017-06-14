@@ -127,7 +127,27 @@ class ImageField(CharField):
                     self.txt_error='Wrong size. Minimum size is '+str(self.sizes['minimum'][0])+'x'+str(self.sizes['minimum'][1])
                     im.close()
                     return ""
+            
+            if 'resize' in self.sizes:
+                
+                height_t=0
+                width_t=0
+                
+                if real_height<=self.sizes['resize'][1]:
+                    height_t=self.sizes['resize'][1]
+                
+                if real_width>self.sizes['resize'][0]:
+                    
+                    width_t=self.sizes['resize'][0]
+                    
+                    if height_t==0:
+                        ratio=(real_width/width_t)
+                        height_t=round(real_height/ratio)
+                        
+                size=(width_t, height_t)
         
+                if width_t>0 and height_t>0:
+                    im.thumbnail(size, self.default_quality_thumb)
 
         format_image=im.format
         
