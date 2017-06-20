@@ -109,32 +109,37 @@ def regenerate_session():
 def get_session():
     
     s={}
-    
-    if request.environ:
-    
-        if not 'session' in request.environ:
-            
-            cookie=None
-            
-            if request.cookies.get(config.cookie_name):
-                cookie=request.get_cookie(config.cookie_name)
-             
-            if not cookie:
+
+    try:
+        
+        if request.environ:
+        
+            if not 'session' in request.environ:
                 
-                s=generate_session()
+                cookie=None
                 
+                if request.cookies.get(config.cookie_name):
+                    cookie=request.get_cookie(config.cookie_name)
+                 
+                if not cookie:
+                    
+                    s=generate_session()
+                    
+                else:
+                    
+                    # Here get the function for load session
+                    
+                    s=load_session(cookie)
+                    
+                    request.environ['session']=s
+
+                        
             else:
                 
-                # Here get the function for load session
-                
-                s=load_session(cookie)
-                
-                request.environ['session']=s
-
-                    
-        else:
-            
-            s=request.environ['session']
+                s=request.environ['session']
+    except RuntimeError:
+        
+        pass
     
     return ParamecioSession(s)
 
