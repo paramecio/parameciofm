@@ -90,7 +90,7 @@ class HierarchyModelLinks:
     
     def prepare(self):
         
-        with self.model.select([self.model.name_field_id, self.field_name, self.field_parent]) as cur:
+        with self.model.set_conditions('', []).select([self.model.name_field_id, self.field_name, self.field_parent]) as cur:
             for arr_model in cur:
                 if self.field_parent not in self.arr_parent:
                     self.arr_parent[arr_model[self.model.name_field_id]]=[]
@@ -119,6 +119,13 @@ class HierarchyModelLinks:
         return '<a href="%s">%s</a>' % (add_get_parameters(self.base_url, **args), title)
     
     def show(self, son_id, separator=' &gt;&gt; '):
+        
+        try:
+            son_id=int(son_id)
+        except:
+            son_id=0
+        
+        self.prepare()
         
         self.parents(son_id, self.no_url)
         
