@@ -74,9 +74,12 @@ class GenerateAdminClass:
             
             title_edit=I18n.lang('common', 'add_new_item', 'Add new item')
             
+            pass_value=False
+            
             if getpostfiles.get['id']!='0':
                 post=self.model.select_a_row(getpostfiles.get['id'], [], True)
                 title_edit=I18n.lang('common', 'edit_new_item', 'Edit item')
+                pass_value=True
             
             if post==None or post==False:
                 
@@ -87,7 +90,7 @@ class GenerateAdminClass:
             
             url_action=add_get_parameters(self.url, op_admin=2, id=getpostfiles.get['id'])
             
-            form=show_form(post, edit_forms, self.t, False)
+            form=show_form(post, edit_forms, self.t, False, pass_value)
                 
             return self.t.render_template(self.template_insert, admin=self, title_edit=title_edit, form=form, model=self.model, id=getpostfiles.get['id'], url_action=url_action)
         

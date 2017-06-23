@@ -9,14 +9,22 @@ from bottle import request
 
 # Need unittest
 
-def pass_values_to_form(post, arr_form, yes_error=True):
+def pass_values_to_form(post, arr_form, yes_error=True, pass_values=True):
     
+    if pass_values:
+        def get_value(key):
+            return post[key]            
+            
+    else:
+        def get_value(key):
+            return arr_form[key].default_value            
+                
     for key, value in arr_form.items():
         
         post[key]=post.get(key, '')
         
         #if arr_form[key].default_value=='':
-        arr_form[key].default_value=post[key]
+        arr_form[key].default_value=get_value(key)
         
         if arr_form[key].field==None:
             arr_form[key].field=corefields.CharField(key, 255, required=False) 
@@ -66,7 +74,7 @@ def show_form(post, arr_form, t, yes_error=True, pass_values=True, modelform_tpl
     generate_csrf()
     
     if pass_values==True:
-        pass_values_to_form(post, arr_form, yes_error)
+        pass_values_to_form(post, arr_form, yes_error, pass_values)
     
     return t.load_template(modelform_tpl, forms=arr_form)
 
