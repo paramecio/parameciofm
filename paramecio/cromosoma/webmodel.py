@@ -854,7 +854,14 @@ class WebModel:
             except:
                 in_list[x]=str(0)
         return '('+', '.join(in_list)+')'
-    
+        
+    def check_in_list_str(self, field, in_list):
+        
+        for x in range(0, len(in_list)):
+            in_list[x]=self.fields[field].check(in_list[x])
+                
+        return '("'+'", "'.join(in_list)+'")'
+            
     def set_order(self, order:dict) -> object:
         
         arr_order=[]

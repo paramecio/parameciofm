@@ -265,6 +265,19 @@ class TestWebModelMethods(unittest.TestCase):
         connection.close()
         
         pass
+        
+    def test_check_filter_list_str(self):
+        
+        print('Check string list filtering')
+
+        connection=WebModel.connection()
+        model=ExampleModel(connection)
+
+        str_filter=model.check_in_list_str('title', ['joan', 'piter', 'luiz"'])
+        
+        self.assertEqual(str_filter, '("joan", "piter", "luiz&quot;")')
+        
+        connection.close()
     
 if __name__ == '__main__':
     unittest.main()
