@@ -16,8 +16,10 @@ class DateField(PhangoField):
             value=datetime.local_to_gmt(value)
         
         elif not datetime.obtain_timestamp(value, True):
-        
-            return False
+
+            self.error=True
+            self.txt_error='Date format invalid'        
+            return ''
         
         if value==False:
             

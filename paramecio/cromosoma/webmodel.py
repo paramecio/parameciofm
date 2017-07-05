@@ -421,7 +421,7 @@ class WebModel:
             
         except: 
             self.query_error='Cannot insert the new row'
-
+            print(sys.exc_info()[0])
             return False
         
         c=len(values)
@@ -1070,7 +1070,12 @@ class WebModel:
                                 #Error, need this fields.
                                 self.num_errors+=1
                                 
-                                self.fields_errors[k].append("Error: "+v.label+" field required")
+                                if self.fields[k].txt_error=='':
+                                
+                                    self.fields_errors[k].append("Error: "+v.label+" field required")
+
+                                else:
+                                    self.fields_errors[k].append(self.fields[k].txt_error)                                    
                                 
                                 error=True
                                 

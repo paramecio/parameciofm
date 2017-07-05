@@ -114,35 +114,29 @@ class UserModel(WebModel):
             
             if self.username_field in dict_values:
             
-                self.conditions=['WHERE (username=%s', [dict_values[self.username_field]]]
+                self.conditions=['WHERE username=%s AND '+self.name_field_id+'!=%s', [dict_values[self.username_field], get_id]]
+                
+            if self.select_count()>0:
+                
+                self.fields[self.username_field].error=True
+                self.fields[self.username_field].txt_error=I18n.lang('common', 'error_username_exists', 'Error: username exists in database')
+                
+                error+=1
 
             
             if self.email_field in dict_values:
             
-                if len(self.conditions[1])>0:
-            
-                    self.conditions[0]+=' OR email=%s)'
-                else:
-                    self.conditions[0]='WHERE (email=%s)'
-                    self.conditions[1]=[]
-            
-                self.conditions[1].append(dict_values[self.email_field])
-            
-            if get_id>0:
+                self.conditions=['WHERE email=%s AND '+self.name_field_id+'!=%s', [dict_values[self.email_field], get_id]]            
                 
-                self.conditions[0]+=' AND '+self.name_field_id+'!=%s'
-                self.conditions[1].append(get_id)
-            
-            
             if self.select_count()>0:
                 
                 self.fields[self.username_field].error=True
-                self.fields[self.username_field].txt_error=I18n.lang('common', 'error_username_or_password_exists', 'Error: username or email exists in database')
+                self.fields[self.username_field].txt_error=I18n.lang('common', 'error_email_exists', 'Error: email exists in database')
                 
                 error+=1
             
             self.conditions=original_conditions
-
+        
         if error>0:
             self.query_error+='Error:if is not expected, please, check that you disabled the special checkings of this model'
             return False
