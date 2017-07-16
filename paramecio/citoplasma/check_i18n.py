@@ -8,7 +8,7 @@ from importlib import import_module
 from paramecio.citoplasma.i18n import I18n
 from settings import config
 
-pattern=re.compile('^\w+\.(py|html|phtml|pjs)$')
+pattern=re.compile('^\w+\.(py|html|phtml|js)$')
 
 ignored=re.compile('^[__|\.].*$')
 

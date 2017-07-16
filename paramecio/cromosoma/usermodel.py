@@ -120,7 +120,7 @@ class UserModel(WebModel):
                 
                 self.fields[self.username_field].error=True
                 self.fields[self.username_field].txt_error=I18n.lang('common', 'error_username_exists', 'Error: username exists in database')
-                
+                self.fields_errors[self.username_field].append(self.fields[self.username_field].txt_error) 
                 error+=1
 
             
@@ -132,7 +132,8 @@ class UserModel(WebModel):
                 
                 self.fields[self.username_field].error=True
                 self.fields[self.username_field].txt_error=I18n.lang('common', 'error_email_exists', 'Error: email exists in database')
-                
+                self.fields_errors[self.username_field].append(self.fields[self.username_field].txt_error) 
+                                
                 error+=1
             
             self.conditions=original_conditions
