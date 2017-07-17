@@ -92,7 +92,7 @@ class GenerateAdminClass:
             
             form=show_form(post, edit_forms, self.t, False, pass_value)
                 
-            return self.t.render_template(self.template_insert, admin=self, title_edit=title_edit, form=form, model=self.model, id=getpostfiles.get['id'], url_action=url_action)
+            return self.t.render_template(self.template_insert, admin=self, title_edit=title_edit, form=form, model=self.model, id=getpostfiles.get['id'], url_action=url_action, enctype=self.model.enctype)
         
         elif getpostfiles.get['op_admin']=='2':
             
@@ -127,7 +127,7 @@ class GenerateAdminClass:
                 url_action=add_get_parameters(self.url, op_admin=2, id=getpostfiles.get['id'])
                 
                 form=show_form(getpostfiles.post, edit_forms, self.t, True)
-                return self.t.render_template(self.template_insert, admin=self, title_edit=title_edit, form=form, model=self.model, id=getpostfiles.get['id'], url_action=url_action)
+                return self.t.render_template(self.template_insert, admin=self, title_edit=title_edit, form=form, model=self.model, id=getpostfiles.get['id'], url_action=url_action, enctype=self.model.enctype)
 
             
             pass
@@ -236,7 +236,7 @@ class GenerateConfigClass:
 
                 form=show_form(getpostfiles.post, edit_forms, self.t, True)
 
-                return self.t.render_template(self.template_insert, admin=self, title_edit=title_edit, form=form, model=self.model, id='0', url_action=url_action)                
+                return self.t.render_template(self.template_insert, admin=self, title_edit=title_edit, form=form, model=self.model, id='0', url_action=url_action, enctype=self.model.enctype)                
             
         else:
             form_values=self.model.select_a_row_where()
@@ -246,5 +246,5 @@ class GenerateConfigClass:
             
             form=show_form(form_values, edit_forms, self.t, True)            
             
-            return self.t.render_template(self.template_insert, admin=self, title_edit=title_edit, form=form, model=self.model, id=0, url_action=url_action)
+            return self.t.render_template(self.template_insert, admin=self, title_edit=title_edit, form=form, model=self.model, id=0, url_action=url_action, enctype=self.model.enctype)
         

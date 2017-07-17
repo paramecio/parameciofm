@@ -4,8 +4,16 @@
 %else:
     ${title_edit} \
 %endif 
+<%
+
+    enctype_txt=''
+
+    if enctype:
+        enctype_txt='enctype="multipart/form-data"'
+ 
+%>
 </p>
-<form method="post" action="${url_action}">
+<form method="post" action="${url_action}" ${enctype_txt|n}>
     <h2>${title_edit}</h2>
     <span class="error">${model.query_error}</span>
     ${ form|n }

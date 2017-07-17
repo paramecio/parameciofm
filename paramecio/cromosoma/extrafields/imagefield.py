@@ -2,6 +2,7 @@ import os
 import sys
 from pathlib import Path
 from paramecio.cromosoma.corefields import CharField
+from paramecio.cromosoma.extraforms.fileform import FileForm
 from paramecio.citoplasma import httputils
 import traceback
 
@@ -42,6 +43,10 @@ class ImageField(CharField):
         
         self.sizes=sizes
         
+        self.name_form=FileForm
+        self.extra_parameters=[self.save_folder]
+
+        
     def change_folder(self, folder):
         
         pass
@@ -81,6 +86,8 @@ class ImageField(CharField):
                                 #value=arr_image[self.name]
                         
                         self.model.yes_reset_conditions=old_reset
+                self.txt_error='Field is empty'
+                self.error=True
                 
                 return ''
 
@@ -257,7 +264,7 @@ class ImageField(CharField):
             print(traceback.format_exc())
             return ""
 
-    def show_formatted(value):
+    def show_formatted(self, value):
         
         return os.path.basename(value)
         

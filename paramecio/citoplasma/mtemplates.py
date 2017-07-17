@@ -357,4 +357,6 @@ def set_flash_message(message):
     
     s.save()
 
-#standard_t=ptemplate(__file__)
+env=env_theme(__file__)
+
+standard_t=PTemplate(env)

@@ -335,6 +335,10 @@ class WebModel:
         # property for use show_formatted property if needed
         
         self.show_formatted=False
+        
+        # property for def if the model have enctype
+        
+        self.enctype=False
 
     # A method where create the new fields of this model
     
@@ -472,7 +476,14 @@ class WebModel:
         
         try:
             
-            fields, values, update_values=self.check_all_fields(dict_values, external_agent, True, 'update')
+            arr_return=self.check_all_fields(dict_values, external_agent, True, 'update')
+
+            if arr_return:
+            
+                fields, values, update_values=arr_return
+                
+            else:
+                return False
             
         except: 
             
