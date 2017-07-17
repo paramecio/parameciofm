@@ -103,11 +103,12 @@ def admin(**args):
                 
                 for key, text in I18n.l[lang][selected_module].items():
                     
-                    arr_l=json.loads(forms.post[key])
-                    
-                    file_lang+="I18n.l['"+lang+"']['"+selected_module+"']['"+key+"']='"+arr_l[lang].replace("'", "\\'")+"'\n\n"
-                    
-                    z+=1
+                    if key in forms.post:
+                        arr_l=json.loads(forms.post[key])
+                        
+                        file_lang+="I18n.l['"+lang+"']['"+selected_module+"']['"+key+"']='"+arr_l[lang].replace("'", "\\'")+"'\n\n"
+                        
+                        z+=1
                 
                 """
                 for key, text in tmp_lang[selected_module].items():
