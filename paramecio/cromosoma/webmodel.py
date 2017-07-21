@@ -1234,6 +1234,12 @@ class WebModel:
         """
         
         return arr_error
+
+    def safe_query(self):
+        
+        self.create_forms()
+        self.reset_require()
+        
     
     def close(self):
         
