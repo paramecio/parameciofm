@@ -3,7 +3,7 @@
 from bottle import hook
 from mako.template import Template
 from mako.lookup import TemplateLookup
-from paramecio.citoplasma.urls import make_url, make_media_url, make_media_url_module, add_get_parameters
+from paramecio.citoplasma.urls import make_url, make_url_domain, make_media_url, make_media_url_module, add_get_parameters
 from paramecio.citoplasma.i18n import I18n
 from paramecio.citoplasma.sessions import get_session
 from paramecio.citoplasma.adminutils import make_admin_url
@@ -113,6 +113,8 @@ class PTemplate:
         
         #Adding basic filters for urls
         self.add_filter(make_url)
+
+        self.add_filter(make_url_domain)
         
         self.add_filter(make_media_url)
         

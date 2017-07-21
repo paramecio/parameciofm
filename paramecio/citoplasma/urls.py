@@ -36,6 +36,10 @@ def make_url(path, query_args={}):
         get_query='?'+"&".join( [x+'='+y for x,y in query_args.items()] )
     
     return config.base_url+path+get_query
+    
+def make_url_domain(path, query_args={}):
+    
+    return config.domain_url+make_url(path, query_args)
 
 def add_get_parameters(url, **args):
     
