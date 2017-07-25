@@ -1,0 +1,26 @@
+${add_js_home_local('jquery.min.js', 'admin')}
+${add_js_home_local('spectrum.js', 'admin')}
+${add_css_home_local('spectrum.css', 'admin')}
+<%
+
+if form.default_value:
+    form.default_value=str(hex(int(form.default_value))).replace('0x', '#')
+    pass
+
+%>
+
+<input type='text' id="${form.name_field_id}_field_form" name="${form.name}" value="${form.default_value}" />
+<script>
+$("#${form.name_field_id}_field_form").spectrum({
+    allowEmpty: true
+});
+
+$("#${form.name_field_id}_field_form").closest('form').submit( function () {
+    
+    var t=$("#${form.name_field_id}_field_form").spectrum("get");
+    
+    $('#${form.name_field_id}_field_form').val(t.toHexString());
+    
+});
+
+</script>

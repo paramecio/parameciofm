@@ -1,0 +1,12 @@
+<%
+
+    import os
+    
+    name_file=os.path.basename(form.default_value)
+
+%>
+<input type="file" name="${form.name}_file" id="${form.name}_file_field_form" />
+% if name_file:
+    ${name_file}
+% endif
+<input type="hidden" name="${form.name}" id="${form.name}_field_form" value="${form.default_value}"/>
