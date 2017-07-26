@@ -29,7 +29,7 @@ class ColorField(IntegerField):
             value=('0'*repeat)+value
             
         value='#'+value
-
+        
         return value
 
     def show_formatted(self, value):

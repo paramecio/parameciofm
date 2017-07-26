@@ -3,10 +3,17 @@ ${add_js_home_local('spectrum.js', 'admin')}
 ${add_css_home_local('spectrum.css', 'admin')}
 <%
 
-if form.default_value:
-    form.default_value=str(hex(int(form.default_value))).replace('0x', '#')
-    pass
 
+form.default_value=str(hex(int(form.default_value))).replace('0x', '')
+
+c=len(form.default_value)
+    
+if(c<6):
+    repeat=6-c
+    form.default_value=('0'*repeat)+form.default_value
+
+form.default_value='#'+form.default_value
+    
 %>
 
 <input type='text' id="${form.name_field_id}_field_form" name="${form.name}" value="${form.default_value}" />
