@@ -119,7 +119,7 @@ class UserModel(WebModel):
             if self.select_count()>0:
                 
                 self.fields[self.username_field].error=True
-                self.fields[self.username_field].txt_error=I18n.lang('common', 'error_username_exists', 'Error: username exists in database')
+                self.fields[self.username_field].txt_error=I18n.lang('common', 'error_username_exists', 'Error: username already exists')
                 self.fields_errors[self.username_field].append(self.fields[self.username_field].txt_error) 
                 error+=1
 
@@ -131,7 +131,7 @@ class UserModel(WebModel):
             if self.select_count()>0:
                 
                 self.fields[self.email_field].error=True
-                self.fields[self.email_field].txt_error=I18n.lang('common', 'error_email_exists', 'Error: email exists in database')
+                self.fields[self.email_field].txt_error=I18n.lang('common', 'error_email_exists', 'Error: this email is already being used')
                 self.fields_errors[self.email_field].append(self.fields[self.email_field].txt_error) 
                                 
                 error+=1
