@@ -47,6 +47,8 @@ class GenerateAdminClass:
         
         self.template_verify_delete='utils/verify_delete.phtml'
 
+        self.url_redirect=self.url
+
     def show(self):
         
         getpostfiles=GetPostFiles()
@@ -189,6 +191,8 @@ class GenerateConfigClass:
         
         self.url=url
         
+        self.url_redirect=self.url
+        
         self.arr_fields_edit=list(model.fields.keys())
 
         del self.arr_fields_edit[self.arr_fields_edit.index(model.name_field_id)]
@@ -220,6 +224,8 @@ class GenerateConfigClass:
     
         if getpostfiles.query['op_config']=='1':
             
+            self.model.yes_reset_conditions=False
+            
             getpostfiles.obtain_post()
             
             c=self.model.select_count()
@@ -231,20 +237,24 @@ class GenerateConfigClass:
 
             if insert_model(getpostfiles.post):
                 set_flash_message(I18n.lang('common', 'task_successful', 'Task successful'))
-                redirect(self.url)
+                self.model.yes_reset_conditions=True
+                redirect(self.url_redirect)
             else:
 
                 form=show_form(getpostfiles.post, edit_forms, self.t, True)
-
+                self.model.yes_reset_conditions=True
                 return self.t.render_template(self.template_insert, admin=self, title_edit=title_edit, form=form, model=self.model, id='0', url_action=url_action, enctype=self.model.enctype)                
             
         else:
             form_values=self.model.select_a_row_where()
             
+            pass_values=True
+            
             if not form_values:
                 form_values={}
+                pass_values=False
             
-            form=show_form(form_values, edit_forms, self.t, True)            
+            form=show_form(form_values, edit_forms, self.t, True, pass_values)            
             
             return self.t.render_template(self.template_insert, admin=self, title_edit=title_edit, form=form, model=self.model, id=0, url_action=url_action, enctype=self.model.enctype)
         

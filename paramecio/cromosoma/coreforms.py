@@ -20,7 +20,7 @@ class BaseForm:
         
     def form(self):
         
-        return '<input type="'+self.type+'" class="'+self.css+'" name="'+self.name+'" id="'+self.name_field_id+'" value="'+self.setform(self.default_value)+'">'
+        return '<input type="'+self.type+'" class="'+self.css+'" name="'+self.name+'" id="'+self.name_field_id+'" value="'+self.setform(self.default_value)+'" />'
     
     def show_formatted(self, value):
     
