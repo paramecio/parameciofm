@@ -1,12 +1,12 @@
 ${add_js_home_local('jquery.min.js', 'admin')}
 
-<input type="text" name="${form}_day" id="time_${form}_day" value="${d}" size="2" maxlength="2"/>
-<input type="text" name="${form}_month" id="time_${form}_month" value="${m}" size="2" maxlength="2"/>
-<input type="text" name="${form}_year" id="time_${form}_year" value="${y}" size="4" maxlength="4"/>
+<input type="number" min="1" max="31" name="${form}_day" id="time_${form}_day" class="form_day" value="${d}" size="2" maxlength="2"/>
+<input type="number" min="1" max="12" name="${form}_month" id="time_${form}_month" class="form_month" value="${m}" size="2" maxlength="2"/>
+<input type="number" name="${form}_year" id="time_${form}_year" class="form_year" value="${y}" size="4" maxlength="4"/>
 %if yes_time==True:
-<input type="text" name="${form}_hour" id="time_${form}_hour" value="${h}" size="2" maxlength="2"/>
-<input type="text" name="${form}_minute" id="time_${form}_minute" value="${min}" size="2" maxlength="2"/>
-<input type="text" name="${form}_second" id="time_${form}_second" value="${s}" size="2" maxlength="2"/>
+<input type="text" min="0" max="23" name="${form}_hour" id="time_${form}_hour" class="form_hour" value="${h}" size="2" maxlength="2"/>
+<input type="text" min="0" max="60" name="${form}_minute" id="time_${form}_minute" class="form_minute" value="${min}" size="2" maxlength="2"/>
+<input type="text" min="0" max="60" name="${form}_second" id="time_${form}_second" class="form_second" value="${s}" size="2" maxlength="2"/>
 <input type="hidden" name="${form}" id="time_${form}" value="" />
 % endif
 

@@ -11,6 +11,7 @@ class DateForm(BaseForm):
         super().__init__(name, value)
         
         self.yes_time=False
+        self.t=standard_t
 
     def form(self):
         
@@ -23,15 +24,15 @@ class DateForm(BaseForm):
         
         time=format_timedata(self.default_value)
         
-        if time==True:
+        if time:
             y=int(time[0])
             m=int(time[1])
             d=int(time[2])
             h=int(time[3])
-            min=int(time[4])
+            min_time=int(time[4])
             s=int(time[5])
-
-        return standard_t.load_template('forms/dateform.phtml', yes_time=self.yes_time, form=self.name, y=y, m=m, d=d, h=h, min=min, s=s)
+        
+        return self.t.load_template('forms/dateform.phtml', yes_time=self.yes_time, form=self.name, y=y, m=m, d=d, h=h, min=min_time, s=s)
 
     #def 
                          

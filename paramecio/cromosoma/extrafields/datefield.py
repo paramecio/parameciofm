@@ -1,11 +1,14 @@
 from paramecio.cromosoma.corefields import PhangoField
 from paramecio.citoplasma import datetime
+from paramecio.cromosoma.extraforms.dateform import DateForm
 
 class DateField(PhangoField):
     
     def __init__(self, name, size=255, required=False):
         
         super().__init__(name, size, required)
+        
+        self.name_form=DateForm
         
         self.utc=True
     
