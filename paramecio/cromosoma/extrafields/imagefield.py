@@ -31,7 +31,7 @@ class ImageField(CharField):
         
         self.yes_thumbnail=False
         
-        self.default_quality_thumb=Image.ANTIALIAS
+        self.default_quality_thumb=95
         
         # Is relative to media folder of paramecio
         
@@ -191,8 +191,8 @@ class ImageField(CharField):
                 
                 save_file_thumb=self.save_folder+'/'+name+filename
                 
-                im_thumb.thumbnail(size, self.default_quality_thumb)
-                im_thumb.save(save_file_thumb, "JPEG")
+                im_thumb.thumbnail(size, Image.ANTIALIAS)
+                im_thumb.save(save_file_thumb, "JPEG", quality=self.default_quality_thumb)
                 
                 im_thumb.close()
                 
