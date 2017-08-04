@@ -3,18 +3,69 @@ ${add_js_home_local('jquery.min.js', 'admin')}
 <input type="number" min="1" max="31" name="${form}_day" id="time_${form}_day" class="form_day" value="${d}" size="2" maxlength="2"/>
 <input type="number" min="1" max="12" name="${form}_month" id="time_${form}_month" class="form_month" value="${m}" size="2" maxlength="2"/>
 <input type="number" name="${form}_year" id="time_${form}_year" class="form_year" value="${y}" size="4" maxlength="4"/>
-%if yes_time==True:
+% if yes_time==True:
 <input type="text" min="0" max="23" name="${form}_hour" id="time_${form}_hour" class="form_hour" value="${h}" size="2" maxlength="2"/>
 <input type="text" min="0" max="60" name="${form}_minute" id="time_${form}_minute" class="form_minute" value="${min}" size="2" maxlength="2"/>
 <input type="text" min="0" max="60" name="${form}_second" id="time_${form}_second" class="form_second" value="${s}" size="2" maxlength="2"/>
-<input type="hidden" name="${form}" id="time_${form}" value="" />
 % endif
+<input type="hidden" name="${form}" id="time_${form}" value="" />
 
 <script language="javascript">
     $(document).submit(function  () {
-    
-        $("#time_${form}").val($("#time_${form}_year").val()+$("#time_${form}_month").val()+$("#time_${form}_day").val()+$("#time_${form}_hour").val()+$("#time_${form}_minute").val()+$("#time_${form}_second").val());
         
+        year=$("#time_${form}_year").val().toString();
+        month=$("#time_${form}_month").val().toString();        
+        day=$("#time_${form}_day").val().toString();        
+
+        year=add_extra_length(year, 4);
+        month=add_extra_length(month, 2);
+        day=add_extra_length(day, 2);        
+        
+        final_time=year+month+day
+        
+        % if yes_time==True:
+        hour=$("#time_${form}_hour").val().toString();
+        minute=$("#time_${form}_minute").val().toString();        
+        second=$("#time_${form}_second").val().toString();        
+        
+        hour=add_extra_length(hour, 2);
+        minute=add_extra_length(minute, 2);
+        second=add_extra_length(second, 2);                
+        
+        final_time+=final_time;
+        
+        % else:
+        
+        final_time+='000000';
+        
+        % endif
+        
+        
+        $("#time_${form}").val(final_time);
     
     });
+    
+    function add_extra_length(str_number, total_length) 
+    {
+        
+        if(str_number.length<total_length)
+        {
+            c=total_length-str_number.length;
+            
+            extra_number='';
+            
+            for(x=0;x<c;x++)
+            {
+                
+                extra_number+='0';
+                
+            }
+            
+            str_number=extra_number+str_number;
+        }
+        
+        return str_number;
+        
+    }
+    
 </script>
