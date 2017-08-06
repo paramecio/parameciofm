@@ -1,5 +1,16 @@
 #!/usr/bin/env python3
 
+try:
+
+    from settings import config
+
+except:
+
+    class config:
+        cookie_name='paramecio.session'
+        key_encrypt=create_key_encrypt_256(30)
+        session_opts={'session.data_dir': 'sessions', 'session.type': 'file', 'session.path': 'paramecio'}
+
 from itsdangerous import URLSafeSerializer
 from paramecio.citoplasma.keyutils import create_key_encrypt, create_key_encrypt_256, create_key
 from bottle import request, response
@@ -11,17 +22,7 @@ import time
 import shutil
 import uuid
 from diskcache import Cache
-
-try:
-
-    from settings import config
-
-except:
-
-    class config:
-        cookie_name='paramecio.session'
-        key_encrypt=create_key_encrypt_256(30)
-        session_opts={'session.data_dir': 'sessions', 'session.type': 'file', 'session.path': 'paramecio'}
+#from dogpile.cache import make_region
 
 # Cookie session
 # This save the session in a cookie for maximum performance. In next version i can use memcached or something for session
@@ -178,7 +179,7 @@ elif config.session_opts['session.type']=='redis':
         pass
 
 else:
-    
+
     cache=Cache(config.session_opts['session.data_dir'])
 
     def load_session(token):
@@ -196,9 +197,38 @@ else:
     def save_session(token, session):
             
         cache[token]=json.dumps(session)
-            #pass
-        pass
-            #Lock file, if cannot lock wait
+
+    """
+    region = make_region().configure(
+    'dogpile.cache.dbm',
+    expiration_time = 3600,
+    arguments = {
+            "filename":config.session_opts['session.data_dir']+"/sessions.dbm"
+        }
+    )
+    
+    def create_value():
+        return False
+    def load_session(token):
+        
+        # Here get the function for load session
+        
+        json_s=region.get_or_create(token, create_value)
+        
+        if json_s:
+            s=json.loads(json_s)
+        else:
+            s={'token': token}
+            region.set(token, json.dumps(s))
+   
+        return s
+
+    def save_session(token, session):
+            
+        #cache[token]=json.dumps(session)
+        region.set(token, json.dumps(session))
+    """
+
 
 """
 def generate_session():
