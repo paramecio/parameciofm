@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+from paramecio.citoplasma.keyutils import create_key_encrypt, create_key_encrypt_256, create_key
+
 try:
 
     from settings import config
@@ -12,7 +14,6 @@ except:
         session_opts={'session.data_dir': 'sessions', 'session.type': 'file', 'session.path': 'paramecio'}
 
 from itsdangerous import URLSafeSerializer
-from paramecio.citoplasma.keyutils import create_key_encrypt, create_key_encrypt_256, create_key
 from bottle import request, response
 import os
 import json
