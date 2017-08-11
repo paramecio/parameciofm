@@ -226,6 +226,9 @@ def format_local_fulldate(timeform):
     
     return format_datetime(format_date_txt+' '+format_time_txt, timeform, no_utc)
 
+def format_local_strtime(strtime, timeform):
+    
+    return format_datetime(strtime, timeform, no_utc)    
 
 #Input is utc timestamp, return local arrow object
 

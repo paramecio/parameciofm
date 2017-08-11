@@ -13,7 +13,7 @@ except:
         key_encrypt=create_key_encrypt_256(30)
         session_opts={'session.data_dir': 'sessions', 'session.type': 'file', 'session.path': 'paramecio'}
 
-from itsdangerous import URLSafeSerializer
+from itsdangerous import JSONWebSignatureSerializer
 from bottle import request, response
 import os
 import json
@@ -82,31 +82,6 @@ class ParamecioSession:
         
         save_session(self.session['token'], self.session)
 
-def generate_session(session={}):
-    
-    #secret=URLSafeSerializer(config.key_encrypt)
-    
-    #session=secret.dumps(session)
-    
-    token=create_key(30).replace('/', '#')
-
-    s={'token': token}
-
-    response.set_cookie(config.cookie_name, token, path=config.session_opts['session.path'])
-    
-    request.environ['session']=s
-    
-    return s
-    
-def regenerate_session():
-    
-    token=create_key(30).replace('/', '#')
-
-    s={'token': token}
-
-    response.set_cookie(config.cookie_name, token, path=config.session_opts['session.path'])
-    
-    return ParamecioSession(s)
 
 def get_session():
     
@@ -180,6 +155,105 @@ elif config.session_opts['session.type']=='redis':
         pass
 
 else:
+    """
+    def generate_session():
+        
+        if config.cookie_name in request.environ:
+        
+            request.environ[config.cookie_name].invalidate()
+            
+        else:
+            
+            request.environ[config.cookie_name]=request.environ.get(config.cookie_name, {})
+            
+        return request.environ[config.cookie_name]
+
+    def regenerate_session():
+        
+        if config.cookie_name in request.environ:
+        
+            request.environ[config.cookie_name].invalidate()
+
+        else:
+            
+            request.environ[config.cookie_name]=request.environ.get(config.cookie_name, {})
+            
+        return request.environ[config.cookie_name]
+    
+    def get_session():
+        print(request.environ.keys())
+        if config.cookie_name in request.environ:
+        
+            return request.environ[config.cookie_name]
+            
+        else:
+            return {}
+    """
+    """
+    secret=JSONWebSignatureSerializer(config.key_encrypt)
+    
+    def generate_session():
+
+        token=create_key(30).replace('/', '#')
+        
+        session={'token': token}
+        
+        s=secret.dumps(session)
+        try:
+            response.set_cookie(config.cookie_name, session, path=config.session_opts['session.path'])
+        
+            request.environ['session']=s
+            
+        except:
+            pass
+        
+        return session
+    
+    def regenerate_session():
+        
+        s=generate_session()
+        
+        return ParamecioSession(s)
+        
+    def load_session(cookie):
+        
+        try:
+            s=secret.loads(cookie)
+            
+        except:
+            s={}
+            
+        return s
+        
+    def save_session(cookie, session):
+        generate_session(session)
+    """
+
+    def generate_session(session={}):
+        
+        #secret=URLSafeSerializer(config.key_encrypt)
+        
+        #session=secret.dumps(session)
+        
+        token=create_key(30).replace('/', '#')
+
+        s={'token': token}
+
+        response.set_cookie(config.cookie_name, token, path=config.session_opts['session.path'])
+        
+        request.environ['session']=s
+        
+        return s
+        
+    def regenerate_session():
+        
+        token=create_key(30).replace('/', '#')
+
+        s={'token': token}
+
+        response.set_cookie(config.cookie_name, token, path=config.session_opts['session.path'])
+        
+        return ParamecioSession(s)
 
     cache=Cache(config.session_opts['session.data_dir'])
 
