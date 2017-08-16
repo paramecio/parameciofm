@@ -125,6 +125,10 @@ def now(utc=False):
     
     return actual
     
+def today(utc=False):
+    
+    return now()[:8]+'000000'
+    
 # Get actual timestamp
 
 def obtain_timestamp(timeform, local=False):
