@@ -531,7 +531,7 @@ class WebModel:
     def reset_conditions(self):
 
         self.conditions=["WHERE 1=1", []]
-        
+        self.limit=''
     
     # A method for select fields from a table in db. Support for foreignkeys.
     #Type assoc can be assoc for return dictionaries
@@ -834,7 +834,7 @@ class WebModel:
         
         #Need delete rows from other related tables save in self.related_models_deleted
         
-        sql="delete from `"+self.name+"` "+self.conditions[0]
+        sql=("delete from `"+self.name+"` "+self.conditions[0]+' '+self.order_by+' '+self.limit).strip()
         
         result=self.query(sql, self.conditions[1], self.connection_id)
         
