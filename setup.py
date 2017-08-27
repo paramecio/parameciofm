@@ -21,7 +21,7 @@ setup(name='paramecio',
       url='http://paramecioproject.com/',
       packages=['paramecio', 'paramecio.i18n', 'paramecio.settings'],
       include_package_data=True,
-      install_requires=['bottle', 'mako', 'mysqlclient', 'sqlalchemy', 'diskcache', 'itsdangerous', 'colorama','cherrypy', 'arrow'],
+      install_requires=['bottle', 'mako', 'mysqlclient', 'sqlalchemy', 'oslo.concurrency', 'itsdangerous', 'colorama','cherrypy', 'arrow'],
       entry_points={'console_scripts': [
         'paramecio = paramecio.console:start',
       ]},
