@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 from paramecio.citoplasma.keyutils import create_key_encrypt, create_key_encrypt_256, create_key
+from oslo_concurrency import lockutils
+
 
 try:
 
@@ -228,7 +230,7 @@ else:
     def save_session(cookie, session):
         generate_session(session)
     """
-
+    """
     def generate_session(session={}):
         
         #secret=URLSafeSerializer(config.key_encrypt)
@@ -255,6 +257,7 @@ else:
         
         return ParamecioSession(s)
 
+
     cache=Cache(config.session_opts['session.data_dir'])
 
     def load_session(token):
@@ -272,6 +275,81 @@ else:
     def save_session(token, session):
             
         cache[token]=json.dumps(session)
+    """
+    
+    def generate_session(session={}):
+        
+        #secret=URLSafeSerializer(config.key_encrypt)
+        
+        #session=secret.dumps(session)
+        
+        token=create_key(30).replace('/', '#')
+
+        s={'token': token}
+
+        response.set_cookie(config.cookie_name, token, path=config.session_opts['session.path'])
+        
+        request.environ['session']=s
+
+        file_session=config.session_opts['session.data_dir']+'/'+token+'_session'
+            
+        save_session(token, s, True)
+
+        request.environ['session']=s
+        
+        return s
+        
+    def regenerate_session():
+        
+        token=create_key(30).replace('/', '#')
+
+        s={'token': token}
+
+        response.set_cookie(config.cookie_name, token, path=config.session_opts['session.path'])
+
+        file_session=config.session_opts['session.data_dir']+'/'+token+'_session'
+            
+        save_session(token, s, True)
+
+        request.environ['session']=s
+        
+        return ParamecioSession(s)
+    
+    def load_session(token):
+        
+        file_session=config.session_opts['session.data_dir']+'/'+token+'_session'
+        
+        if os.path.isfile(file_session):
+        
+            with open(file_session) as f:
+            
+                try:
+                
+                    s=json.loads(f.read())
+        
+                except:
+                    
+                    s={'token': token}
+                
+        else:
+            return generate_session({'token': token})
+        
+        return s
+        
+    @lockutils.synchronized('not_thread_safe')
+    def save_session(token, session, create_file=False):
+        
+        file_session=config.session_opts['session.data_dir']+'/'+token+'_session'
+
+        # Check if exists lock
+
+        if os.path.isfile(file_session) or create_file:
+            
+            with open(file_session, 'w') as f:                
+                #try:
+                json_session=json.dumps(session)
+                
+                f.write(json_session)
 
     """
     region = make_region().configure(
