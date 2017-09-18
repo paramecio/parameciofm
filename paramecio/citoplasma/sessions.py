@@ -24,7 +24,7 @@ import errno
 import time
 import shutil
 import uuid
-from diskcache import Cache
+#from diskcache import Cache
 #from dogpile.cache import make_region
 
 # Cookie session
