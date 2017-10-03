@@ -9,6 +9,8 @@ class DictField(PhangoField):
         
         self.field_type=field_type
     
+        self.error_default='Sorry, the json dict is invalid'
+    
     def check(self, value):
         
         if type(value).__name__=='str':
@@ -18,13 +20,13 @@ class DictField(PhangoField):
                 
                 value={}
                 self.error=True
-                self.txt_error='Sorry, the json dict is invalid'
+                self.txt_error=self.error_default
                 
         elif type(value).__name__!='dict':
             
             value={}
             self.error=True
-            self.txt_error='Sorry, the json array is invalid'
+            self.txt_error=self.error_default
             
         for k,v in value.items():
             

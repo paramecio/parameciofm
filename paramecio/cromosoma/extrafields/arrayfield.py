@@ -8,6 +8,8 @@ class ArrayField(PhangoField):
         super().__init__(name, required)
         
         self.field_type=field_type
+        
+        self.error_default='Sorry, the json array is invalid'
     
     def check(self, value):
         
@@ -18,7 +20,7 @@ class ArrayField(PhangoField):
                 
                 value=[]
                 self.error=True
-                self.txt_error='Sorry, the json array is invalid'
+                self.txt_error=self.error_default
                 
         elif type(value).__name__!='list':
             

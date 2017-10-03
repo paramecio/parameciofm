@@ -11,6 +11,8 @@ class DateField(PhangoField):
         self.name_form=DateForm
         
         self.utc=True
+        
+        self.error_default='Date format invalid'        
     
     def check(self, value):
         
@@ -21,13 +23,13 @@ class DateField(PhangoField):
         elif not datetime.obtain_timestamp(value, True):
 
             self.error=True
-            self.txt_error='Date format invalid'        
+            self.txt_error=self.error_default
             return ''
         
         if value==False:
             
             self.error=True
-            self.txt_error='Date format invalid'
+            self.txt_error=self.error_default
             return ''
         
         return value

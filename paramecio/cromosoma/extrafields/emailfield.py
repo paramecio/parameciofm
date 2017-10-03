@@ -5,6 +5,12 @@ mail_pattern=re.compile("\w[\w\.-]*@\w[\w\.-]+\.\w+")
 
 class EmailField(CharField):
     
+    def __init__(self, name, size=1024, required=False):
+        
+        super().__init__(name, size, required)
+        
+        self.error_default='Error: No valid format'        
+    
     def check(self, value):
         
         value=super().check(value)
@@ -16,6 +22,6 @@ class EmailField(CharField):
             
             self.error=True
             value=""
-            self.txt_error='No valid format'
+            self.txt_error=self.error_default
             
         return value

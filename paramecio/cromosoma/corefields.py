@@ -81,6 +81,8 @@ class FloatField(PhangoField):
     
     def __init__(self, name, size=11, required=False):
         super(FloatField, self).__init__(name, size, required)
+        
+        self.error_default="The value is zero"
     
     def check(self, value):
         
@@ -99,12 +101,12 @@ class FloatField(PhangoField):
             value=str(float(value))
         
             if value=="0" and self.required==True:
-                self.txt_error="The value is zero"
+                self.txt_error=self.error_default
                 self.error=True
         except:
             
             value="0"
-            self.txt_error="The value is zero"
+            self.txt_error=self.error_default
             self.error=True
         
         return value
@@ -187,6 +189,8 @@ class BooleanField(IntegerField):
         
         super(IntegerField, self).__init__(name, size, required)
     
+        self.default_error="Need 0 or 1 value"
+    
     def check(self, value):
         
         self.error=False
@@ -197,13 +201,13 @@ class BooleanField(IntegerField):
             value=int(value)
             
             if value<0 or value>1:
-                self.txt_error="Need 0 or 1 value"
+                self.txt_error=self.default_error
                 self.error=True
 
         except:
             
             self.error=True
-            self.txt_error="Need 0 or 1 value"
+            self.txt_error=self.default_error
             value=0
 
         value=str(value)

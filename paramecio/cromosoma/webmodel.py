@@ -97,6 +97,10 @@ class PhangoField:
         # Template manager for the form if needed
         
         self.t=None
+        
+        # Error by default
+        
+        self.error_default='Error: field required'
      
     # This method is used for describe the new field in a sql language format.
     
@@ -129,7 +133,7 @@ class PhangoField:
         #value=WebModel.escape_sql(value)
         
         if value=="":
-            self.txt_error="The field is empty"
+            self.txt_error=self.error_default
             self.error=True
             
         
@@ -168,11 +172,12 @@ class PrimaryKeyField(PhangoField):
         self.protected=True
         self.name_form=HiddenForm
         self.required=True
+        self.error_default="The value is zero"
     
     def check(self, value):
         
         self.error=None
-        self.txt_error=''
+        self.txt_error=self.error_default
         
         if value=='':
             value='0'
@@ -186,7 +191,7 @@ class PrimaryKeyField(PhangoField):
             value=0
         
         if value==0:
-            self.txt_error="The value is zero"
+            self.txt_error=self.error_default
             self.error=True
             
         

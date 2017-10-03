@@ -29,11 +29,11 @@ class PasswordField(PhangoField):
                     return ""
                 else:
                     
-                    self.txt_error="The field is empty"
+                    self.txt_error=self.error_default
                     self.error=True
                     
             else:
-                self.txt_error="The field is empty"
+                self.txt_error=self.error_default
                 self.error=True
             
         else:
