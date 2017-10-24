@@ -818,7 +818,7 @@ class WebModel:
                 conditions[0]+=" AND `"+table_name+"`.`"+self.fields[field].identifier_field+"`=`"+self.name+"`.`"+field+"`"
                 
         sql= "select count(`"+field_to_count+"`) from "+", ".join(tables_to_select)+' '+conditions[0]
-        
+        print(sql)
         count=0
         
         with self.query(sql, conditions[1], self.connection_id) as cursor:

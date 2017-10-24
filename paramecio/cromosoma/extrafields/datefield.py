@@ -12,7 +12,7 @@ class DateField(PhangoField):
         
         self.utc=True
         
-        self.error_default='Date format invalid'        
+        self.error_default='Error: Date format invalid'        
     
     def check(self, value):
         

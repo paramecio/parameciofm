@@ -222,6 +222,13 @@ class PTemplate:
         self.filters[filter_name.__name__]=filter_name
 
 
+class STemplate:
+    
+    def __init__(html_code):
+        
+        return Template(html_code)
+
+
 class HeaderHTML:
     
     def __init__(self):

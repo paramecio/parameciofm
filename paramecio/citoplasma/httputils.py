@@ -4,6 +4,7 @@ import json, re
 from bottle import request, response
 from paramecio.citoplasma.sessions import get_session
 from paramecio.citoplasma.keyutils import create_key_encrypt
+from bottle import HTTPResponse
 
 no_csrf=False
 change_csrf=False
@@ -105,7 +106,8 @@ class GetPostFiles:
 
                 if self.post['csrf_token']!=s['csrf_token'] or self.post['csrf_token'].strip()=="":
                     
-                    raise NameError('Error: you need a valid csrf_token')
+                    #raise NameError('Error: you need a valid csrf_token')
+                    raise HTTPResponse(body=json.dumps({'error_csrf': 1, 'error': 1}), status=200, headers={'Content-type': 'application/json'})
                 else:
                     #Clean csrf_token
                     
@@ -117,7 +119,8 @@ class GetPostFiles:
                     
 
             else:
-                raise NameError('Error: you don\'t send any valid csrf_token')
+                #raise NameError('Error: you don\'t send any valid csrf_token')
+                raise HTTPResponse(body=json.dumps({'error_csrf': 1, 'error': 1}), status=200, headers={'Content-type': 'application/json'})
 
         #Check post_token
     
