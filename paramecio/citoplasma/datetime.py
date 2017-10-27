@@ -168,6 +168,7 @@ def timestamp_to_datetime(timestamp):
     
     return arrow.get(timestamp).format(sql_format_time)
 
+# Get a utc timestamp and convert to local
 
 def timestamp_to_datetime_local(timestamp):
     
@@ -272,3 +273,31 @@ def no_utc(timestamp):
     
     return arrow.get(timestamp)
 
+
+class TimeClass:
+    
+    def __init__(self, timestamp=0, utc=False):
+        
+        self.utc=utc
+        
+        self.format_time=sql_format_time
+        self.format_time_txt=format_time_txt
+        
+        if timestamp==0:
+
+            self.datetime=now(self.utc)
+        
+        else:
+        
+            self.datetime=timestamp_to_datetime(timestamp)
+        
+        y, m, d, h, mi, s=format_timedata(self.datetime)
+        
+        self.t=arrow.get(datetime(y, m, d, h, mi, s))
+    
+    def add_month(self, num_months):
+        
+        m=self.t.shift(months=+num_months)
+        
+        return m.format(self.format_time)
+    
