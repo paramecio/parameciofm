@@ -300,4 +300,8 @@ class TimeClass:
         m=self.t.shift(months=+num_months)
         
         return m.format(self.format_time)
+        
+    def format(self):
+        
+        return m.format(self.format_time_txt)
     

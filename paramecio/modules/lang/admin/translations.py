@@ -13,6 +13,11 @@ from paramecio.cromosoma.extraforms.i18nform import I18nForm
 import re, json
 from collections import OrderedDict
 from importlib import import_module
+import bottle
+
+# NEED more memfile max
+
+bottle.BaseRequest.MEMFILE_MAX=1024*1024 
 
 def admin(**args):
     
