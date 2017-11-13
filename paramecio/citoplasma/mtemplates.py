@@ -144,6 +144,8 @@ class PTemplate:
         
         self.add_filter(self.headerhtml.add_header_home)
         
+        self.add_filter(qf)
+        
         self.filters['HeaderHTML']=self.headerhtml
         
         self.filters['show_flash_message']=self.headerhtml.show_flash_message
@@ -365,6 +367,10 @@ def set_flash_message(message):
     s['flash']=message
     
     s.save()
+
+def qf(text):
+    
+    return text.replace('"', '\\"')
 
 env=env_theme(__file__)
 
