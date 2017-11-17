@@ -188,7 +188,7 @@ def home(module='', submodule=''):
                  if arr_user==False:
                      # delete cookioe
                      connection.close()
-                     response.delete_cookie("remember_login")
+                     response.delete_cookie("remember_login", path=config.session_opts['session.path'], secret=key_encrypt)
                  else:
                      s=get_session()
             
@@ -422,7 +422,7 @@ def logout():
     if request.get_cookie("remember_login", secret=key_encrypt):
            
         # delete cookie
-        response.delete_cookie("remember_login", path="/")
+        response.delete_cookie("remember_login", path=config.session_opts['session.path'])
     
     #return ""
     
