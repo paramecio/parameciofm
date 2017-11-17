@@ -46,7 +46,7 @@ def start():
         
         lang_p=re.compile("I18n\.lang\('("+module_base+"?)',\s+'(.*?)',\s+'(.*?)'\)")
         #lang_t=re.compile("\${lang\('("+module_base+"?)',\s+'(.*?)',\s+'(.*?)'\)\}")
-        lang_t=re.compile("\${lang\('("+module_base+"?)',\s+'(.*?)',\s+'(.*?)'\)")    
+        lang_t=re.compile("lang\('("+module_base+"?)',\s+'(.*?)',\s+'(.*?)'\)")    
     
     if not os.path.isdir(path):
         

@@ -273,8 +273,6 @@ def login():
         
             if user_admin.fields['password'].verify(password, arr_user['password']):
                 
-                generate_session()
-                
                 s=get_session()
                 
                 s['id']=arr_user['id']
@@ -305,7 +303,7 @@ def login():
                     
                     if user_admin.update({'token_login': random_text}):
                         
-                        response.set_cookie('remember_login', random_text, path="/", expires=timestamp, secret=key_encrypt)
+                        response.set_cookie('remember_login', random_text, path=config.session_opts['session.path'], expires=timestamp, secret=key_encrypt)
                     #else:
                         #print(user_admin.query_error)
                 s.save()
