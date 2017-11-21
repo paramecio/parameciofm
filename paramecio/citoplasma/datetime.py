@@ -381,15 +381,19 @@ class TimeClass:
         
         if not utc:
 
-            actual=self.t.now().format(sql_format_time)
+            actual=arrow.now(self.tz).format(sql_format_time)
         else:
-            actual=self.t.utcnow().format(sql_format_time)
+            actual=arrow.utcnow().format(sql_format_time)
         
         return actual
         
     def today(self, utc=False):
         
-        return self.now(utc)[:8]+'000000'
+        if utc:
+        
+            return arrow.utcnow()[:8]+'000000'
+        else:
+            return arrow.now(self.tz)[:8]+'000000'            
 
     def timestamp_to_datetime(self, timestamp):
         
