@@ -100,7 +100,9 @@ class TestClassMethods(unittest.TestCase):
 
         self.assertEqual('20121203231248', d.add_day(7))
         self.assertEqual('20121119231248', d.substract_day(7))
-        #self.assertEqual('20121203231248', d.substract_day(7))
+
+        #timestamp=d.obtain_timestamp('20121126231248')
+
 
 if __name__ == '__main__':
     unittest.main()

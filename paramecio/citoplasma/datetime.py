@@ -389,52 +389,33 @@ class TimeClass:
         
     def today(self, utc=False):
         
-        return now(utc, self.tz)[:8]+'000000'
+        return self.now(utc)[:8]+'000000'
 
-    def timestamp_to_datetime(self, timestamp, utc=False):
+    def timestamp_to_datetime(self, timestamp):
         
-        if utc:
-        
-            return self.t.get(timestamp).to('UTC').format(sql_format_time)
+        return arrow.get(timestamp).format(sql_format_time)
 
-        else:
-        
-            return self.t.get(timestamp).format(sql_format_time)
-
-    def obtain_timestamp(self, timeform, utc=False):
+    def obtain_timestamp(self, timeform):
         
         y, m, d, h, mi, s=format_timedata(timeform)
         
         if checkdatetime(y, m, d, h, mi, s):
             
-            #timestamp=int(time.mktime((y, m, d, h, mi, s, 0, 0, -1)))       
-            if local:
-                
-                #offset=time.altzone
-            
-                #return timestamp-offset
-                
-                t=arrow.arrow.Arrow(y, m, d, h, mi, s).to(tz)
-                
-                timestamp=t.timestamp
-                
-            else:
-                timestamp=arrow.arrow.Arrow(y, m, d, h, mi, s).timestamp
+            timestamp=arrow.arrow.Arrow(y, m, d, h, mi, s).timestamp                
             
             return timestamp
             
-            #return mktime($h, $mi, $s, $m, $d, $y);
         else:
             return False
             
     def format_strtime(self, strtime, timeform):
     
-        timestamp=obtain_timestamp(timeform)
+        #timestamp=self.obtain_timestamp(timeform)
+        try:
+            y, m, d, h, mi, s=format_timedata(timeform)
+
+            return arrow.get(datetime(y, m, d, h, mi, s), self.tz).format(strtime)
             
-        if timestamp:
-            
-            return self.t.get(timestamp).format(strtime)
-            
-        else:
+        except:
         
             return False
