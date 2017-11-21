@@ -101,7 +101,7 @@ def checkdatetime(y, m, d, h, mi, s):
     
 # Get the localtime
     
-def now(utc=False):
+def now(utc=False, tz=''):
     """
     actual=datetime.today()
     
@@ -118,20 +118,22 @@ def now(utc=False):
     """
     
     if not utc:
-    
-        actual=arrow.now().format(sql_format_time)
+        if tz=='':
+            actual=arrow.now().format(sql_format_time)
+        else:
+            actual=arrow.to(tz).now().format(sql_format_time)
     else:
         actual=arrow.utcnow().format(sql_format_time)
     
     return actual
     
-def today(utc=False):
+def today(utc=False,tz=''):
     
-    return now()[:8]+'000000'
+    return now(utc, tz)[:8]+'000000'
     
 # Get actual timestamp
 
-def obtain_timestamp(timeform, local=False):
+def obtain_timestamp(timeform, local=False, tz=''):
     
     y, m, d, h, mi, s=format_timedata(timeform)
     
@@ -145,7 +147,10 @@ def obtain_timestamp(timeform, local=False):
         
             #return timestamp-offset
             
-            t=arrow.arrow.Arrow(y, m, d, h, mi, s).to(environ['TZ'])
+            if tz=='':
+                tz=environ['TZ']
+            
+            t=arrow.arrow.Arrow(y, m, d, h, mi, s).to(tz)
             
             timestamp=t.timestamp
             
@@ -170,15 +175,18 @@ def timestamp_to_datetime(timestamp):
 
 # Get a utc timestamp and convert to local
 
-def timestamp_to_datetime_local(timestamp):
+def timestamp_to_datetime_local(timestamp, tz=''):
     
     #time_set=time.localtime(timestamp)
     
     #return time.strftime(sql_format_time, time_set)
     
     t=arrow.get(timestamp)
+
+    if tz=='':
+        tz=environ['TZ']    
     
-    return t.to(environ['TZ']).format(sql_format_time)
+    return t.to(tz).format(sql_format_time)
 
 
 def format_datetime(format_time, timeform, func_utc_return):
@@ -241,7 +249,7 @@ def format_local_strtime(strtime, timeform):
 
 #Input is utc timestamp, return local arrow object
 
-def sum_utc(timestamp):
+def sum_utc(timestamp, tz=''):
     
     #offset=time.altzone
 
@@ -249,11 +257,14 @@ def sum_utc(timestamp):
     
     t=arrow.get(timestamp)
     
-    return t.to(environ['TZ'])
+    if tz=='':
+        tz=environ['TZ']    
+    
+    return t.to(tz)
 
 #Input is local timestamp, return utc arrow object
 
-def substract_utc(timestamp):
+def substract_utc(timestamp, tz=''):
     
     #offset=time.altzone
 
@@ -264,8 +275,11 @@ def substract_utc(timestamp):
     timeform=timestamp_to_datetime(timestamp)
     
     y, m, d, h, mi, s=format_timedata(timeform)
+
+    if tz=='':
+        tz=environ['TZ']    
     
-    t=arrow.get(datetime(y, m, d, h, mi, s), environ['TZ']).to('UTC')
+    t=arrow.get(datetime(y, m, d, h, mi, s), tz).to('UTC')
     
     return t
 
@@ -276,32 +290,151 @@ def no_utc(timestamp):
 
 class TimeClass:
     
-    def __init__(self, timestamp=0, utc=False):
+    def __init__(self, timestamp=0, tz=''):
         
-        self.utc=utc
+        self.utc=False
         
         self.format_time=sql_format_time
         self.format_time_txt=format_time_txt
-        
-        if timestamp==0:
 
-            self.datetime=now(self.utc)
+        self.format_date_txt=format_date_txt
+
+        self.format_date_full=format_date_txt+' '+format_time_txt
         
+        self.tz=environ['TZ']
+        
+        if tz:
+            self.tz=tz
+        
+        if type(timestamp).__name__=='int':
+
+            if self.utc:
+
+                self.datetime=utcnow()
+                
+            else:
+                self.datetime=timestamp_to_datetime(timestamp)        
+
         else:
-        
-            self.datetime=timestamp_to_datetime(timestamp)
+            
+            self.datetime=timestamp
         
         y, m, d, h, mi, s=format_timedata(self.datetime)
         
-        self.t=arrow.get(datetime(y, m, d, h, mi, s))
+        self.t=arrow.get(datetime(y, m, d, h, mi, s), self.tz)
     
     def add_month(self, num_months):
         
         m=self.t.shift(months=+num_months)
         
         return m.format(self.format_time)
+
+    def substract_month(self, num_months):
         
+        m=self.t.shift(months=-num_months)
+        
+        return m.format(self.format_time)
+
+    def add_day(self, num_days):
+        
+        m=self.t.shift(days=+num_days)
+        
+        return m.format(self.format_time)
+
+    def substract_day(self, num_days):
+        
+        m=self.t.shift(days=-num_days)
+        
+        return m.format(self.format_time)
+
+    def add_year(self, num_years):
+        
+        m=self.t.shift(years=+num_years)
+        
+        return m.format(self.format_time)
+
+    def substract_year(self, num_years):
+        
+        m=self.t.shift(years=-num_years)
+        
+        return m.format(self.format_time)
+    
     def format(self):
         
-        return m.format(self.format_time_txt)
+        return self.t.format(self.format_date_full)
     
+    def local_to_utc(self):
+        
+        self.t=self.t.to('utc')
+
+    # Only use 
+
+    def utc_to_local(self):
+        
+        self.t=self.t.to(self.tz)
+
+    def local_to_tz(self, tz):
+        
+        self.t=self.t.to(tz)
+
+    def now(self, utc=False):        
+        
+        if not utc:
+
+            actual=self.t.now().format(sql_format_time)
+        else:
+            actual=self.t.utcnow().format(sql_format_time)
+        
+        return actual
+        
+    def today(self, utc=False):
+        
+        return now(utc, self.tz)[:8]+'000000'
+
+    def timestamp_to_datetime(self, timestamp, utc=False):
+        
+        if utc:
+        
+            return self.t.get(timestamp).to('UTC').format(sql_format_time)
+
+        else:
+        
+            return self.t.get(timestamp).format(sql_format_time)
+
+    def obtain_timestamp(self, timeform, utc=False):
+        
+        y, m, d, h, mi, s=format_timedata(timeform)
+        
+        if checkdatetime(y, m, d, h, mi, s):
+            
+            #timestamp=int(time.mktime((y, m, d, h, mi, s, 0, 0, -1)))       
+            if local:
+                
+                #offset=time.altzone
+            
+                #return timestamp-offset
+                
+                t=arrow.arrow.Arrow(y, m, d, h, mi, s).to(tz)
+                
+                timestamp=t.timestamp
+                
+            else:
+                timestamp=arrow.arrow.Arrow(y, m, d, h, mi, s).timestamp
+            
+            return timestamp
+            
+            #return mktime($h, $mi, $s, $m, $d, $y);
+        else:
+            return False
+            
+    def format_strtime(self, strtime, timeform):
+    
+        timestamp=obtain_timestamp(timeform)
+            
+        if timestamp:
+            
+            return self.t.get(timestamp).format(strtime)
+            
+        else:
+        
+            return False

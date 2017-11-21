@@ -76,5 +76,31 @@ class TestFieldMethods(unittest.TestCase):
         print(datetime.local_to_utc('20121221232421', tz))
         """
 
+class TestClassMethods(unittest.TestCase):
+    
+    def test_timenow(self):
+
+        datetime.timezone='Europe/Madrid'
+
+        datetime.set_timezone()
+
+        d=datetime.TimeClass('20121126231248')
+
+        self.assertEqual('2012/11/26 23:12:48', d.format())
+        
+        d.local_to_utc()
+        
+        self.assertEqual('2012/11/26 22:12:48', d.format())
+        
+        d.utc_to_local()
+
+        self.assertEqual('20130126231248', d.add_month(2))
+
+        self.assertEqual('20120926231248', d.substract_month(2))
+
+        self.assertEqual('20121203231248', d.add_day(7))
+        self.assertEqual('20121119231248', d.substract_day(7))
+        #self.assertEqual('20121203231248', d.substract_day(7))
+
 if __name__ == '__main__':
     unittest.main()
