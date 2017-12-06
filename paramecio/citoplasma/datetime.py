@@ -148,7 +148,7 @@ def obtain_timestamp(timeform, local=False, tz=''):
             #return timestamp-offset
             
             if tz=='':
-                tz=environ['TZ']
+                tz=environ.get('TZ', 'utc')
             
             t=arrow.arrow.Arrow(y, m, d, h, mi, s).to(tz)
             
@@ -301,7 +301,7 @@ class TimeClass:
 
         self.format_date_full=format_date_txt+' '+format_time_txt
         
-        self.tz=environ['TZ']
+        self.tz=environ.get('TZ', 'utc')
         
         if tz:
             self.tz=tz

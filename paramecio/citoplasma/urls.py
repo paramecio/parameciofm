@@ -50,6 +50,10 @@ def add_get_parameters(url, **args):
     
     return url+added_url+"&".join( [x+'='+str(y) for x,y in args.items()] )
 
+def get_actual_url():
+    
+    return config.base_url[:len(config.base_url)-1]+request.path
+
 if config.yes_static==True:
     
     def make_media_url(file_path):

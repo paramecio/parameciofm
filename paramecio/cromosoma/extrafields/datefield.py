@@ -20,7 +20,7 @@ class DateField(PhangoField):
         
             value=datetime.local_to_gmt(value)
         
-        elif not datetime.obtain_timestamp(value, True):
+        elif not datetime.obtain_timestamp(value, False):
 
             self.error=True
             self.txt_error=self.error_default
