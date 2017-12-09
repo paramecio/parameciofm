@@ -345,6 +345,14 @@ class WebModel:
         
         self.enctype=False
 
+    # A method for change the name of table 
+    
+    def change_name(self, name):
+        
+        self.name=name
+
+        self.order_by="ORDER BY `"+self.name+"`.`id` ASC"
+
     # A method where create the new fields of this model
     
     def create_fields(self):
