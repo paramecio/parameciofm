@@ -122,7 +122,7 @@ def home(module='', submodule=''):
                         #print(t.env.directories)
                         #if config.reloader:
                             #reload(new_module)
-                    
+
                     except ImportError:
                         
                         print("Exception in user code:")

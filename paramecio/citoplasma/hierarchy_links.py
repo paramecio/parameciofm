@@ -89,6 +89,8 @@ class HierarchyModelLinks:
         self.first_element_title=first_element_title
     
     def prepare(self):
+
+        conditions=self.model.conditions
         
         with self.model.set_conditions('', []).select([self.model.name_field_id, self.field_name, self.field_parent]) as cur:
             for arr_model in cur:
@@ -96,6 +98,8 @@ class HierarchyModelLinks:
                     self.arr_parent[arr_model[self.model.name_field_id]]=[]
                 
                 self.arr_parent[arr_model[self.model.name_field_id]]=[arr_model[self.field_name], arr_model[self.field_parent]]
+
+        self.model.conditions=conditions
         
     def parents(self,  son_id, url_func):
         
