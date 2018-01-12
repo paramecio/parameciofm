@@ -52,9 +52,10 @@ class I18n:
         return lang
     
     @staticmethod
-    def lang(module, symbol, text_default):
+    def lang(module, symbol, text_default, lang=None):
         
-        lang=I18n.get_default_lang()
+        if not lang:
+            lang=I18n.get_default_lang()
         
         I18n.l[lang]=I18n.l.get(lang, {})
         
@@ -81,3 +82,14 @@ class I18n:
     def get_browser_lang():
         
         return request.headers.get('Accept-Language')
+
+    @staticmethod
+    def lang_json(module, symbol, text_default):
+        
+        arr_final={}
+        
+        for l in I18n.dict_i18n:
+            arr_final[l]=I18n.lang(module, symbol, text_default, l)
+        
+        return json.dumps(arr_final)
+

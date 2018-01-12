@@ -20,6 +20,7 @@ class I18nField(PhangoField):
         
         self.name_form=I18nForm
         self.extra_parameters=[form]
+        self.show_formatted_value=True
         
     def check_value(self, value):
         

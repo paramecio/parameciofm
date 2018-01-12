@@ -101,6 +101,10 @@ class PhangoField:
         # Error by default
         
         self.error_default='Error: field required'
+        
+        # Show this value formatted
+        
+        self.show_formatted_value=False
      
     # This method is used for describe the new field in a sql language format.
     
@@ -749,7 +753,8 @@ class WebModel:
                 
                 if self.show_formatted and row:
                     for k, col in row.items():
-                        row[k]=self.fields[k].show_formatted(col)
+                        if self.fields[k].show_formatted_value:
+                            row[k]=self.fields[k].show_formatted(col)
                 
                 results.append(row)
             
@@ -786,6 +791,10 @@ class WebModel:
         
         with self.select(fields_selected, raw_query) as cursor:        
             for row in cursor:
+
+                if self.show_formatted and row:
+                    for k, col in row.items():
+                        row[k]=self.fields[k].show_formatted(col)
                 
                 results[row[self.name_field_id]]=row
             
