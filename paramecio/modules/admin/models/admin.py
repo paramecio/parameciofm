@@ -34,7 +34,7 @@ _num_tries=corefields.IntegerField('num_tries', 1)
 class UserAdmin(UserModel):
     
     #def create_fields(self):
-    def __init__(self, connection):
+    def __init__(self, connection=None):
 
         super().__init__(connection)
 

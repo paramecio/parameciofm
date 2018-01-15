@@ -249,7 +249,7 @@ class WebModel:
     
     # Init the class
     
-    def __init__(self, sqlclass, name_field_id="id"):
+    def __init__(self, sqlclass=None, name_field_id="id"):
         
         self.cached=self.global_cached
         
@@ -349,6 +349,22 @@ class WebModel:
         
         self.enctype=False
 
+    # A method for add the connection
+    
+    def conn(self, sqlclass):
+        
+        self.sqlclass=sqlclass
+
+        # Reset conditions
+    
+        self.yes_reset_conditions=True
+
+        self.conditions=["WHERE 1=1", []]
+        
+        self.order_by="ORDER BY `"+self.name+"`.`id` ASC"
+        
+        self.limit=""        
+        
     # A method for change the name of table 
     
     def change_name(self, name):
@@ -416,6 +432,7 @@ class WebModel:
     # Method for clean fields
     
     def clean_fields(self):
+        clean=self.fields_to_clean
         for field in self.fields_to_clean:
             del self.fields[field]
     
@@ -616,7 +633,9 @@ class WebModel:
                 
                 # Add extra fields from related table from select_fields ForeignKeyField class member
                 
-                for extra_field in self.fields[field].select_fields:
+                select_fields=self.fields[field].select_fields
+                
+                for extra_field in select_fields:
                     
                     self.fields[field+'_'+extra_field]=self.fields[field].related_model.fields[extra_field]
                     self.fields_to_clean.append(field+'_'+extra_field)
@@ -941,14 +960,14 @@ class WebModel:
         #Create id field
         #Not neccesary
         #table_fields.append('`'+self.name_field_id+"` INT NOT NULL PRIMARY KEY AUTO_INCREMENT")
-        
-        for field, data in self.fields.items():
+        fields=self.fields
+        for field, data in fields.items():
         
             table_fields.append('`'+field+'` '+data.get_type_sql())
             
             #Check if indexed
             
-            if self.fields[field].indexed==True:
+            if fields[field].indexed==True:
             
                 self.arr_sql_index[self.name][field]='CREATE INDEX `index_'+self.name+'_'+field+'` ON '+self.name+'(`'+field+'`);'
                 self.arr_sql_set_index[self.name][field]=""
@@ -956,18 +975,18 @@ class WebModel:
             
             #Check if unique
             
-            if self.fields[field].unique==True:
+            if fields[field].unique==True:
             
                 self.arr_sql_unique[self.name][field]='ALTER TABLE `'+self.name+'` ADD UNIQUE (`'+field+'`)'
                 self.arr_sql_set_unique[self.name][field]=""
                 
-            if type(self.fields[field]).__name__=="ForeignKeyField":
+            if type(fields[field]).__name__=="ForeignKeyField":
                 
                 self.arr_sql_index[self.name][field]='CREATE INDEX `index_'+self.name+'_'+field+'` ON '+self.name+'(`'+field+'`);'
                 
-                table_related=self.fields[field].table_name
+                table_related=fields[field].table_name
                 
-                id_table_related=self.fields[field].table_id            
+                id_table_related=fields[field].table_id            
                 
                 self.arr_sql_set_index[self.name][field]='ALTER TABLE `'+self.name+'` ADD CONSTRAINT `'+field+'_'+self.name+'IDX` FOREIGN KEY ( `'+field+'` ) REFERENCES `'+table_related+'` (`'+id_table_related+'`) ON DELETE CASCADE ON UPDATE CASCADE;'
         
