@@ -83,6 +83,12 @@ class ParamecioSession:
         # Here get the function for load session
         
         save_session(self.session['token'], self.session)
+        
+    def reset(self):
+        
+        token=self.session['token']
+        self.session={'token': token}
+        self.save()
 
 
 def get_session():
