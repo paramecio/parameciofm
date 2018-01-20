@@ -587,10 +587,17 @@ a:hover.no_choose_flag
 	
 }
 
+#languages_general {
+
+    top:8px;
+    right:5px;
+
+}
+
 #logout
 {
 
-	top:16px;
+	top:8px;
 	right:10px;
     width:55px;
 	font-weight:bold;
