@@ -99,7 +99,7 @@ class GetPostFiles:
         s=get_session()
         
         if ignore_csrf_token==False and no_csrf==False:
-        
+            
             if 'csrf_token' in s:
                 
                 self.post['csrf_token']=self.post.get('csrf_token', '')
@@ -107,7 +107,7 @@ class GetPostFiles:
                 if self.post['csrf_token']!=s['csrf_token'] or self.post['csrf_token'].strip()=="":
                     
                     #raise NameError('Error: you need a valid csrf_token')
-                    raise HTTPResponse(body=json.dumps({'error_csrf': 1, 'error': 1}), status=200, headers={'Content-type': 'application/json'})
+                    raise HTTPResponse(body=json.dumps({'error_csrf': 1, 'error': 1, 'token_invalid': 1}), status=200, headers={'Content-type': 'application/json'})
                 else:
                     #Clean csrf_token
                     
@@ -120,7 +120,7 @@ class GetPostFiles:
 
             else:
                 #raise NameError('Error: you don\'t send any valid csrf_token')
-                raise HTTPResponse(body=json.dumps({'error_csrf': 1, 'error': 1}), status=200, headers={'Content-type': 'application/json'})
+                raise HTTPResponse(body=json.dumps({'error_csrf': 1, 'error': 1, 'token_invalid': 0}), status=200, headers={'Content-type': 'application/json'})
 
         #Check post_token
     
