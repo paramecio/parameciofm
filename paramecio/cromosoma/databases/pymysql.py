@@ -20,6 +20,7 @@ class SqlClass:
         # Sql connection
         self.conn=None
         self.connected=False
+        self.pool_recycle=3600
         
     def connect(self):
       
@@ -34,9 +35,12 @@ class SqlClass:
                         cursorclass=pymysql.cursors.DictCursor)
 				
                 if SqlClass.mypool==None:
-                    SqlClass.mypool=pool.QueuePool(getconn, max_overflow=self.max_overflow, pool_size=self.pool_size)
+                    SqlClass.mypool=pool.QueuePool(getconn, max_overflow=self.max_overflow, pool_size=self.pool_size, recycle=self.pool_recycle)
 
                 self.conn=SqlClass.mypool.connect()
+                
+                while not self.conn.open:
+                    self.conn=SqlClass.mypool.connect()
 
                 self.conn.ping(True)
 	
@@ -47,6 +51,8 @@ class SqlClass:
                 v = sys.exc_info()[1]
 
                 self.error_connection="Error in connection: %s %s" % (e, v)
+
+                self.conn.close()
 
                 raise NameError(self.error_connection)
   
@@ -69,6 +75,7 @@ class SqlClass:
             self.conn.commit()
             
             return cursor
+            
         
         except:
             e = sys.exc_info()[0]
@@ -87,17 +94,19 @@ class SqlClass:
     #def fetch(self, cursor):
         
         #return cursor.fetchone()
-    """
+    
     def __del__(self):
         
-        self.close()
-    """
+        if self.conn:
+        
+            self.conn.close()
+    
     def close(self, name_connection="default"):
         
         if self.conn:
         
             self.conn.close()
-            #self.conn=False
+            self.conn=None
         
         pass
     
