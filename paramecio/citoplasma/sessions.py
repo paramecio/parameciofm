@@ -108,7 +108,7 @@ def get_session():
                  
                 if not cookie:
                     
-                    if len(request.environ)>0:
+                    if hasattr(request, 'app'):
                     
                         s=generate_session()
                     
