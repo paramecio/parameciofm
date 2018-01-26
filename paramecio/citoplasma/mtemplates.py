@@ -51,6 +51,8 @@ def env_theme(module, cache_enabled=True, cache_impl='', cache_args={}, module_d
 
     standard_templates=path.dirname(__file__)+'/templates'
 
+    module_directory+='/'+module
+
     module_templates=module+'/templates'
     
     theme_templates='themes/'+config.theme+'/templates'

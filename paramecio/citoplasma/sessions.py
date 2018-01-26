@@ -108,7 +108,9 @@ def get_session():
                  
                 if not cookie:
                     
-                    s=generate_session()
+                    if len(request.environ)>0:
+                    
+                        s=generate_session()
                     
                 else:
                     
