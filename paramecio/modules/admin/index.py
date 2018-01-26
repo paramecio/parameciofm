@@ -346,7 +346,7 @@ def login():
 
 @app.post('/'+config.admin_folder+'/register')
 def register():
-    print('pepe')
+    
     getpostfiles=GetPostFiles()
     
     connection=WebModel.connection()
