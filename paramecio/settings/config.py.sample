@@ -61,8 +61,6 @@ session_enabled=True
 
 cookie_name = 'paramecio.session'
 
-domain='localhost'
-
 domain_url='http://localhost:8080'
 
 #Keep this variable and don't show to anybody

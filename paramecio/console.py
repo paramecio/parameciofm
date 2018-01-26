@@ -26,15 +26,13 @@ def start():
     
     # Options for deploy
     
-    parser.add_argument('--domain', help='The base domain for this site', required=True)
+    parser.add_argument('--url', help='The http/https base url of the real proxy server. Example: https://www.exampledomain.com, default is http://localhost:8080', required=False)
     
     parser.add_argument('--folder', help='If you deploy in a subdirectory, set it, without beggining and ending slashes', required=False)
     
     parser.add_argument('--host', help='The host ip or domain where the app is binded', required=False)
     
-    parser.add_argument('--port', help='Change the default port 8080 to other number. Use 80 is not recommended, use 80 for the principal server how nginx or apache', required=False)
-    
-    parser.add_argument('--ssl', help='If the site use ssl, set it', action='store_true')
+    parser.add_argument('--port', help='Change the default port 8080 to other number. Use 80 is not recommended, use 80 for the proxy server how nginx or apache', required=False)
 
     args=parser.parse_args()
     
@@ -147,7 +145,7 @@ def start():
     
     #domain='localhost'
     
-    conf=conf.replace("domain='localhost'", "domain='"+args.domain+"'")
+    #conf=conf.replace("domain='localhost'", "domain='"+args.url+"'")
 
     if args.host==None:
         args.host='localhost'
@@ -156,13 +154,7 @@ def start():
 
     if args.port==None:
         args.port='8080'
-        port_deploy=':8080'
         
-    elif args.port=='80':
-        port_deploy=''
-        
-    else:
-        port_deploy=':'+args.port
         
     conf=conf.replace("port=8080", "port="+args.port)
     
@@ -171,18 +163,15 @@ def start():
     if args.folder==None:
         args.folder=''
     else:
-        args.folder='/'+args.folder
+        #args.folder='/'+args.folder
         base_url='/'+args.folder+'/'
     
     conf=conf.replace("base_url='/'", "base_url='"+base_url+"'")
-        
-    arg_ssl='http'
     
-    if args.ssl==True:
-        arg_ssl='https'
-        
+    if args.url==None:
+        args.url='http://localhost:8080'
     
-    domain_url=arg_ssl+'://'+args.domain+port_deploy+args.folder
+    domain_url=args.url
     
     conf=conf.replace("domain_url='http://localhost:8080'", "domain_url='"+domain_url+"'")
 
