@@ -49,6 +49,10 @@ In Fedora and other Red Hat derived distros you can use `yum install git` or `dn
 
 You can install the framework using the next command in your server:
 
+`pip3 install parameciofm`
+
+or if you want development version:
+
 `pip3 install git+https://github.com/paramecio/parameciofm`
 
 This command will install in your server paramecio framework with its dependencies.
