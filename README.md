@@ -1,6 +1,6 @@
 # A simple webframework based in Bottle and Mako for create nice webapps
 
-#Installation
+# Installation
 
 This guide give you step by step for install paramecio sucessfully.
 
