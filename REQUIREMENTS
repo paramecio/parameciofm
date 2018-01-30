@@ -3,8 +3,6 @@
 - Python >3.3
 - Bottle 0.12+
 - Mako
-- passlib
-- bcrypt
 
 Use PIP is recommended for new installations.
 
