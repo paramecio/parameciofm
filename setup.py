@@ -6,15 +6,16 @@ from setuptools import setup, find_packages
 
 
 if sys.version_info < (3, 3):
-    raise NotImplementedError("Sorry, you need at least Python 3.3 to use paramecio.")
+    raise NotImplementedError("Sorry, you need at least Python 3.3 for use paramecio.")
 
 #import paramecio
 # Pillow should be installed after if you need ImageField
 # If you install passlib and bcrypt, the password system will use bcrypt by default, if not, will use native crypt libc 
 
 setup(name='paramecio',
-      version='0.1.2',
-      description='Fast and simple Framework based in bottlepy and Mako.',
+      packages=['paramecio'],
+      version='1.5.0',
+      description='Simple Web Framework based in bottlepy and Mako.',
       long_description='This framework is a simple framework used for create web apps. Paramecio is modular and fast. By default have a module called admin that can be used for create admin sites',
       author='Antonio de la Rosa Caballero',
       author_email='antonio.delarosa@salirdelhoyo.com',
