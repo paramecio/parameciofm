@@ -13,12 +13,11 @@ if sys.version_info < (3, 3):
 # If you install passlib and bcrypt, the password system will use bcrypt by default, if not, will use native crypt libc 
 
 setup(name='paramecio',
-      packages=['paramecio'],
       version='1.5.0',
       description='Simple Web Framework based in bottlepy and Mako.',
       long_description='This framework is a simple framework used for create web apps. Paramecio is modular and fast. By default have a module called admin that can be used for create admin sites',
       author='Antonio de la Rosa Caballero',
-      author_email='antonio.delarosa@salirdelhoyo.com',
+      author_email='antonio.delarosa@coesinfo.com',
       url='https://github.com/paramecio/parameciofm/',
       packages=['paramecio', 'paramecio.i18n', 'paramecio.settings'],
       include_package_data=True,
