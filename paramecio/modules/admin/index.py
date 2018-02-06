@@ -60,12 +60,22 @@ for k, v in menu.items():
 
 #print(d)
 
+t=PTemplate(env)
+
+num_template=1
+
+if hasattr(config, 'admin_templates_index'):
+
+    t.env.directories.insert(num_template, config.admin_templates_index)
+    num_template+=1
+    
+
 @app.get('/'+config.admin_folder)
 @app.get('/'+config.admin_folder+'/<module>')
 @app.post('/'+config.admin_folder+'/<module>')
 @app.get('/'+config.admin_folder+'/<module>/<submodule>')
 @app.post('/'+config.admin_folder+'/<module>/<submodule>')
-def home(module='', submodule=''):
+def home(module='', submodule='', t=t):
     
     # A simple boolean used for show or not the code of admin module in standard template
     
@@ -73,8 +83,6 @@ def home(module='', submodule=''):
     user_admin=UserAdmin(connection)
     
     #Fix, make local variable
-    
-    t=PTemplate(env)
     
     t.add_filter(make_admin_url)
     
@@ -118,8 +126,14 @@ def home(module='', submodule=''):
                         
                         #t.env=t.env_theme(path.dirname(__file__))
                         
-                        t.env.directories.insert(1, path.dirname(module_imported[module].__file__).replace('/admin', '')+'/templates')
-                        #print(t.env.directories)
+                        templates_path=path.dirname(module_imported[module].__file__).replace('/admin', '')+'/templates'
+                        
+                        try:
+                            index_value = t.env.directories.index(templates_path)
+                        except ValueError:
+                            t.env.directories.insert(num_template, templates_path)
+                        
+                        print(t.env.directories)
                         #if config.reloader:
                             #reload(new_module)
 

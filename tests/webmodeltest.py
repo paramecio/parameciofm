@@ -183,6 +183,27 @@ class TestWebModelMethods(unittest.TestCase):
         self.assertTrue(model.drop())
         
         connection.close()
+
+    def test_functions(self):
+        
+        print('Test functions')
+        
+        connection=WebModel.connection()
+        model=ExampleModel(connection)
+        
+        sql=model.create_table()
+        
+        self.assertTrue(model.query(sql))
+        
+        cur=model.set_conditions('where id=%s', [4]).select()
+        
+        self.assertTrue(cur)
+        
+        cur.close()
+        
+        self.assertTrue(model.drop())
+        
+        connection.close()
     
     def test_zcheck_1_foreignkeys(self):
         
