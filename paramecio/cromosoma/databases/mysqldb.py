@@ -12,7 +12,7 @@ class SqlClass:
     def __init__(self, connection):
     
         self.max_overflow=-1
-        self.pool_size=25
+        self.pool_size=15
         self.error_connection=""
         # Data of connection
         self.connection=connection
