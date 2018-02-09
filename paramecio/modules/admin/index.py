@@ -133,7 +133,7 @@ def home(module='', submodule='', t=t):
                         except ValueError:
                             t.env.directories.insert(num_template, templates_path)
                         
-                        print(t.env.directories)
+                        # print(t.env.directories)
                         #if config.reloader:
                             #reload(new_module)
 

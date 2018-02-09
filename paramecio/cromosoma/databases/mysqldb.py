@@ -37,11 +37,11 @@ class SqlClass:
                     SqlClass.mypool=pool.QueuePool(getconn, max_overflow=self.max_overflow, pool_size=self.pool_size, recycle=self.pool_recycle)
 
                 self.conn=SqlClass.mypool.connect()
+
+                self.conn.ping(True)
                 
                 while not self.conn.open:
                     self.conn=SqlClass.mypool.connect()
-
-                self.conn.ping(True)
 	
                 self.connected=True
 

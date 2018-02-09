@@ -349,6 +349,8 @@ class WebModel:
         
         self.enctype=False
 
+        self.dummy=0
+
     # A method for add the connection
     
     def conn(self, sqlclass):

@@ -205,13 +205,13 @@ def format_datetime(format_time, timeform, func_utc_return):
         
 # This method parse local time to gmt
 
-def local_to_gmt(timeform):
+def local_to_gmt(timeform, sql_format_time=sql_format_time):
     
     return format_datetime(sql_format_time, timeform, substract_utc)
 
 # time.localtime is useless, you need sum the time offset to the date
 
-def gmt_to_local(timeform):
+def gmt_to_local(timeform, sql_format_time=sql_format_time):
     
     return format_datetime(sql_format_time, timeform, sum_utc)
 
@@ -287,6 +287,9 @@ def no_utc(timestamp):
     
     return arrow.get(timestamp)
 
+# def date_to_sql(date_sql):
+    
+    
 
 class TimeClass:
     
