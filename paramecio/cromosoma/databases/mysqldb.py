@@ -5,14 +5,14 @@ import MySQLdb.cursors
 import sqlalchemy.pool as pool
 import traceback
 
+mypool=None
+
 class SqlClass:
-    
-    mypool=None
     
     def __init__(self, connection):
     
         self.max_overflow=-1
-        self.pool_size=0
+        self.pool_size=25
         self.error_connection=""
         # Data of connection
         self.connection=connection
@@ -22,6 +22,8 @@ class SqlClass:
         self.pool_recycle=3600
         
     def connect(self):
+        
+        global mypool
       
         if self.conn==None:
             try:
@@ -33,10 +35,11 @@ class SqlClass:
                         charset='utf8mb4',
                         cursorclass=MySQLdb.cursors.DictCursor)
 				
-                if SqlClass.mypool==None:
-                    SqlClass.mypool=pool.QueuePool(getconn, max_overflow=self.max_overflow, pool_size=self.pool_size, recycle=self.pool_recycle)
+                if mypool==None:
+                    
+                    mypool=pool.QueuePool(getconn, max_overflow=self.max_overflow, pool_size=self.pool_size, recycle=self.pool_recycle, use_threadlocal=False)
 
-                self.conn=SqlClass.mypool.connect()
+                self.conn=mypool.connect()
 
                 self.conn.ping(True)
                 
