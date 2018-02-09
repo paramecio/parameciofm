@@ -40,9 +40,11 @@ class SqlClass:
 
                 self.conn.ping(True)
                 
+                """
                 while not self.conn.open:
                     self.conn=SqlClass.mypool.connect()
-	
+                """
+                
                 self.connected=True
 
             except:
