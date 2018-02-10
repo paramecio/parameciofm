@@ -5,7 +5,7 @@ import re
 import uuid
 from importlib import import_module, reload
 from collections import OrderedDict
-from paramecio.cromosoma.databases.mysqldb import SqlClass
+from paramecio.cromosoma.databases.pymysql import SqlClass
 from paramecio.cromosoma.coreforms import BaseForm, HiddenForm
 import copy
 import traceback
