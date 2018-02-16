@@ -125,7 +125,7 @@ class PhangoField:
         self.error=False
         self.txt_error=''
         
-        value=str(value)
+        value=str(value).strip()
         
         if self.escape==False:        
             value=value.replace('<', '&lt;')

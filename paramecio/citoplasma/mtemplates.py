@@ -64,7 +64,7 @@ def env_theme(module, cache_enabled=True, cache_impl='', cache_args={}, module_d
     
     #Standard templates
     #print(standard_templates)
-    return TemplateLookup(directories=search_folders, default_filters=['h'], input_encoding='utf-8', encoding_errors='replace', cache_enabled=cache_enabled, cache_impl=cache_impl, cache_args=cache_args, module_directory=module_directory, filesystem_checks=config.debug)
+    return TemplateLookup(directories=search_folders, default_filters=['h'], input_encoding='utf-8', encoding_errors='replace', cache_enabled=cache_enabled, cache_impl=cache_impl, cache_args=cache_args, module_directory=module_directory, filesystem_checks=config.reloader)
     
 def preload_templates(template_files, env):
     
