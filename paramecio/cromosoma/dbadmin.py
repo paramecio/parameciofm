@@ -338,6 +338,8 @@ def start():
             f.close()
     
     
+    connection.close()
+    
     #script_model=args.model+''
     
     print(Style.BRIGHT+"All tasks finished")
