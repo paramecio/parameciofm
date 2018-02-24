@@ -20,6 +20,7 @@ class SqlClass:
         self.conn=None
         self.connected=False
         self.pool_recycle=3600
+        self.connect()
         
     def connect(self):
         
@@ -64,8 +65,6 @@ class SqlClass:
     #Make def query more simple if not debugging.
     
     def query(self, sql_query, arguments=[], name_connection="default"):
-        
-        self.connect()
         
         #if fetch_type=="ASSOC":
             #fetch_type=MySQLdb.cursors.DictCursor
