@@ -928,9 +928,9 @@ class WebModel:
 
             if o in self.fields:
                 
-                final_order.append('order by '+o+' '+arr_order[v])
+                final_order.append(o+' '+arr_order[v])
     
-        self.order_by=", ".join(final_order)
+        self.order_by='order by '+", ".join(final_order)
         
         return self
     
