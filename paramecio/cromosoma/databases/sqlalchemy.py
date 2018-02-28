@@ -1,14 +1,19 @@
 #!/usr/bin/env python3
 
 import sys
-import pymysql.cursors
-pymysql.install_as_MySQLdb
-import sqlalchemy.pool as pool
+#import pymysql.cursors
+#pymysql.install_as_MySQLdb
+#import sqlalchemy.pool as pool
+from sqlalchemy import create_engine
 import traceback
 
-mypool=None
+#mypool=None
+#engine = create_engine('sqlite:///:memory:', echo=True)
+engine=None
 
 class SqlClass:
+    
+    cursors_connect=None 
     
     def __init__(self, connection):
     
@@ -25,8 +30,38 @@ class SqlClass:
         
     def connect(self):
         
-        global mypool
-      
+        global engine
+        
+        if not engine:
+            
+            try:
+                
+                if self.connection['db_type']=='pymysql':
+                    
+                    import pymysql.cursors
+                    
+                    SqlClass.cursors_connect=pymysql.cursors.DictCursor
+                else:
+                    import MySQLdb.cursors
+                    SqlClass.cursors_connect=MySQLdb.cursors.DictCursor
+            
+                engine=create_engine("mysql+%s://%s:%s@%s/%s?charset=utf8mb4" % (self.connection['db_type'], self.connection['user'], self.connection['password'], self.connection['host'], self.connection['db']))
+                
+            except:
+                e = sys.exc_info()[0]
+                v = sys.exc_info()[1]
+
+                self.error_connection="Error in connection: %s %s" % (e, v)
+
+                #self.conn.close()
+
+                raise NameError(self.error_connection)
+                
+        self.conn=engine.raw_connection()
+        
+        pass
+        
+        """
         if self.conn==None:
             try:
                 def getconn():
@@ -42,13 +77,8 @@ class SqlClass:
                     mypool=pool.QueuePool(getconn, max_overflow=self.max_overflow, pool_size=self.pool_size, recycle=self.pool_recycle, use_threadlocal=True)
 
                 self.conn=mypool.connect()
-                
+
                 self.conn.ping(True)
-                
-                """
-                while not self.conn.open:
-                    self.conn=SqlClass.mypool.connect()
-                """
                 
                 self.connected=True
 
@@ -61,11 +91,33 @@ class SqlClass:
                 self.conn.close()
 
                 raise NameError(self.error_connection)
-  
+        """
     
     #Make def query more simple if not debugging.
     
     def query(self, sql_query, arguments=[], name_connection="default"):
+        
+
+        cursor=self.conn.cursor(SqlClass.cursors_connect)
+        
+        try:
+            
+            cursor.execute(sql_query, arguments)
+            self.conn.commit()            
+            return cursor
+
+        except:
+            e = sys.exc_info()[0]
+            v = sys.exc_info()[1]
+            
+            if hasattr(cursor, '_last_executed'):
+               sql_query=cursor._last_executed 
+
+            self.error_connection="Error in query ||%s||Values: %s" % (sql_query, str(arguments))
+        
+            #return False
+            raise NameError(self.error_connection)
+
         
         #self.connect()
         
@@ -73,6 +125,7 @@ class SqlClass:
             #fetch_type=MySQLdb.cursors.DictCursor
         
         #with self.conn.cursor(MySQLdb.cursors.DictCursor) as cursor:
+        """
         cursor=self.conn.cursor(pymysql.cursors.DictCursor)
         
         try:
@@ -94,7 +147,8 @@ class SqlClass:
         
             #return False
             raise NameError(self.error_connection)
-    
+        """
+        
     #Fetcho row return dictionary if is defined in query.
     
     #def fetch(self, cursor):

@@ -5,7 +5,7 @@ import re
 import uuid
 from importlib import import_module, reload
 from collections import OrderedDict
-from paramecio.cromosoma.databases.pymysql import SqlClass
+from paramecio.cromosoma.databases.sqlalchemy import SqlClass
 from paramecio.cromosoma.coreforms import BaseForm, HiddenForm
 import copy
 import traceback
@@ -230,7 +230,7 @@ class WebModel:
     
     model=OrderedDict()
     
-    connections={'default': {'host': 'localhost', 'user': 'user', 'password': '', 'db': 'default', 'charset': 'utf8', 'set_connection': False} }
+    connections={'default': {'host': 'localhost', 'user': 'user', 'password': '', 'db': 'default', 'charset': 'utf8', 'set_connection': False, 'db_type': 'pymysql'} }
         
     connection_id="default"
     

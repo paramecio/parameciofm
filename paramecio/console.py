@@ -209,9 +209,9 @@ def start():
         if db=="":
             db='paramecio_db'
         
-        WebModel.connections={'default': {'name': 'default', 'host': host_db, 'user': user_db, 'password': pass_db, 'db': '', 'charset': 'utf8mb4', 'set_connection': False} }
+        WebModel.connections={'default': {'name': 'default', 'host': host_db, 'user': user_db, 'password': pass_db, 'db': '', 'charset': 'utf8mb4', 'set_connection': False, 'db_type': 'pymysql'} }
         
-        connection_code="WebModel.connections={'default': {'name': 'default', 'host': '"+host_db+"', 'user': '"+user_db+"', 'password': '"+pass_db+"', 'db': '"+db+"', 'charset': 'utf8mb4', 'set_connection': False} }"
+        connection_code="WebModel.connections={'default': {'name': 'default', 'host': '"+host_db+"', 'user': '"+user_db+"', 'password': '"+pass_db+"', 'db': '"+db+"', 'charset': 'utf8mb4', 'set_connection': False, 'db_type': 'pymysql'} }"
         
         with open(path_settings+'/config.py', 'a') as f:
             f.write("\n\n"+connection_code)

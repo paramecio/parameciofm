@@ -97,10 +97,15 @@ class FloatField(PhangoField):
         self.txt_error=''
         
         try:
-        
+
+            value=str(value)
+
+            if value.find(',')!=-1:
+                value=value.replace(',', '.')
+            
             value=str(float(value))
-        
-            if value=="0" and self.required==True:
+            
+            if value==0 and self.required==True:
                 self.txt_error=self.error_default
                 self.error=True
         except:
