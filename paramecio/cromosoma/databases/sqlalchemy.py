@@ -18,7 +18,7 @@ class SqlClass:
     def __init__(self, connection):
     
         self.max_overflow=-1
-        self.pool_size=0
+        self.pool_size=5
         self.error_connection=""
         # Data of connection
         self.connection=connection
@@ -45,7 +45,7 @@ class SqlClass:
                     import MySQLdb.cursors
                     SqlClass.cursors_connect=MySQLdb.cursors.DictCursor
             
-                engine=create_engine("mysql+%s://%s:%s@%s/%s?charset=utf8mb4" % (self.connection['db_type'], self.connection['user'], self.connection['password'], self.connection['host'], self.connection['db']), pool_recycle=self.pool_recycle, echo_pool=True)
+                engine=create_engine("mysql+%s://%s:%s@%s/%s?charset=utf8mb4" % (self.connection['db_type'], self.connection['user'], self.connection['password'], self.connection['host'], self.connection['db']), pool_recycle=self.pool_recycle, echo_pool=True, pool_size=self.pool_size)
                 
             except:
                 e = sys.exc_info()[0]
