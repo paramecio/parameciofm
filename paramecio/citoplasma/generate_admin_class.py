@@ -48,6 +48,8 @@ class GenerateAdminClass:
         self.template_verify_delete='utils/verify_delete.phtml'
 
         self.url_redirect=self.url
+        
+        self.post_update=None
 
     def show(self):
         
@@ -124,6 +126,10 @@ class GenerateAdminClass:
             
             if insert_row(getpostfiles.post):
                 set_flash_message(I18n.lang('common', 'task_successful', 'Task successful'))
+                
+                if self.post_update:
+                    self.post_update(self, getpostfiles.get['id'])                
+                
                 redirect(self.url)
             else:
                 url_action=add_get_parameters(self.url, op_admin=2, id=getpostfiles.get['id'])
@@ -199,6 +205,8 @@ class GenerateConfigClass:
         
         self.template_insert='utils/insertform.phtml'
 
+        self.post_update=None
+
     def show(self):
         
         getpostfiles=GetPostFiles()
@@ -238,7 +246,13 @@ class GenerateConfigClass:
             if insert_model(getpostfiles.post):
                 set_flash_message(I18n.lang('common', 'task_successful', 'Task successful'))
                 self.model.yes_reset_conditions=True
+                
+                if self.post_update:
+                    self.post_update(self)                
+                
                 redirect(self.url_redirect)
+                
+                
             else:
 
                 form=show_form(getpostfiles.post, edit_forms, self.t, True)

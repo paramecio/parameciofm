@@ -45,7 +45,7 @@ class SqlClass:
                     import MySQLdb.cursors
                     SqlClass.cursors_connect=MySQLdb.cursors.DictCursor
             
-                engine=create_engine("mysql+%s://%s:%s@%s/%s?charset=utf8mb4" % (self.connection['db_type'], self.connection['user'], self.connection['password'], self.connection['host'], self.connection['db']))
+                engine=create_engine("mysql+%s://%s:%s@%s/%s?charset=utf8mb4" % (self.connection['db_type'], self.connection['user'], self.connection['password'], self.connection['host'], self.connection['db']), pool_recycle=3600, echo_pool=True)
                 
             except:
                 e = sys.exc_info()[0]

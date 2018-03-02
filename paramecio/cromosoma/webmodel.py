@@ -944,6 +944,8 @@ class WebModel:
             sql_limit+=', '+str(limit[1])
         
         self.limit='limit '+sql_limit
+        
+        return self
     
     # Method for create sql tables
     

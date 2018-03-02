@@ -334,6 +334,7 @@ else:
                 try:
                 
                     s=json.loads(f.read())
+                    os.utime(file_session)
         
                 except:
                     
