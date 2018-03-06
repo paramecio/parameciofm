@@ -784,9 +784,14 @@ class WebModel:
         return results
         
 
-    def select_to_dict(self, fields_selected=[], raw_query=0):
+    def select_to_dict(self, fields_selected=[], raw_query=0, integer=True):
         
-        
+        if integer:
+            def check_index(index):
+                return index
+        else:
+            def check_index(index):
+                return str(index)
         
         if len(fields_selected)==0:
             fields_selected=self.fields.keys()
@@ -817,7 +822,7 @@ class WebModel:
                     for k, col in row.items():
                         row[k]=self.fields[k].show_formatted(col)
                 
-                results[row[self.name_field_id]]=row
+                results[check_index(row[self.name_field_id])]=row
             
             del_row_id(results)
         
