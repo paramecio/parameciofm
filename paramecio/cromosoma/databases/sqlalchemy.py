@@ -115,6 +115,8 @@ class SqlClass:
 
             self.error_connection="Error in query ||%s||Values: %s" % (sql_query, str(arguments))
         
+            self.conn.close()
+        
             #return False
             raise NameError(self.error_connection)
 
