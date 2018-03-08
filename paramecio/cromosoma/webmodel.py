@@ -677,9 +677,9 @@ class WebModel:
         
         cursor=self.query(sql, conditions[1], self.connection_id)
         
-        if cursor==False:
+        if not cursor:
             self.query_error=self.sqlclass.error_connection
-            cursor.close()
+
             return False
         else:
             return cursor

@@ -168,7 +168,7 @@ class SqlClass:
         if self.conn:
         
             self.conn.close()
-            self.conn=None
+            #self.conn=None
         
         pass
     
