@@ -5,10 +5,10 @@
 </%def>
 <%def name="help(help, name)">
     % if help: 
-        <i class="fa fa-question-circle tooltip"  data-tooltip-content="#tooltip_${name}_content"></i> \
+        <i class="fa fa-question-circle tooltip"  data-tooltip-content="#tooltip_${name}_content" style="cursor:pointer;"></i> \
         <div class="tooltip_templates" style="display:none;">
             <div id="tooltip_${name}_content">
-                ${help}
+                ${help|n}
             </div>
         </div>
     % endif
