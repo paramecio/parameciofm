@@ -14,8 +14,10 @@ ${make_url('admin/'+module)}\
 ${add_css_home_local('admin.css', 'admin')}
 ${add_css_home_local('font-awesome.min.css', 'admin')}
 ${add_css_home_local('responsive-nav.css', 'admin')}
+${add_css_home_local('tooltipster.bundle.min.css', 'admin')}
 ${add_js_home_local('jquery.min.js', 'admin')}
 ${add_js_home_local('responsive-nav.min.js', 'admin')}
+${add_js_home_local('tooltipster.bundle.min.js', 'admin')}
 ${HeaderHTML.css_home()|n}
 ${HeaderHTML.js_home()|n}
 ${HeaderHTML.header_home()|n}
@@ -78,6 +80,13 @@ ${HeaderHTML.header_home()|n}
 </div>
 <script>
     var navigation = responsiveNav(".nav-collapse", {customToggle: "#toggle"});
+    
+    $('.tooltip').tooltipster({
+        animation: 'fade',
+        delay: 100,
+        trigger: 'click'
+    });
+    
 </script>
 <%block name="jscript_block">
 </%block>

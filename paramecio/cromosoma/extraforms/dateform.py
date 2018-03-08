@@ -21,10 +21,11 @@ class DateForm(BaseForm):
         h=''
         min=''
         s=''
+        min_time=''
         
         time=format_timedata(self.default_value)
         
-        if time:
+        if time[0]:
             y=int(time[0])
             m=int(time[1])
             d=int(time[2])

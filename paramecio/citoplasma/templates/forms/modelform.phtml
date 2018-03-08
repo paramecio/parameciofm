@@ -3,10 +3,20 @@
         ${'*'} \
     % endif
 </%def>
+<%def name="help(help, name)">
+    % if help: 
+        <i class="fa fa-question-circle tooltip"  data-tooltip-content="#tooltip_${name}_content"></i> \
+        <div class="tooltip_templates" style="display:none;">
+            <div id="tooltip_${name}_content">
+                ${help}
+            </div>
+        </div>
+    % endif
+</%def>
 <div class="form">
     % for form in forms.values():
         % if form.type!='hidden':
-            <p><label>${form.label} ${check_required(form.required)}</label>${form.form()|n} <span class="error" id="${form.name}_error">${form.txt_error}</span></p>
+            <p><label>${form.label} ${check_required(form.required)} ${help(form.help, form.name)}</label>${form.form()|n} <span class="error" id="${form.name}_error">${form.txt_error}</span></p>
         % else:
             ${form.form()|n}
         % endif

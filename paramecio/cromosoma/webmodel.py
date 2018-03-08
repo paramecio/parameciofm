@@ -106,6 +106,10 @@ class PhangoField:
         
         self.show_formatted_value=False
      
+        # Value used for help strings in tooltips in forms
+     
+        self.help=''
+     
     # This method is used for describe the new field in a sql language format.
     
 
@@ -158,6 +162,7 @@ class PhangoField:
         form.required=self.required
         form.label=self.label
         form.field=self
+        form.help=self.help
         return form
     
     def change_form(self, new_form, parameters):

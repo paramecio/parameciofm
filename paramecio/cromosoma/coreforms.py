@@ -17,6 +17,7 @@ class BaseForm:
         self.required=False
         self.txt_error=''
         self.name_field_id=self.name+'_form'
+        self.help=''
         
     def form(self):
         
