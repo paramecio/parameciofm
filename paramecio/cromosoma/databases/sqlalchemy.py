@@ -14,6 +14,8 @@ engine=None
 class SqlClass:
     
     cursors_connect=None 
+    disable_pool=False
+    pymysql_install=False
     
     def __init__(self, connection):
     
@@ -28,37 +30,68 @@ class SqlClass:
         self.pool_recycle=3600
         self.connect()
         
+        
     def connect(self):
         
         global engine
         
-        if not engine:
-            
-            try:
-                
-                if self.connection['db_type']=='pymysql':
-                    
-                    import pymysql.cursors
-                    
-                    SqlClass.cursors_connect=pymysql.cursors.DictCursor
-                else:
-                    import MySQLdb.cursors
-                    SqlClass.cursors_connect=MySQLdb.cursors.DictCursor
-            
-                engine=create_engine("mysql+%s://%s:%s@%s/%s?charset=utf8mb4" % (self.connection['db_type'], self.connection['user'], self.connection['password'], self.connection['host'], self.connection['db']), pool_recycle=self.pool_recycle, echo_pool=True, pool_size=self.pool_size)
-                
-            except:
-                e = sys.exc_info()[0]
-                v = sys.exc_info()[1]
-
-                self.error_connection="Error in connection: %s %s" % (e, v)
-
-                #self.conn.close()
-
-                raise NameError(self.error_connection)
-                
-        self.conn=engine.raw_connection()
+        if not SqlClass.disable_pool:
         
+            if not engine:
+                
+                try:
+                    
+                    if self.connection['db_type']=='pymysql':
+                        
+                        import pymysql.cursors
+                        
+                        SqlClass.cursors_connect=pymysql.cursors.DictCursor
+                    else:
+                        import MySQLdb.cursors
+                        SqlClass.cursors_connect=MySQLdb.cursors.DictCursor
+                
+                    engine=create_engine("mysql+%s://%s:%s@%s/%s?charset=utf8mb4" % (self.connection['db_type'], self.connection['user'], self.connection['password'], self.connection['host'], self.connection['db']), pool_recycle=self.pool_recycle, echo_pool=True, pool_size=self.pool_size)
+                    
+                except:
+                    e = sys.exc_info()[0]
+                    v = sys.exc_info()[1]
+
+                    self.error_connection="Error in connection: %s %s" % (e, v)
+
+                    #self.conn.close()
+
+                    raise NameError(self.error_connection)
+            
+            self.conn=engine.raw_connection()
+
+        else:
+            
+            if self.connection['db_type']=='pymysql':
+
+                import pymysql.cursors
+
+                if not SqlClass.pymysql_install:
+                    pymysql.install_as_MySQLdb
+                    SqlClass.pymysql_install=True        
+                
+                self.conn=pymysql.connect(self.connection['host'],
+                    user=self.connection['user'],
+                    passwd=self.connection['password'],
+                    db=self.connection['db'],
+                    charset='utf8mb4',
+                    cursorclass=MySQLdb.cursors.DictCursor)
+                    
+            else:
+        
+                import MySQLdb.cursors
+        
+                self.conn=MySQLdb.connect(self.connection['host'],
+                    user=self.connection['user'],
+                    passwd=self.connection['password'],
+                    db=self.connection['db'],
+                    charset='utf8mb4',
+                    cursorclass=MySQLdb.cursors.DictCursor)
+                
         pass
         
         """
@@ -168,7 +201,7 @@ class SqlClass:
         if self.conn:
         
             self.conn.close()
-            #self.conn=None
+            self.conn=None
         
         pass
     

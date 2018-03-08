@@ -5,8 +5,6 @@ import MySQLdb.cursors
 import sqlalchemy.pool as pool
 import traceback
 
-mypool=None
-
 class SqlClass:
     
     def __init__(self, connection):
@@ -24,42 +22,43 @@ class SqlClass:
         
     def connect(self):
         
-        global mypool
-      
+        """
         if self.conn==None:
-            try:
-                def getconn():
-                    return MySQLdb.connect(self.connection['host'],
-                        user=self.connection['user'],
-                        passwd=self.connection['password'],
-                        db=self.connection['db'],
-                        charset='utf8mb4',
-                        cursorclass=MySQLdb.cursors.DictCursor)
-				
-                if mypool==None:
-                    
-                    mypool=pool.QueuePool(getconn, max_overflow=self.max_overflow, pool_size=self.pool_size, recycle=self.pool_recycle, use_threadlocal=False)
+        """
+        try:
 
-                self.conn=mypool.connect()
-
-                self.conn.ping(True)
+            def getconn():
+                return MySQLdb.connect(self.connection['host'],
+                    user=self.connection['user'],
+                    passwd=self.connection['password'],
+                    db=self.connection['db'],
+                    charset='utf8mb4',
+                    cursorclass=MySQLdb.cursors.DictCursor)
+            """
+            if mypool==None:
                 
-                """
-                while not self.conn.open:
-                    self.conn=SqlClass.mypool.connect()
-                """
-                
-                self.connected=True
+                mypool=pool.QueuePool(getconn, max_overflow=self.max_overflow, pool_size=self.pool_size, recycle=self.pool_recycle, use_threadlocal=False)
+            """
+            self.conn=getconn() #mypool.connect()
 
-            except:
-                e = sys.exc_info()[0]
-                v = sys.exc_info()[1]
+            self.conn.ping(True)
+            
+            """
+            while not self.conn.open:
+                self.conn=SqlClass.mypool.connect()
+            """
+            
+            self.connected=True
 
-                self.error_connection="Error in connection: %s %s" % (e, v)
+        except:
+            e = sys.exc_info()[0]
+            v = sys.exc_info()[1]
 
-                self.conn.close()
+            self.error_connection="Error in connection: %s %s" % (e, v)
 
-                raise NameError(self.error_connection)
+            self.conn.close()
+
+            raise NameError(self.error_connection)
   
     
     #Make def query more simple if not debugging.
