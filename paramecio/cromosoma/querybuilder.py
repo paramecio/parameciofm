@@ -249,3 +249,21 @@ def select_to_dict(model, conditions=['', []], fields_selected=[], raw_query=0, 
         del_row_id(results)
     
     return results
+
+def select_a_row_where(model, conditions=['', []], fields_selected=[], raw_query=0, begin=0):
+    
+    limit="limit "+str(begin)+", 1"
+    
+    with select(model, conditions, fields_selected, raw_query) as cursor:
+    
+        row=cursor.fetchone()
+        
+        if row==None:
+            row=False
+        else:
+            if model.show_formatted:
+                for k, col in row.items():
+                    row[k]=model.fields[k].show_formatted(col)
+    
+    return row
+
