@@ -82,6 +82,32 @@ debug(config.debug)
 
 application=app
 
+# Load modules
+
+try:
+
+    from settings import modules
+    
+    prepare_app()
+    
+except:
+
+    @app.route('/')
+    def catch_errors(all='/'):
+        try:
+            from pathlib import Path
+            from settings import modules
+            import time
+            prepare_app()
+            p=Path('index.py')
+            p.touch()
+            time.sleep(1)
+        except:
+            raise
+            
+        redirect(request.url)
+    catch_errors=app.route('/<all:path>')(catch_errors)
+
 # Prepare static routes
 
 if config.yes_static==True:
@@ -112,33 +138,6 @@ if config.yes_static==True:
         else:
             mimetype=guess_type(path_module+'/'+filename)
             return static_file(filename, root=path_module, mimetype=mimetype[0])
-
-# Load modules
-
-try:
-
-    from settings import modules
-    
-    prepare_app()
-    
-except:
-
-    @app.route('/')
-    def catch_errors(all='/'):
-        try:
-            from pathlib import Path
-            from settings import modules
-            import time
-            prepare_app()
-            p=Path('index.py')
-            p.touch()
-            time.sleep(1)
-        except:
-            raise
-            
-        redirect(request.url)
-    catch_errors=app.route('/<all:path>')(catch_errors)
-
         
 def run_app(app):
     if config.server_used!='cherrypy':

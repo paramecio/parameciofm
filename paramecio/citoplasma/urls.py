@@ -2,6 +2,7 @@
 
 from settings import config
 from bottle import request, response, HTTPResponse
+import urllib.parse
 
 # A modified version of bottle url for don't need set x-proxy shit for redirect...
 
@@ -33,7 +34,8 @@ def make_url(path, query_args={}):
     
     if len(query_args)>0:
         
-        get_query='?'+"&".join( [x+'='+y for x,y in query_args.items()] )
+        #get_query='?'+"&".join( [x+'='+y for x,y in query_args.items()] )
+        get_query='?'+urllib.parse.urlencode(query_args)
     
     return config.base_url+path+get_query
     
@@ -48,7 +50,29 @@ def add_get_parameters(url, **args):
     if url.find('?')==-1:
         added_url='?'
     
-    return url+added_url+"&".join( [x+'='+str(y) for x,y in args.items()] )
+    get_query=urllib.parse.urlencode(args)
+    
+    return url+added_url+get_query
+
+def make_external_url(path, query_args={}):
+    
+    """
+        This is a method for create urls for external systems
+        
+        Keyword arguments:
+        path -- The base url of the url
+        query_args -- a ser of get variables for add to url
+        
+    """
+    
+    get_query=''
+    
+    if len(query_args)>0:
+        
+        #get_query='?'+"&".join( [x+'='+y for x,y in query_args.items()] )
+        get_query='?'+urllib.parse.urlencode(query_args)
+    
+    return path+get_query
 
 def get_actual_url():
     
