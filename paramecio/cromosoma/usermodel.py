@@ -16,6 +16,7 @@ class UserModel(WebModel):
         self.username_field='username'
         self.yes_repeat_password=True
         self.check_user=True
+        self.check_email=True
     
     def create_forms(self, arr_fields=[]):
         
@@ -123,18 +124,20 @@ class UserModel(WebModel):
                 self.fields_errors[self.username_field].append(self.fields[self.username_field].txt_error) 
                 error+=1
 
+          
+            if self.check_email:
             
-            if self.email_field in dict_values:
-            
-                self.conditions=['WHERE email=%s AND '+self.name_field_id+'!=%s', [dict_values[self.email_field], get_id]]            
+                if self.email_field in dict_values:
                 
-            if self.select_count()>0:
-                
-                self.fields[self.email_field].error=True
-                self.fields[self.email_field].txt_error=I18n.lang('common', 'error_email_exists', 'Error: this email is already being used')
-                self.fields_errors[self.email_field].append(self.fields[self.email_field].txt_error) 
-                                
-                error+=1
+                    self.conditions=['WHERE email=%s AND '+self.name_field_id+'!=%s', [dict_values[self.email_field], get_id]]            
+                    
+                if self.select_count()>0:
+                    
+                    self.fields[self.email_field].error=True
+                    self.fields[self.email_field].txt_error=I18n.lang('common', 'error_email_exists', 'Error: this email is already being used')
+                    self.fields_errors[self.email_field].append(self.fields[self.email_field].txt_error) 
+                                    
+                    error+=1
             
             self.conditions=original_conditions
         
