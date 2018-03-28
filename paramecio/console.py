@@ -419,7 +419,7 @@ def start():
                                 exit(1)
                             else:
                                 print('Postinstall script finished')
-                    
+        conn.close()            
 
 if __name__=="__main__":
     start()
