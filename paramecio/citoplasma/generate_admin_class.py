@@ -128,6 +128,8 @@ class GenerateAdminClass:
                 set_flash_message(I18n.lang('common', 'task_successful', 'Task successful'))
                 
                 if self.post_update:
+                    if getpostfiles.get['id']=='0':
+                        getpostfiles.get['id']=self.model.insert_id()
                     self.post_update(self, getpostfiles.get['id'])                
                 
                 redirect(self.url)
