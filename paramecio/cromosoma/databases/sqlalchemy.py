@@ -64,6 +64,8 @@ class SqlClass:
             
             self.conn=engine.raw_connection()
 
+            self.conn.ping(True)
+
         else:
             
             if self.connection['db_type']=='pymysql':
