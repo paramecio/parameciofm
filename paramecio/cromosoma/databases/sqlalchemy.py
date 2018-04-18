@@ -50,7 +50,7 @@ class SqlClass:
                         import MySQLdb.cursors
                         SqlClass.cursors_connect=MySQLdb.cursors.DictCursor
                 
-                    engine=create_engine("mysql+%s://%s:%s@%s/%s?charset=utf8mb4" % (self.connection['db_type'], self.connection['user'], self.connection['password'], self.connection['host'], self.connection['db']), pool_recycle=self.pool_recycle, echo_pool=True, pool_size=self.pool_size)
+                    engine=create_engine("mysql+%s://%s:%s@%s/%s?charset=utf8mb4" % (self.connection['db_type'], self.connection['user'], self.connection['password'], self.connection['host'], self.connection['db']), pool_recycle=self.pool_recycle, echo_pool=True, pool_size=self.pool_size, pool_pre_ping=True)
                     
                 except:
                     e = sys.exc_info()[0]
@@ -64,7 +64,7 @@ class SqlClass:
             
             self.conn=engine.raw_connection()
 
-            self.conn.ping(True)
+            #self.conn.ping(True)
 
         else:
             
@@ -81,7 +81,7 @@ class SqlClass:
                     passwd=self.connection['password'],
                     db=self.connection['db'],
                     charset='utf8mb4',
-                    cursorclass=MySQLdb.cursors.DictCursor)
+                    cursorclass=pymysql.cursors.DictCursor)
                     
             else:
         
