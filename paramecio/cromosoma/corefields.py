@@ -143,6 +143,16 @@ class TextField(PhangoField):
 
         return 'TEXT NOT NULL'
 
+class HTMLField(TextField):
+    
+    def __init__(self, name, required=False):
+        super().__init__(name, required)
+
+    def check(self, value):
+        
+        return re.sub('<.*?script?>', '', value)
+
+
 class ForeignKeyField(IntegerField):
     
     def __init__(self, name, related_table, size=11, required=False, identifier_field='id', named_field="id", select_fields=[]):

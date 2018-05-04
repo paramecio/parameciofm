@@ -29,6 +29,8 @@ def run_cherrypy_server():
     # Instantiate a new server object
     server = cherrypy._cpserver.Server()
 
+    server.thread_pool=30
+
     # Configure the server object
     server.socket_host=config.host
     server.socket_port=config.port
@@ -51,8 +53,6 @@ def run_cherrypy_server():
         server.ssl_certificate=config.ssl_certificate
         server.ssl_private_key=config.ssl_private_key
         server.ssl_certificate_chain=config.certificate_chain
-
-
 
     # Subscribe this server
     server.subscribe()

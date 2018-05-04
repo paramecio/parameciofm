@@ -267,3 +267,42 @@ def select_a_row_where(model, conditions=['', []], fields_selected=[], raw_query
     
     return row
 
+# A method por count num rows affected for sql conditions
+
+def select_count(model, conditions=['', []], field_to_count='id', raw_query=True):
+    
+    
+    #First table selecction
+    
+    tables_to_select=['`'+model.name+'`']
+    
+    fields=list(model.fields.keys())
+    
+    #Creating the fields
+    
+    for field in fields:
+        
+        #Check if foreignkeyfield
+        
+        if type(model.fields[field]).__name__=="ForeignKeyField"  and raw_query==False:
+            
+            table_name=model.fields[field].table_name
+            
+            tables_to_select.append('`'+table_name+'`')
+            
+            # Add a condition to sql query for join the two tables.
+            
+            conditions[0]+=" AND `"+table_name+"`.`"+model.fields[field].identifier_field+"`=`"+model.name+"`.`"+field+"`"
+            
+    sql= "select count(`"+field_to_count+"`) from "+", ".join(tables_to_select)+' '+conditions[0]
+    
+    count=0
+    
+    with model.query(sql, conditions[1], model.connection_id) as cursor:
+        count=list(cursor.fetchone().values())[0]
+        
+        if model.yes_reset_conditions:
+            model.reset_conditions()
+    
+    return count
+
