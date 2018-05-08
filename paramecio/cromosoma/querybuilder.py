@@ -267,6 +267,23 @@ def select_a_row_where(model, conditions=['', []], fields_selected=[], raw_query
     
     return row
 
+def select_a_row(model, id, fields_selected=[], raw_query=0):
+    
+    conditions=['WHERE `'+model.name+'`.`'+model.name_field_id+'`=%s', [id]]
+    
+    with select(model, conditions, fields_selected, raw_query) as cursor:
+    
+        row=cursor.fetchone()
+        
+        if row==None:
+            row=False
+        else:
+            if model.show_formatted:
+                for k, col in row.items():
+                    row[k]=model.fields[k].show_formatted(col)
+    return row
+
+
 # A method por count num rows affected for sql conditions
 
 def select_count(model, conditions=['', []], field_to_count='id', raw_query=True):
