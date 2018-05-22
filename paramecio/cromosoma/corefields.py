@@ -135,13 +135,15 @@ class TextField(PhangoField):
     def __init__(self, name, required=False):
         super().__init__(name, 11, required)
         
+        self.set_default='NOT NULL'
+        
     def get_type_sql(self):
         
         """Method for return the sql code for this type
 
         """
 
-        return 'TEXT NOT NULL'
+        return 'TEXT '+self.set_default
 
 class HTMLField(TextField):
     

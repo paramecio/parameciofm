@@ -256,9 +256,9 @@ class WebModel:
     
     def __init__(self, sqlclass=None, name_field_id="id"):
         
-        self.cached=self.global_cached
+        self.cached=WebModel.global_cached
         
-        self.cached_runquery=self.global_cached
+        self.cached_runquery=WebModel.global_cached
         
         self.type_cache='file'
         
@@ -1334,3 +1334,18 @@ class WebModel:
         
         return post
 
+class QueryModel(WebModel):
+    
+    def __init__(self, model_name, sqlclass=None, name_field_id="id"):
+        
+        super().__init__(sqlclass, name_field_id)
+
+        self.name=model_name.lower()        
+
+        self.label=self.name
+        
+        self.label_general=self.name
+        
+        self.order_by="ORDER BY `"+self.name+"`.`id` ASC"
+        
+        

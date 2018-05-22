@@ -29,8 +29,6 @@ def run_cherrypy_server():
     # Instantiate a new server object
     server = cherrypy._cpserver.Server()
 
-    server.thread_pool=30
-
     # Configure the server object
     server.socket_host=config.host
     server.socket_port=config.port

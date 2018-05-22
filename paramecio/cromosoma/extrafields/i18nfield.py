@@ -77,6 +77,9 @@ class I18nField(PhangoField):
     
     def show_formatted(self, value):
         
+        if value=='':
+            value='{"en-US": "", "es-ES": ""}'
+        
         value=json.loads(value)
 
         lang=I18n.get_default_lang()

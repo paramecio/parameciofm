@@ -10,6 +10,8 @@ class ArrayField(PhangoField):
         self.field_type=field_type
         
         self.error_default='Sorry, the json array is invalid'
+
+        self.set_default='NOT NULL'
     
     def check(self, value):
         
@@ -41,7 +43,7 @@ class ArrayField(PhangoField):
 
     def get_type_sql(self):
 
-        return 'TEXT NOT NULL'
+        return 'TEXT '+self.set_default
     
     def show_formatted(self, value):
         
