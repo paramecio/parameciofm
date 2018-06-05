@@ -25,7 +25,10 @@ def insert(model, dict_values, external_agent=True):
     query_error=False
     last_sql=''
     
-    model.fields[model.name_field_id].required=False
+    #model.fields[model.name_field_id].required=False
+    
+    if model.name_field_id in dict_values:
+        del dict_values[model.name_field_id]
     
     try:
         

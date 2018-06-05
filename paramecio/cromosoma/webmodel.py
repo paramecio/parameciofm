@@ -272,9 +272,13 @@ class WebModel:
         
         self.name_field_id=name_field_id
         
-        #Fields of the table, inserte with register method
+        #Fields of the table, inserted with register method
         
         self.fields=OrderedDict()
+        
+        # Errors of fields of the table, for safe thread reasons.
+        
+        self.fields_error=OrderedDict()        
         
         #The tables related with foreignkeyfield to this table
         
